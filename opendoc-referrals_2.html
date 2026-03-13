@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenDoc — Referrals Have Never Been This Simple</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0C1929;--white:#FFFFFF;--offwhite:#F5F3EF;--active:#22C55E;--active-bg:#14532D;--active-surface:#F0FDF4;--n50:#FAFAF9;--n100:#F5F5F4;--n200:#E7E5E4;--n300:#D6D3D1;--n400:#A8A29E;--n500:#78716C;--n600:#57534E;--n700:#44403C;--n800:#292524;--n900:#1C1917;--font:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono','SF Mono',monospace;--blue:#2563EB;--blue-light:#EFF6FF;--red:#EF4444;--red-light:#FEF2F2}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:var(--font);background:var(--offwhite);color:var(--navy);-webkit-font-smoothing:antialiased}
+
+.site-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:var(--white);border-bottom:1px solid var(--n200);position:sticky;top:0;z-index:100}
+.logo-lockup{display:inline-flex;align-items:center;gap:10px;text-decoration:none}
+.logo-mark svg{display:block;width:28px;height:22px}
+.logo-wordmark{font-family:var(--font);font-weight:700;letter-spacing:-0.02em;font-size:18px;color:var(--navy)}
+.nav-help{font-size:14px;color:var(--n500);font-weight:500}
+.nav-help a{color:var(--navy);font-weight:600;text-decoration:none}
+
+.hero{background:var(--navy);padding:56px 24px 48px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 140%,rgba(34,197,94,.08) 0%,transparent 60%)}
+.hero-inner{position:relative;max-width:660px;margin:0 auto}
+.hero-pulse{margin-bottom:20px}.hero-pulse svg{width:56px;height:45px}
+.hero h1{font-size:36px;font-weight:700;color:var(--white);line-height:1.15;letter-spacing:-0.02em;margin-bottom:12px}
+.hero p{font-size:16px;color:rgba(255,255,255,.55);line-height:1.65;max-width:500px;margin:0 auto}
+
+.main{max-width:920px;margin:0 auto;padding:0 24px}
+.section-label{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--active);margin-bottom:10px}
+.divider{height:1px;background:var(--n200)}
+
+/* ===== PROBLEM SECTION ===== */
+.problem-section{padding:56px 0 48px}
+.problem-section h2{font-size:24px;font-weight:700;line-height:1.25;margin-bottom:24px}
+
+.problem-flow{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:start;margin-bottom:32px}
+
+.flow-card{background:var(--white);border:1px solid var(--n200);border-radius:12px;padding:28px;position:relative}
+.flow-card.old{border-color:var(--n300)}
+.flow-card.new{border-color:var(--active)}
+.flow-card .flow-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--n100)}
+.flow-card.old .flow-label{color:var(--red)}
+.flow-card.new .flow-label{color:var(--active)}
+
+.flow-step{display:flex;gap:12px;padding:10px 0;align-items:start}
+.flow-step .fs-num{flex-shrink:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-family:var(--mono);font-size:14px;font-weight:600}
+.flow-card.old .fs-num{background:var(--red-light);color:var(--red)}
+.flow-card.new .fs-num{background:var(--active-surface);color:var(--active-bg)}
+.flow-step .fs-text{font-size:16px;color:var(--n600);line-height:1.5}
+.flow-step .fs-text strong{color:var(--navy)}
+.flow-step.dropout .fs-text{color:var(--red);font-weight:600}
+.flow-step.complete .fs-text{color:var(--active-bg);font-weight:600}
+
+.flow-arrow{display:flex;align-items:center;justify-content:center;padding-top:60px;color:var(--n300);font-size:28px}
+
+.problem-stat{background:var(--navy);border-radius:10px;padding:20px 28px;display:flex;align-items:center;gap:20px}
+.problem-stat .ps-num{font-family:var(--mono);font-size:32px;font-weight:700;color:var(--red);white-space:nowrap}
+.problem-stat .ps-text{font-size:14px;color:rgba(255,255,255,.6);line-height:1.5}
+
+.comparison-message{text-align:center;margin-top:28px}
+.comparison-message p{font-size:20px;font-weight:600;color:var(--navy);line-height:1.5;max-width:520px;margin:0 auto}
+
+/* ===== HOW IT WORKS ===== */
+.how-section{padding:48px 0}
+.how-section h2{font-size:24px;font-weight:700;line-height:1.25;margin-bottom:8px}
+.how-section>p{font-size:15px;color:var(--n600);line-height:1.65;margin-bottom:32px;max-width:640px}
+
+.how-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+
+.how-card{background:var(--white);border:1px solid var(--n200);border-radius:12px;overflow:hidden}
+.how-card-header{padding:20px 24px 16px;border-bottom:1px solid var(--n100)}
+.how-card-header .hc-who{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--active);margin-bottom:6px}
+.how-card-header h3{font-size:18px;font-weight:700}
+.how-card-body{padding:20px 24px 24px}
+.how-card-body p{font-size:14px;color:var(--n600);line-height:1.65;margin-bottom:16px}
+
+/* Referral link display */
+.ref-link-box{background:var(--n900);border-radius:8px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.ref-link-url{font-family:var(--mono);font-size:13px;color:var(--active);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ref-link-copy{flex-shrink:0;padding:6px 14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:6px;font-family:var(--font);font-size:12px;font-weight:600;color:var(--white);cursor:pointer;transition:background .15s}
+.ref-link-copy:hover{background:rgba(255,255,255,.2)}
+
+/* QR card mockup */
+.qr-card-mock{background:var(--white);border:2px solid var(--n200);border-radius:12px;padding:24px;text-align:center;max-width:280px;margin:0 auto}
+.qr-card-mock .qr-header{font-size:12px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.qr-card-mock .qr-subheader{font-size:11px;color:var(--n500);margin-bottom:16px}
+.qr-placeholder{width:140px;height:140px;background:var(--n100);border:2px dashed var(--n300);border-radius:8px;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--n400);font-weight:600}
+.qr-card-mock .qr-provider{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.qr-card-mock .qr-tagline{font-size:12px;color:var(--n500)}
+.qr-card-mock .qr-url{font-family:var(--mono);font-size:10px;color:var(--active);margin-top:12px;padding-top:12px;border-top:1px solid var(--n100)}
+.qr-foot{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:12px;font-size:10px;color:var(--n400);font-weight:600}
+.qr-foot svg{width:12px;height:10px}
+
+/* Phone mockup */
+.phone-mock{background:var(--n800);border-radius:24px;padding:10px;max-width:260px;margin:0 auto}
+.phone-notch{width:60px;height:5px;background:var(--n700);border-radius:3px;margin:0 auto 8px}
+.phone-screen{background:white;border-radius:14px;overflow:hidden}
+.phone-header{padding:12px 16px;background:var(--navy);display:flex;align-items:center;gap:8px}
+.phone-header-logo svg{width:16px;height:13px}
+.phone-header-text{font-size:12px;font-weight:700;color:var(--white)}
+
+/* Mini widget inside phone */
+.mw{font-size:11px}
+.mw-top{padding:14px 14px 12px}
+.mw-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--active-bg);margin-bottom:6px}
+.mw-badge .mwd{width:4px;height:4px;background:var(--active);border-radius:50%}
+.mw-proc{font-size:11px;font-weight:600;color:var(--n600);margin-bottom:2px}
+.mw-price{font-size:24px;font-weight:700;color:var(--active-bg);letter-spacing:-0.02em;line-height:1.1;margin-bottom:2px}
+.mw-guar{font-size:9px;color:var(--n400)}
+.mw-prov{font-size:10px;font-weight:600;color:var(--navy);margin-top:8px;margin-bottom:6px}
+.mw-ref{font-size:9px;color:var(--blue);background:var(--blue-light);padding:4px 8px;border-radius:4px;display:inline-block;margin-bottom:8px}
+.mw-slots{display:flex;gap:4px;flex-wrap:wrap;padding:10px 14px;background:var(--n50);border-top:1px solid var(--n100)}
+.mw-slot{padding:5px 8px;border-radius:5px;font-size:9px;font-weight:600;border:1px solid var(--n200);background:white;color:var(--navy)}
+.mw-slot.sel{border-color:var(--navy);background:var(--navy);color:white}
+.mw-slot .msd{display:block;font-size:8px;color:var(--n400);margin-bottom:1px}
+.mw-slot.sel .msd{color:rgba(255,255,255,.5)}
+.mw-cta-area{padding:12px 14px;border-top:1px solid var(--n100)}
+.mw-cta{display:block;width:100%;padding:10px;background:var(--navy);color:white;border:none;border-radius:7px;font-family:var(--font);font-size:12px;font-weight:700;text-align:center}
+.mw-sub{text-align:center;font-size:8px;color:var(--n400);margin-top:6px;line-height:1.4}
+
+/* ===== TRACKING ===== */
+.tracking-section{padding:48px 0}
+.tracking-section h2{font-size:24px;font-weight:700;line-height:1.25;margin-bottom:8px}
+.tracking-section>p{font-size:15px;color:var(--n600);line-height:1.65;margin-bottom:28px;max-width:640px}
+
+.tracking-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.track-card{background:var(--white);border:1px solid var(--n200);border-radius:12px;padding:24px}
+.track-card .tc-who{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--active);margin-bottom:12px}
+.track-card h3{font-size:16px;font-weight:700;margin-bottom:8px}
+.track-card p{font-size:14px;color:var(--n600);line-height:1.65}
+
+/* Stat mockup */
+.stat-row{margin-top:16px;padding-top:16px;border-top:1px solid var(--n100);display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat-item .si-num{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--active-bg)}
+.stat-item .si-label{font-size:11px;color:var(--n500);margin-top:2px}
+
+/* ===== SETUP ===== */
+.setup-section{padding:48px 0}
+.setup-section h2{font-size:24px;font-weight:700;line-height:1.25;margin-bottom:8px}
+.setup-section>p{font-size:15px;color:var(--n600);line-height:1.65;margin-bottom:28px;max-width:640px}
+
+.setup-steps{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.setup-card{background:var(--white);border:1px solid var(--n200);border-radius:12px;padding:28px;position:relative}
+.setup-card::before{content:attr(data-num);font-family:var(--mono);font-size:56px;font-weight:700;color:var(--n100);position:absolute;top:12px;right:16px;line-height:1}
+.setup-card h3{font-size:16px;font-weight:700;margin-bottom:8px;position:relative}
+.setup-card p{font-size:14px;color:var(--n600);line-height:1.65;position:relative}
+
+/* ===== FAQ ===== */
+.faq-section{padding:48px 0}
+.faq-section h2{font-size:24px;font-weight:700;margin-bottom:24px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-card{background:var(--white);border:1px solid var(--n200);border-radius:10px;padding:24px}
+.faq-card h3{font-size:14px;font-weight:700;margin-bottom:6px}
+.faq-card p{font-size:13px;color:var(--n600);line-height:1.65}
+
+/* ===== SUPPORT ===== */
+.support-section{padding:48px 0 72px}
+.support-box{background:var(--active-surface);border:1px solid #BBF7D0;border-radius:12px;padding:32px 36px;display:flex;align-items:center;justify-content:space-between}
+.support-box .support-text h3{font-size:18px;font-weight:700;color:var(--active-bg);margin-bottom:4px}
+.support-box .support-text p{font-size:14px;color:var(--active-bg);opacity:.7}
+.support-btn{padding:12px 24px;border-radius:8px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;background:var(--active-bg);color:var(--white);border:none;transition:opacity .15s}
+.support-btn:hover{opacity:.9}
+
+@media(max-width:768px){
+  .problem-flow{grid-template-columns:1fr;gap:12px}
+  .flow-arrow{display:none}
+  .how-grid,.tracking-grid,.faq-grid{grid-template-columns:1fr}
+  .setup-steps{grid-template-columns:1fr}
+  .hero{padding:40px 20px}.hero h1{font-size:28px}
+  .support-box{flex-direction:column;gap:20px;text-align:center}
+  .site-nav{padding:14px 20px}
+  .problem-stat{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="logo-lockup" href="#">
+    <span class="logo-mark"><svg viewBox="0 0 80 64" fill="none"><polyline points="0,32 20,32 30,32 40,4 50,58 60,32 80,32" stroke="#0C1929" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>
+    <span class="logo-wordmark">OpenDoc</span>
+  </a>
+  <span class="nav-help">Need help? <a href="/cdn-cgi/l/email-protection#e99b8c8f8c9b9b88859aa986998c878d868ac78a8684"><span class="__cf_email__" data-cfemail="61130407041313000d12210e11040f050e024f020e0c">[email&#160;protected]</span></a></span>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-pulse"><svg viewBox="0 0 80 64" fill="none"><polyline points="0,32 20,32 30,32 40,4 50,58 60,32 80,32" stroke="#22C55E" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+    <h1>Referrals have never<br>been this simple</h1>
+    <p>Text your patient a link for the provider you're sending them to. They see the doctor, their available appointments, and the price — and they can book it right there. One link. Done.</p>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- COMPARISON -->
+  <div class="problem-section">
+    <div class="section-label">The Difference</div>
+
+    <div class="problem-flow">
+      <div class="flow-card old">
+        <div class="flow-label">Today</div>
+        <div class="flow-step"><div class="fs-num">✗</div><div class="fs-text">You hand the patient a name and a phone number. <strong>They never call.</strong></div></div>
+      </div>
+
+      <div class="flow-arrow">→</div>
+
+      <div class="flow-card new">
+        <div class="flow-label">With OpenDoc</div>
+        <div class="flow-step"><div class="fs-num">✓</div><div class="fs-text">You text the patient a link. <strong>They book before they leave your office.</strong></div></div>
+      </div>
+    </div>
+
+    <div class="comparison-message">
+      <p>Share a link with whoever you trust your patients to. Make it easy on them. Make it easy on you and your staff.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section">
+    <div class="section-label">How It Works</div>
+    <h2>One link. That's the whole system.</h2>
+    <p>Any provider on OpenDoc can generate referral links for the providers they refer patients to. PCPs refer to specialists. Specialists refer to imaging, PT, pain management, other specialists. It all works the same way — a link.</p>
+
+    <div class="how-grid">
+      <!-- YOUR SIDE -->
+      <div class="how-card">
+        <div class="how-card-header">
+          <div class="hc-who">The Provider Receiving the Referral</div>
+          <h3>You share a link with whoever refers to you</h3>
+        </div>
+        <div class="how-card-body">
+          <p>In your OpenDoc dashboard, generate a unique link for each provider who sends you patients. Send it to them once — they use it for every patient they refer your way.</p>
+
+          <div class="ref-link-box">
+            <span class="ref-link-url">opendoc.com/book/canton-ortho?ref=dr-patel-pcp</span>
+            <button class="ref-link-copy">Copy</button>
+          </div>
+          <div class="ref-link-box">
+            <span class="ref-link-url">opendoc.com/book/canton-ortho?ref=canton-urgent</span>
+            <button class="ref-link-copy">Copy</button>
+          </div>
+          <div class="ref-link-box">
+            <span class="ref-link-url">opendoc.com/book/canton-ortho?ref=dr-lee-sports</span>
+            <button class="ref-link-copy">Copy</button>
+          </div>
+
+          <p style="font-size:13px;color:var(--n500);margin:0">Works for any combination: PCP → specialist, specialist → specialist, specialist → imaging, surgeon → PT. Any provider on OpenDoc can receive referrals this way.</p>
+        </div>
+      </div>
+
+      <!-- THEIR SIDE -->
+      <div class="how-card">
+        <div class="how-card-header">
+          <div class="hc-who">The Provider Making the Referral</div>
+          <h3>Your staff texts the link to the patient</h3>
+        </div>
+        <div class="how-card-body">
+          <p>No new system. No login. No training. Your staff texts the link the same way they'd send a patient any other information. The patient opens it on their phone and sees this:</p>
+
+          <!-- Phone mockup -->
+          <div class="phone-mock">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <div class="phone-header">
+                <span class="phone-header-logo"><svg viewBox="0 0 80 64" fill="none"><polyline points="0,32 20,32 30,32 40,4 50,58 60,32 80,32" stroke="#22C55E" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>
+                <span class="phone-header-text">OpenDoc</span>
+              </div>
+              <div class="mw">
+                <div class="mw-top">
+                  <div class="mw-badge"><span class="mwd"></span> Cleared Price</div>
+                  <div class="mw-proc">Orthopedic Consultation</div>
+                  <div class="mw-price">$275</div>
+                  <div class="mw-guar">All-in price — no additional charges</div>
+                  <div class="mw-prov">Canton Orthopedic Associates</div>
+                  <div class="mw-ref">Referred by Dr. Patel</div>
+                </div>
+                <div class="mw-slots">
+                  <div class="mw-slot"><span class="msd">Mon 3/23</span>9:00 AM</div>
+                  <div class="mw-slot sel"><span class="msd">Mon 3/23</span>2:15 PM</div>
+                  <div class="mw-slot"><span class="msd">Tue 3/24</span>10:30 AM</div>
+                </div>
+                <div class="mw-cta-area">
+                  <button class="mw-cta">Book & Pay — $275</button>
+                  <div class="mw-sub">Held securely. Free cancel 72hrs.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- TRACKING -->
+  <div class="tracking-section">
+    <div class="section-label">Referral Tracking</div>
+    <h2>Both sides see what happened</h2>
+    <p>The provider who received the referral knows it converted. The provider who made the referral knows their patient followed through. No more wondering.</p>
+
+    <div class="tracking-grid">
+      <div class="track-card">
+        <div class="tc-who">Receiving Provider Sees</div>
+        <h3>Which referral sources are sending patients</h3>
+        <p>Your dashboard shows every referral link, who clicked, who booked, and who completed. You know exactly which providers are driving volume to your practice.</p>
+        <div class="stat-row">
+          <div class="stat-item"><div class="si-num">47</div><div class="si-label">Referrals received this month</div></div>
+          <div class="stat-item"><div class="si-num">89%</div><div class="si-label">Completed (booked & paid)</div></div>
+        </div>
+      </div>
+      <div class="track-card">
+        <div class="tc-who">Referring Provider Sees</div>
+        <h3>Their patients actually followed through</h3>
+        <p>The referring provider gets a notification when their patient books. They know the referral completed without making a follow-up call. Their patient gets the care they recommended.</p>
+        <div class="stat-row">
+          <div class="stat-item"><div class="si-num">12</div><div class="si-label">Patients referred this month</div></div>
+          <div class="stat-item"><div class="si-num">11</div><div class="si-label">Booked with specialist</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SETUP -->
+  <div class="setup-section">
+    <div class="section-label">Getting Started</div>
+    <h2>Set up takes 5 minutes</h2>
+    <p>You're already on OpenDoc with your services and pricing. Now just generate links for the providers who refer to you — or the providers you refer to.</p>
+
+    <div class="setup-steps">
+      <div class="setup-card" data-num="1">
+        <h3>List the providers you refer to or receive from</h3>
+        <p>In your OpenDoc dashboard, add the providers in your referral network. Just their name and practice.</p>
+      </div>
+      <div class="setup-card" data-num="2">
+        <h3>Share the links</h3>
+        <p>Each connection gets a unique link. Text it, email it, or print a QR card for their front desk. One message — they're set up forever.</p>
+      </div>
+      <div class="setup-card" data-num="3">
+        <h3>Watch referrals start completing</h3>
+        <p>When a referred patient books and pays, both you and the referring provider get notified. Track it all in your dashboard.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <div class="section-label">Quick Answers</div>
+    <h2>Common questions</h2>
+    <div class="faq-grid">
+      <div class="faq-card"><h3>Does the referring provider need an OpenDoc account?</h3><p>No. They just need the link. They text it to patients. No login, no setup, no training. They can also keep a printed QR card at their front desk.</p></div>
+      <div class="faq-card"><h3>Is this just for PCPs referring to specialists?</h3><p>No. It works for any referral direction. PCP to specialist. Specialist to imaging. Surgeon to PT. Orthopedist to pain management. Cardiologist to vascular. Any provider on OpenDoc can receive referrals from any other provider.</p></div>
+      <div class="faq-card"><h3>What does the referring provider say to the patient?</h3><p>"I'm referring you to Dr. Mitchell for an orthopedic consultation. I'm going to text you a link — you can see their availability and book right from your phone."</p></div>
+      <div class="faq-card"><h3>Does this cost the referring provider anything?</h3><p>Nothing. The link is free. The referring provider's only role is to hand it to the patient.</p></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SUPPORT -->
+  <div class="support-section">
+    <div class="support-box">
+      <div class="support-text">
+        <h3>Ready to set up your referral links?</h3>
+        <p>Log into your OpenDoc dashboard — or we'll walk you through it.</p>
