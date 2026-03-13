@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenDoc — Add OpenDoc to Your Website</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0C1929;--white:#FFFFFF;--offwhite:#F5F3EF;--active:#22C55E;--active-bg:#14532D;--active-surface:#F0FDF4;--decision:#F59E0B;--decision-surface:#FFFBEB;--notauth:#EF4444;--n50:#FAFAF9;--n100:#F5F5F4;--n200:#E7E5E4;--n300:#D6D3D1;--n400:#A8A29E;--n500:#78716C;--n600:#57534E;--n700:#44403C;--n800:#292524;--n900:#1C1917;--font:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono','SF Mono',monospace;--blue:#2563EB;--blue-light:#EFF6FF}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:var(--font);background:var(--offwhite);color:var(--navy);-webkit-font-smoothing:antialiased}
+
+.site-nav{display:flex;align-items:center;justify-content:space-between;padding:20px 32px;background:var(--white);border-bottom:1px solid var(--n200);position:sticky;top:0;z-index:100}
+.logo-lockup{display:inline-flex;align-items:center;gap:10px;text-decoration:none}
+.logo-mark svg{display:block;width:32px;height:26px}
+.logo-wordmark{font-family:var(--font);font-weight:700;letter-spacing:-0.02em;font-size:20px;color:var(--navy)}
+.nav-cta{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;background:var(--navy);color:var(--white);border:none;border-radius:8px;font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;transition:opacity .15s}
+.nav-cta:hover{opacity:.85}
+
+.hero{background:var(--navy);padding:96px 24px 80px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 130%,rgba(34,197,94,.08) 0%,transparent 60%)}
+.hero-inner{position:relative;max-width:720px;margin:0 auto}
+.hero-pulse{margin-bottom:32px}.hero-pulse svg{width:80px;height:64px}
+.hero h1{font-size:48px;font-weight:700;color:var(--white);line-height:1.1;letter-spacing:-0.02em;margin-bottom:20px}
+.hero p{font-size:18px;color:rgba(255,255,255,.65);line-height:1.7;max-width:560px;margin:0 auto}
+
+.main{max-width:920px;margin:0 auto;padding:0 24px}
+.section-label{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--active);margin-bottom:12px}
+.divider{height:1px;background:var(--n200)}
+
+.value-section{padding:80px 0 64px}
+.value-section h2{font-size:36px;font-weight:700;line-height:1.15;letter-spacing:-0.02em;margin-bottom:12px}
+.value-section>p{font-size:17px;color:var(--n600);line-height:1.7;max-width:600px;margin-bottom:48px}
+.value-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.value-card{background:var(--white);border:1px solid var(--n200);border-radius:12px;padding:32px;transition:border-color .2s,box-shadow .2s}
+.value-card:hover{border-color:var(--n300);box-shadow:0 4px 20px rgba(12,25,41,.04)}
+.value-card .card-icon{width:48px;height:48px;display:flex;align-items:center;justify-content:center;border-radius:12px;margin-bottom:20px;font-size:22px}
+.value-card .card-icon.green{background:var(--active-surface)}.value-card .card-icon.blue{background:var(--blue-light)}.value-card .card-icon.amber{background:var(--decision-surface)}.value-card .card-icon.warm{background:var(--offwhite)}
+.value-card h3{font-size:17px;font-weight:700;margin-bottom:8px;line-height:1.3}
+.value-card p{font-size:14px;color:var(--n600);line-height:1.7}
+.value-card .card-detail{margin-top:16px;padding-top:16px;border-top:1px solid var(--n100);font-size:13px;color:var(--n500);font-style:italic;line-height:1.6}
+
+.cleared-section{padding:64px 0}
+.cleared-section h2{font-size:32px;font-weight:700;line-height:1.2;letter-spacing:-0.01em;margin-bottom:12px}
+.cleared-section>p{font-size:16px;color:var(--n600);line-height:1.7;max-width:680px;margin-bottom:20px}
+.cleared-callout{background:var(--active-surface);border-left:3px solid var(--active);border-radius:0 12px 12px 0;padding:24px 28px;margin:28px 0}
+.cleared-callout p{font-size:15px;color:var(--active-bg);line-height:1.7;margin:0}.cleared-callout strong{font-weight:700}
+.cleared-example{background:var(--white);border:1px solid var(--n200);border-radius:12px;padding:32px;margin:28px 0}
+.cleared-example .ex-label{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--n400);margin-bottom:20px}
+.cleared-example .ex-item{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--n100)}
+.cleared-example .ex-item:last-child{border-bottom:none}
+.cleared-example .ex-service{font-size:15px;font-weight:600}
+.cleared-example .ex-service span{display:block;font-size:13px;font-weight:400;color:var(--n500);margin-top:3px}
+.cleared-example .ex-price{font-family:var(--mono);font-size:18px;font-weight:600;color:var(--active-bg)}
+
+.preview-section{padding:64px 0}
+.preview-section h2{font-size:32px;font-weight:700;line-height:1.2;margin-bottom:12px}
+.preview-section>p{font-size:16px;color:var(--n600);line-height:1.7;max-width:640px;margin-bottom:40px}
+.preview-frame{background:var(--n200);border-radius:16px;padding:12px}
+.browser-bar{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--n300);border-radius:10px 10px 0 0}
+.browser-dots{display:flex;gap:6px}.browser-dots span{width:10px;height:10px;border-radius:50%;background:var(--n400);opacity:.5}
+.browser-url{flex:1;background:rgba(0,0,0,.06);border-radius:6px;padding:6px 14px;font-size:12px;color:var(--n500);font-family:var(--mono)}
+.browser-content{background:white;border-radius:0 0 10px 10px;padding:40px 48px}
+.mock-site-header{display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;margin-bottom:32px;border-bottom:1px solid var(--n100)}
+.mock-logo{font-size:17px;font-weight:700}
+.mock-nav{display:flex;gap:24px;font-size:13px;color:var(--n400);font-weight:500}.mock-nav span.active{color:var(--navy);font-weight:600}
+.mock-page-title{font-size:24px;font-weight:700;margin-bottom:8px}
+.mock-page-text{font-size:14px;color:var(--n600);margin-bottom:28px;line-height:1.7}
+
+.opendoc-widget{border:1px solid var(--n200);border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(12,25,41,.03),0 6px 20px rgba(12,25,41,.04)}
+.widget-top{padding:28px 28px 24px}
+.widget-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--active-bg);margin-bottom:14px}
+.widget-badge .wdot{width:6px;height:6px;background:var(--active);border-radius:50%}
+.widget-procedure{font-size:14px;font-weight:600;color:var(--n600);margin-bottom:4px}
+.widget-price-row{display:flex;align-items:baseline;gap:12px;margin-bottom:4px}
+.widget-price{font-size:36px;font-weight:700;color:var(--active-bg);letter-spacing:-0.02em;line-height:1.1}
+.widget-guarantee{font-size:13px;color:var(--n500);font-weight:500}
+.widget-provider{font-size:14px;font-weight:600;margin-top:14px;margin-bottom:4px}
+.widget-includes{font-size:13px;color:var(--n600);line-height:1.6;margin-bottom:14px}
+.widget-tags{display:flex;gap:8px;flex-wrap:wrap}
+.widget-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:5px 12px;border-radius:6px}
+.widget-tag.hsa{color:var(--blue);background:var(--blue-light)}.widget-tag.avail{color:var(--active-bg);background:var(--active-surface)}
+
+.widget-availability{padding:20px 28px;background:var(--n50);border-top:1px solid var(--n100)}
+.avail-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--n400);margin-bottom:12px}
+.avail-slots{display:flex;gap:8px;flex-wrap:wrap}
+.avail-slot{padding:8px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;border:1px solid var(--n200);background:white;color:var(--navy)}
+.avail-slot:hover{border-color:var(--active);color:var(--active-bg);background:var(--active-surface)}
+.avail-slot.selected{border-color:var(--navy);background:var(--navy);color:white}
+.avail-slot .slot-day{display:block;font-size:10px;font-weight:500;color:var(--n400);margin-bottom:2px}
+.avail-slot.selected .slot-day{color:rgba(255,255,255,.6)}
+.avail-slot:hover .slot-day{color:var(--active-bg)}
+
+.widget-cta-area{padding:24px 28px;background:white;border-top:1px solid var(--n100)}
+.widget-cta{display:block;width:100%;padding:16px 24px;background:var(--navy);color:white;border:none;border-radius:10px;font-family:var(--font);font-size:16px;font-weight:700;cursor:pointer;transition:opacity .15s;text-align:center}
+.widget-cta:hover{opacity:.9}
+.widget-subtext{text-align:center;font-size:12px;color:var(--n400);margin-top:12px;line-height:1.6}
+.widget-footer{display:flex;align-items:center;justify-content:space-between;padding:12px 28px;background:var(--n50);border-top:1px solid var(--n100)}
+.widget-escrow{font-size:11px;color:var(--n400)}
+.widget-powered{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--n400);font-weight:600}
+.widget-powered svg{width:14px;height:11px}
+
+.journey-section{padding:64px 0}
+.journey-section h2{font-size:32px;font-weight:700;line-height:1.2;margin-bottom:12px}
+.journey-section>p{font-size:16px;color:var(--n600);line-height:1.7;max-width:640px;margin-bottom:40px}
+.journey-step{display:grid;grid-template-columns:64px 1fr;gap:20px;padding:24px 0;border-bottom:1px solid var(--n100)}
+.journey-step:last-child{border-bottom:none}
+.journey-num{width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:var(--navy);color:white;font-family:var(--mono);font-size:16px;font-weight:600;border-radius:12px}
+.journey-step h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.journey-step p{font-size:14px;color:var(--n600);line-height:1.7}
+.highlight{display:inline;background:var(--active-surface);color:var(--active-bg);font-weight:700;padding:2px 8px;border-radius:4px;font-size:13px}
+
+.numbers-section{padding:56px 0}
+.numbers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.number-card{background:var(--navy);border-radius:12px;padding:32px;text-align:center}
+.number-card .num{font-family:var(--mono);font-size:40px;font-weight:700;color:var(--active);margin-bottom:8px}
+.number-card .num-label{font-size:14px;color:rgba(255,255,255,.6);line-height:1.5}
+
+.install-section{padding:64px 0}
+.install-section h2{font-size:32px;font-weight:700;line-height:1.2;margin-bottom:12px}
+.install-section>p{font-size:16px;color:var(--n600);line-height:1.7;max-width:640px;margin-bottom:36px}
+.install-box{background:var(--white);border:2px solid var(--navy);border-radius:14px;overflow:hidden;box-shadow:0 4px 24px rgba(12,25,41,.06)}
+.install-header{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:var(--navy)}
+.install-header-label{font-size:13px;font-weight:600;color:rgba(255,255,255,.7)}
+.install-copy-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 20px;background:var(--active);color:var(--navy);border:none;border-radius:8px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.install-copy-btn:hover{opacity:.9}.install-copy-btn.copied{background:var(--white)}
+.install-body{padding:24px}
+.install-snippet{background:var(--n900);border-radius:10px;padding:24px;font-family:var(--mono);font-size:14px;line-height:1.9;color:#D6D3D1;overflow-x:auto;white-space:pre}
+.install-snippet .hl-tag{color:#FF7B72}.install-snippet .hl-attr{color:#79C0FF}.install-snippet .hl-str{color:#A5D6FF}.install-snippet .hl-cmt{color:#57534E}
+.install-instructions{margin-top:24px;font-size:14px;color:var(--n600);line-height:1.7}
+.install-instructions strong{color:var(--navy)}
+.platform-list{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+.platform-item{background:var(--n50);border:1px solid var(--n200);border-radius:10px;padding:16px 20px}
+.platform-item .pname{font-size:14px;font-weight:700;margin-bottom:4px}
+.platform-item .pstep{font-size:13px;color:var(--n600);line-height:1.5}
+
+.faq-section{padding:64px 0}
+.faq-section h2{font-size:32px;font-weight:700;line-height:1.2;margin-bottom:40px}
+.faq-item{padding:24px 0;border-bottom:1px solid var(--n100)}
+.faq-item:first-of-type{border-top:1px solid var(--n100)}
+.faq-item h3{font-size:16px;font-weight:700;margin-bottom:8px}
+.faq-item p{font-size:14px;color:var(--n600);line-height:1.7}
+
+.bottom-cta{background:var(--navy);border-radius:16px;padding:64px 48px;text-align:center;margin:48px 0 80px;position:relative;overflow:hidden}
+.bottom-cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 150%,rgba(34,197,94,.1) 0%,transparent 60%)}
+.bottom-cta-inner{position:relative}
+.bottom-cta .bottom-pulse{margin-bottom:24px}.bottom-cta .bottom-pulse svg{width:60px;height:48px}
+.bottom-cta h2{font-size:28px;font-weight:700;color:white;margin-bottom:12px;letter-spacing:-0.01em}
+.bottom-cta p{font-size:16px;color:rgba(255,255,255,.6);margin-bottom:32px;line-height:1.7}
+.bottom-cta-btn{display:inline-flex;align-items:center;gap:8px;padding:16px 36px;background:var(--active);color:var(--navy);border:none;border-radius:10px;font-family:var(--font);font-size:16px;font-weight:700;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.bottom-cta-btn:hover{transform:translateY(-1px);box-shadow:0 4px 24px rgba(34,197,94,.3)}
+.bottom-cta .help-text{margin-top:20px;font-size:13px;color:rgba(255,255,255,.4)}
+
+@media(max-width:720px){.hero{padding:64px 20px}.hero h1{font-size:32px}.value-grid,.platform-list,.numbers-grid{grid-template-columns:1fr}.browser-content{padding:24px 20px}.mock-site-header{display:none}.bottom-cta{padding:48px 24px;margin:32px 0 60px}.site-nav{padding:16px 20px}}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="logo-lockup" href="#">
+    <span class="logo-mark"><svg viewBox="0 0 80 64" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="0,32 20,32 30,32 40,4 50,58 60,32 80,32" stroke="#0C1929" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>
+    <span class="logo-wordmark">OpenDoc</span>
+  </a>
+  <a class="nav-cta" href="#install">Add to Your Website</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-pulse"><svg viewBox="0 0 80 64" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="0,32 20,32 30,32 40,4 50,58 60,32 80,32" stroke="#22C55E" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+    <h1>Let patients book and pay<br>directly from your website</h1>
+    <p>Patients see your availability, select a time, purchase the service, and complete their intake — before they ever walk through your door. Your staff scans one QR code. Everything is done.</p>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="value-section">
+    <div class="section-label">What This Does For Your Practice</div>
+    <h2>Everything your website<br>can't do today</h2>
+    <p>Your website tells patients about your practice. Now it can sell your services, fill your schedule, and eliminate your front desk's busiest workflows.</p>
+    <div class="value-grid">
+      <div class="value-card"><div class="card-icon green">📅</div><h3>Show your real-time availability</h3><p>Patients see exactly when you're available — no phone tag, no hold music, no callbacks. Your open slots update automatically from your schedule.</p><div class="card-detail">Patients who can see open appointments book 3x more often than those told to "call our office."</div></div>
+      <div class="value-card"><div class="card-icon blue">✓</div><h3>Let patients book instantly</h3><p>One click to select a time. No portal login. No account creation. No phone call. The appointment is confirmed immediately.</p><div class="card-detail">Your front desk stops spending hours on scheduling calls and starts focusing on the patients in the room.</div></div>
+      <div class="value-card"><div class="card-icon amber">💳</div><h3>Collect full payment upfront</h3><p>Patients purchase the specific service at your Cleared price — the guaranteed all-in cost you set. Payment is collected at booking and held securely until you deliver care.</p><div class="card-detail">No billing. No collections. No accounts receivable. The patient has already bought the service before they walk in.</div></div>
+      <div class="value-card"><div class="card-icon warm">📋</div><h3>Collect intake before they arrive</h3><p>Attach custom questions to any service — medical history, medications, allergies, imaging uploads. Patients answer on their phone before the visit.</p><div class="card-detail">When the patient arrives, their Health Key contains their completed intake. One scan instead of a clipboard.</div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="cleared-section">
+    <div class="section-label">How Cleared Pricing Works</div>
+    <h2>Patients purchase your services directly</h2>
+    <p>A Cleared price is the all-in cost you set for a specific service you offer. When a patient books through your website, they are purchasing that service from you at the price you've set. It's a straightforward transaction — just like buying any other professional service.</p>
+    <div class="cleared-callout"><p><strong>You set the price. The patient pays it. That's the whole transaction.</strong> The Cleared price is the guaranteed maximum the patient will pay for that service. No surprise charges, no add-on fees. If the visit requires more of your time than expected, you've already been paid. If additional services are needed — imaging, a follow-up procedure, a specialist referral — those are separate services the patient can purchase individually, whenever they're ready.</p></div>
+    <p>Each service you offer gets its own Cleared price. Patients can purchase as many services as they need, one at a time, each as a clear and complete transaction.</p>
+    <div class="cleared-example">
+      <div class="ex-label">Example — Orthopedic Practice</div>
+      <div class="ex-item"><div class="ex-service">Orthopedic Consultation<span>History, exam, assessment, and treatment plan</span></div><div class="ex-price">$275</div></div>
+      <div class="ex-item"><div class="ex-service">Knee X-Ray (2 views)<span>Imaging with same-day radiologist read</span></div><div class="ex-price">$95</div></div>
+      <div class="ex-item"><div class="ex-service">Cortisone Injection — Knee<span>Includes ultrasound guidance and injection</span></div><div class="ex-price">$350</div></div>
+      <div class="ex-item"><div class="ex-service">Post-Operative Follow-Up<span>Wound check, imaging review, rehab plan</span></div><div class="ex-price">$150</div></div>
+    </div>
+    <p>A patient with knee pain might purchase the Orthopedic Consultation today. After the exam, if you recommend imaging, they purchase the Knee X-Ray. If an injection is indicated, they purchase that. Each service is a separate, clear transaction at a price they know before they commit.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="preview-section">
+    <div class="section-label">What Your Patients See</div>
+    <h2>This is what it looks like on your website</h2>
+    <p>A single component that handles pricing, scheduling, payment, and intake. It lives on your existing website. Nothing to rebuild, nothing to replace.</p>
+    <div class="preview-frame">
+      <div class="browser-bar"><div class="browser-dots"><span></span><span></span><span></span></div><div class="browser-url">www.cantonortho.com/services</div></div>
+      <div class="browser-content">
+        <div class="mock-site-header"><div class="mock-logo">Canton Orthopedic Associates</div><div class="mock-nav"><span>About</span><span>Providers</span><span class="active">Services & Pricing</span><span>Contact</span></div></div>
+        <div class="mock-page-title">Our Services & Pricing</div>
+        <div class="mock-page-text">We believe in upfront, honest pricing. Select a service below to see the all-in cost, choose a time, and book your visit.</div>
+        <div class="opendoc-widget">
+          <div class="widget-top">
+            <div class="widget-badge"><span class="wdot"></span> Cleared Price</div>
+            <div class="widget-procedure">Orthopedic Consultation</div>
+            <div class="widget-price-row"><span class="widget-price">$275</span><span class="widget-guarantee">All-in price — no additional charges</span></div>
+            <div class="widget-provider">Canton Orthopedic Associates — Canton, GA</div>
+            <div class="widget-includes">Includes comprehensive history, physical exam, assessment, and treatment plan with Dr. Mitchell</div>
+            <div class="widget-tags"><span class="widget-tag hsa">✓ HSA / FSA Eligible</span><span class="widget-tag avail">● Appointments Available</span></div>
+          </div>
+          <div class="widget-availability">
+            <div class="avail-label">Next Available Appointments</div>
+            <div class="avail-slots">
+              <div class="avail-slot"><span class="slot-day">Mon, Mar 23</span>9:00 AM</div>
+              <div class="avail-slot selected"><span class="slot-day">Mon, Mar 23</span>2:15 PM</div>
+              <div class="avail-slot"><span class="slot-day">Tue, Mar 24</span>10:30 AM</div>
+              <div class="avail-slot"><span class="slot-day">Wed, Mar 25</span>8:00 AM</div>
+              <div class="avail-slot"><span class="slot-day">Thu, Mar 26</span>3:45 PM</div>
+            </div>
+          </div>
+          <div class="widget-cta-area">
+            <button class="widget-cta">Book & Pay — $275</button>
+            <div class="widget-subtext">Payment held securely until your visit is complete.<br>Free cancellation within 72 hours.</div>
+          </div>
+          <div class="widget-footer">
+            <span class="widget-escrow">🔒 Payment secured by OpenDoc</span>
+            <span class="widget-powered"><svg viewBox="0 0 80 64" fill="none"><polyline points="0,32 20,32 30,32 40,4 50,58 60,32 80,32" stroke="#A8A29E" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>OpenDoc</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="journey-section">
+    <div class="section-label">The Patient Experience</div>
+    <h2>From your website to your exam room — with nothing left to do</h2>
+    <p>Here's exactly what happens after a patient finds your website.</p>
+    <div class="journey-step"><div class="journey-num">1</div><div><h3>Patient sees your services, pricing, and availability</h3><p>Right on your website. The specific service, the all-in cost, and real open appointment slots. No phone calls. No guessing.</p></div></div>
+    <div class="journey-step"><div class="journey-num">2</div><div><h3>Patient selects a time and purchases the service</h3><p>They pick an appointment, pay your Cleared price with their credit card, debit card, HSA, FSA, Apple Pay, or Google Pay. The service is purchased. Payment is held securely and released to you after you deliver care.</p></div></div>
+    <div class="journey-step"><div class="journey-num">3</div><div><h3>Patient receives their Health Key and completes intake</h3><p>They instantly get a Health Key — a digital credential with a scannable QR code confirming their appointment and purchase. They also receive your pre-visit questions, which they complete on their phone before they arrive.</p></div></div>
+    <div class="journey-step"><div class="journey-num">4</div><div><h3>Patient arrives. Staff scans. Done.</h3><p>Your front desk scans the QR code and sees: <span class="highlight">PAID — $0 due</span>. Appointment confirmed. Intake complete. No insurance verification. No copay collection. No clipboard. The patient sits down.</p></div></div>
+    <div class="journey-step"><div class="journey-num">5</div><div><h3>You deliver care. You get paid.</h3><p>Confirm the visit in your OpenDoc dashboard. Payment is released to your bank account within 3–5 business days. No claims. No denials. <span class="highlight">Money in your account in under a week</span>.</p></div></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="numbers-section">
+    <div class="numbers-grid">
+      <div class="number-card"><div class="num">$0</div><div class="num-label">Due from the patient at check-in</div></div>
+      <div class="number-card"><div class="num">3–5</div><div class="num-label">Business days to payment in your account</div></div>
+      <div class="number-card"><div class="num">0</div><div class="num-label">Insurance claims to file</div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="install-section" id="install">
+    <div class="section-label">Adding It to Your Website</div>
+    <h2>Send this to whoever manages your website</h2>
+    <p>This is everything they need. They paste the snippet below into your website wherever you want the booking and payment component to appear. It takes less than a minute.</p>
+    <div class="install-box">
+      <div class="install-header"><span class="install-header-label">Your OpenDoc Snippet — Ready to Paste</span><button class="install-copy-btn" onclick="copySnippet(this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy to Clipboard</button></div>
+      <div class="install-body">
+        <div class="install-snippet"><span class="hl-cmt">&lt;!-- OpenDoc: Book, Pay &amp; Check In --&gt;</span>
+<span class="hl-tag">&lt;script</span> <span class="hl-attr">src</span>=<span class="hl-str">"https://opendoc.com/embed.js"</span><span class="hl-tag">&gt;&lt;/script&gt;</span>
+<span class="hl-tag">&lt;div</span> <span class="hl-attr">data-opendoc</span>=<span class="hl-str">"canton-ortho"</span><span class="hl-tag">&gt;&lt;/div&gt;</span></div>
+        <div class="install-instructions"><strong>That's the whole thing.</strong> Your web person pastes this wherever you want it on your site — your Services page, your Pricing page, your homepage. It automatically displays your services, availability, and pricing, and handles the entire booking and payment flow.
+          <div class="platform-list">
+            <div class="platform-item"><div class="pname">WordPress</div><div class="pstep">Edit page → Add <strong>Custom HTML</strong> block → Paste → Update</div></div>
+            <div class="platform-item"><div class="pname">Squarespace</div><div class="pstep">Edit page → Add <strong>Code Block</strong> → Paste → Save</div></div>
+            <div class="platform-item"><div class="pname">Wix</div><div class="pstep">Add → <strong>Embed Code</strong> → Paste → Publish</div></div>
+            <div class="platform-item"><div class="pname">Any other website</div><div class="pstep">Paste into the page wherever you want it to appear</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="faq-section">
+    <div class="section-label">Common Questions</div>
+    <h2>Questions from providers</h2>
+    <div class="faq-item"><h3>Does this replace my EHR or scheduling system?</h3><p>No. This adds a new capability to your existing website. Your EHR, your scheduling system, your clinical workflows — all unchanged. This is a new channel for patients who want to book and pay directly.</p></div>
+    <div class="faq-item"><h3>What if the patient needs additional services after the visit?</h3><p>Each service is a separate purchase. If a patient comes in for an Orthopedic Consultation and you recommend imaging or an injection, those are separate services the patient can purchase individually — either in your office or through your website. They buy what they need, when they need it.</p></div>
+    <div class="faq-item"><h3>What if the visit takes longer than expected?</h3><p>The Cleared price covers the service as defined — the patient has purchased that service and the price doesn't change regardless of how long it takes. You set the prices, so price them at a level that accounts for the range of what a visit might involve.</p></div>
+    <div class="faq-item"><h3>When do I get paid?</h3><p>3–5 business days after you confirm the service was delivered. No claims to file. No denials to manage. No 90-day accounts receivable cycle. Payment goes directly to your bank account.</p></div>
+    <div class="faq-item"><h3>Can I change my prices?</h3><p>Anytime. Update your Cleared prices in your OpenDoc dashboard and they update on your website automatically. Patients who have already purchased are locked at the price they paid.</p></div>
+    <div class="faq-item"><h3>What if a patient cancels?</h3><p>Full refund within 72 hours. After that, a cancellation fee applies. No-shows receive a partial refund — you receive a portion for the reserved time. All policies are displayed to the patient before they purchase.</p></div>
+    <div class="faq-item"><h3>What about the intake questions?</h3><p>In your OpenDoc dashboard, you attach custom questions to any service — medical history, allergies, current medications, prior imaging, whatever you need. Patients complete these on their phone after purchasing. When they arrive, your staff scans the Health Key and the completed intake is right there.</p></div>
+    <div class="faq-item"><h3>What does this cost me?</h3><p>OpenDoc takes a small percentage of each transaction. You can build this into your Cleared price — it's your cost of acquiring a patient, collecting payment, and eliminating your billing workflow for that visit. Most providers find this is far less than what they spend on billing staff, claim denials, and collections today.</p></div>
+    <div class="faq-item"><h3>Can patients use their HSA or FSA?</h3><p>Yes. HSA and FSA debit cards are accepted as payment methods. Each transaction generates a receipt that meets IRS documentation requirements for qualified medical expenses.</p></div>
+  </div>
+
+  <div class="bottom-cta">
+    <div class="bottom-cta-inner">
+      <div class="bottom-pulse"><svg viewBox="0 0 80 64" fill="none"><polyline points="0,32 20,32 30,32 40,4 50,58 60,32 80,32" stroke="#22C55E" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+      <h2>Ready to add OpenDoc to your website?</h2>
+      <p>Send the snippet above to whoever manages your site — or we'll do it for you.</p>
+      <button class="bottom-cta-btn" id="bottomCopyBtn">Copy My Snippet →</button>
+      <div class="help-text">Need help? Email embed@opendoc.com or call us from your provider dashboard.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function copySnippet(btn){var t='<!-- OpenDoc: Book, Pay & Check In -->\n<script src="https://opendoc.com/embed.js"><\/script>\n<div data-opendoc="canton-ortho"></div>';navigator.clipboard.writeText(t).then(function(){btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Copied!';btn.classList.add('copied');setTimeout(function(){btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy to Clipboard';btn.classList.remove('copied')},2500)})}
+document.getElementById('bottomCopyBtn').addEventListener('click',function(){var b=document.querySelector('.install-copy-btn');copySnippet(b);this.textContent='\u2713 Copied!';var s=this;setTimeout(function(){s.textContent='Copy My Snippet \u2192'},2500)});
+</script>
+</body>
+</html>

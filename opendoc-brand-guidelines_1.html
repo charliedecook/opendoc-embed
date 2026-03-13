@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenDoc — Brand & Engineering Guidelines v1.0</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #08080a;
+    color: #d4d4d4;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* Page structure */
+  .page { max-width: 1000px; margin: 0 auto; padding: 80px 48px; }
+
+  .section { margin-bottom: 96px; }
+
+  .section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #555;
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 36px;
+    font-weight: 400;
+    color: #fff;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+
+  .section-desc {
+    color: #888;
+    max-width: 640px;
+    margin-bottom: 40px;
+  }
+
+  /* Cards */
+  .card {
+    border: 1px solid #1a1a1a;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  .card-header {
+    padding: 20px 28px;
+    border-bottom: 1px solid #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: #fff;
+  }
+
+  .card-tag {
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: #555;
+    background: #151515;
+    padding: 3px 10px;
+    border-radius: 6px;
+  }
+
+  .card-body {
+    padding: 0;
+  }
+
+  /* Logo display areas */
+  .logo-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 40px;
+    min-height: 200px;
+  }
+
+  .logo-area.white { background: #ffffff; }
+  .logo-area.offwhite { background: #F5F3EF; }
+  .logo-area.navy { background: #0C1929; }
+  .logo-area.dark { background: #0d1117; }
+
+  /* Grid layouts */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .grid-2 > * + *,
+  .grid-3 > * + *,
+  .grid-4 > * + * {
+    border-left: 1px solid #1a1a1a;
+  }
+
+  .grid-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    gap: 16px;
+    min-height: 160px;
+  }
+
+  .cell-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #666;
+  }
+
+  .grid-cell.navy .cell-label,
+  .grid-cell.dark .cell-label { color: #555; }
+
+  /* Spec tables */
+  .spec-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .spec-table td {
+    padding: 14px 28px;
+    border-bottom: 1px solid #141414;
+    vertical-align: top;
+  }
+
+  .spec-table td:first-child {
+    color: #888;
+    width: 200px;
+    font-size: 13px;
+  }
+
+  .spec-table td:last-child {
+    color: #ccc;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+
+  /* Color swatches */
+  .swatch-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 28px;
+    border-bottom: 1px solid #141414;
+  }
+
+  .swatch {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .swatch-info { flex: 1; }
+  .swatch-name { font-size: 14px; color: #ccc; font-weight: 500; }
+  .swatch-hex { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #666; margin-top: 2px; }
+  .swatch-token { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #444; margin-top: 1px; }
+
+  /* Don'ts */
+  .dont-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  .dont-item {
+    background: #111;
+    border: 1px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 32px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .dont-item .label {
+    font-size: 12px;
+    color: #ef4444;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .dont-item .desc {
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  /* Code blocks */
+  .code-block {
+    background: #111;
+    border: 1px solid #1a1a1a;
+    border-radius: 10px;
+    padding: 20px 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #999;
+    overflow-x: auto;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .code-block .keyword { color: #c084fc; }
+  .code-block .string { color: #86efac; }
+  .code-block .comment { color: #444; }
+
+  /* Divider */
+  hr {
+    border: none;
+    border-top: 1px solid #1a1a1a;
+    margin: 64px 0;
+  }
+
+  /* File manifest */
+  .file-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 28px;
+    border-bottom: 1px solid #141414;
+    gap: 16px;
+  }
+
+  .file-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: #151515;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #555;
+    flex-shrink: 0;
+  }
+
+  .file-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: #ccc;
+    flex: 1;
+  }
+
+  .file-desc {
+    font-size: 12px;
+    color: #555;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ============================================ -->
+  <!-- HEADER -->
+  <!-- ============================================ -->
+  <div class="section" style="margin-bottom: 64px;">
+    <div class="section-label">Brand & Engineering Guidelines</div>
+    <div class="section-title" style="font-size: 48px;">OpenDoc Identity System v1.0</div>
+    <div class="section-desc">The Verification Pulse — Single Peak (H1). Everything engineering needs to implement the OpenDoc brand consistently across all surfaces.</div>
+  </div>
+
+  <hr>
+
+  <!-- ============================================ -->
+  <!-- 1. THE MARK -->
+  <!-- ============================================ -->
+  <div class="section">
+    <div class="section-label">01</div>
+    <div class="section-title">The Mark</div>
+    <div class="section-desc">A single-peak pulse waveform. Flatline → spike → resolution. It reads as clinical verification and transactional finality. One decisive moment of authorization.</div>
+
+    <!-- Primary lockup -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Primary Lockup</span>
+        <span class="card-tag">opendoc-logo-primary.svg</span>
+      </div>
+      <div class="card-body">
+        <div class="logo-area white">
+          <svg width="420" height="70" viewBox="0 0 480 80">
+            <polyline points="0,40 20,40 30,40 40,10 50,64 60,40 80,40" fill="none" stroke="#0C1929" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="106" y="56" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="48" letter-spacing="-1" fill="#0C1929">OpenDoc</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reversed lockup -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Reversed Lockup</span>
+        <span class="card-tag">opendoc-logo-reversed.svg</span>
+      </div>
+      <div class="card-body">
+        <div class="logo-area navy">
+          <svg width="420" height="70" viewBox="0 0 480 80">
+            <polyline points="0,40 20,40 30,40 40,10 50,64 60,40 80,40" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="106" y="56" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="48" letter-spacing="-1" fill="#FFFFFF">OpenDoc</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mark only + Wordmark only -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Mark Only & Wordmark Only</span>
+        <span class="card-tag">opendoc-mark-*.svg / opendoc-wordmark-*.svg</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-2" style="border-top: none;">
+          <div class="grid-cell white">
+            <svg width="120" height="56" viewBox="0 0 80 64">
+              <polyline points="0,34 20,34 30,34 40,4 50,58 60,34 80,34" fill="none" stroke="#0C1929" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="cell-label">Mark only</span>
+          </div>
+          <div class="grid-cell white">
+            <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:40px; letter-spacing:-0.02em; color:#0C1929;">OpenDoc</span>
+            <span class="cell-label">Wordmark only</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- 2. MARK CONSTRUCTION -->
+  <!-- ============================================ -->
+  <div class="section">
+    <div class="section-label">02</div>
+    <div class="section-title">Mark Construction</div>
+    <div class="section-desc">The pulse is a 7-point polyline with round caps and round joins. All coordinates are proportional — the mark scales to any size using these ratios.</div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Geometry Specification</span>
+      </div>
+      <div class="card-body">
+        <table class="spec-table">
+          <tr><td>Element</td><td>SVG polyline (not path)</td></tr>
+          <tr><td>Points (% of bbox)</td><td>0,50 | 25,50 | 37.5,50 | 50,6.25 | 62.5,90.625 | 75,50 | 100,50</td></tr>
+          <tr><td>Stroke width</td><td>8.75% of mark height</td></tr>
+          <tr><td>Stroke linecap</td><td>round</td></tr>
+          <tr><td>Stroke linejoin</td><td>round</td></tr>
+          <tr><td>Fill</td><td>none (always)</td></tr>
+          <tr><td>Aspect ratio</td><td>1.25 : 1 (width : height)</td></tr>
+          <tr><td>Minimum size</td><td>24px width</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Canonical SVG at Common Sizes</span>
+      </div>
+      <div class="card-body">
+        <table class="spec-table">
+          <tr><td>80 × 64px</td><td>stroke-width: 5.6px — Standard mark</td></tr>
+          <tr><td>512 × 410px</td><td>stroke-width: 35.8px — App icon internal</td></tr>
+          <tr><td>40 × 32px</td><td>stroke-width: 2.8px — Inline / nav</td></tr>
+          <tr><td>24 × 19px</td><td>stroke-width: 1.7px — Minimum viable</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Clear Space</span>
+      </div>
+      <div class="card-body">
+        <div class="logo-area" style="background:#111; padding:48px;">
+          <div style="position:relative; display:inline-flex; align-items:center; gap:26px;">
+            <!-- Clear space visualization -->
+            <div style="position:absolute; inset:-32px; border: 1px dashed #333; border-radius:4px;"></div>
+            <div style="position:absolute; top:-32px; left:50%; transform:translateX(-50%); font-size:10px; font-family:'JetBrains Mono',monospace; color:#444;">50% of mark height</div>
+            <svg width="80" height="64" viewBox="0 0 80 64">
+              <polyline points="0,34 20,34 30,34 40,4 50,58 60,34 80,34" fill="none" stroke="#fff" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; font-size:40px; letter-spacing:-0.02em; color:#fff;">OpenDoc</span>
+          </div>
+        </div>
+        <table class="spec-table">
+          <tr><td>Clear space</td><td>50% of mark height on all sides — nothing enters this zone</td></tr>
+          <tr><td>Min lockup width</td><td>120px</td></tr>
+          <tr><td>Mark-to-wordmark gap</td><td>32.5% of mark width</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- 3. APP ICON -->
+  <!-- ============================================ -->
+  <div class="section">
+    <div class="section-label">03</div>
+    <div class="section-title">App Icon</div>
+    <div class="section-desc">Navy rounded rectangle container with the white pulse centered inside. The container radius matches the iOS superellipse mask.</div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Default App Icon</span>
+        <span class="card-tag">opendoc-appicon-navy.svg</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-4" style="border-top:1px solid #1a1a1a;">
+          <div class="grid-cell" style="background:#222;">
+            <svg width="96" height="96" viewBox="0 0 512 512">
+              <rect width="512" height="512" rx="108" fill="#0C1929"/>
+              <polyline points="96,264 168,264 204,264 256,100 308,404 344,264 416,264" fill="none" stroke="#fff" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="cell-label">512px</span>
+          </div>
+          <div class="grid-cell" style="background:#222;">
+            <svg width="64" height="64" viewBox="0 0 512 512">
+              <rect width="512" height="512" rx="108" fill="#0C1929"/>
+              <polyline points="96,264 168,264 204,264 256,100 308,404 344,264 416,264" fill="none" stroke="#fff" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="cell-label">64px</span>
+          </div>
+          <div class="grid-cell" style="background:#222;">
+            <svg width="48" height="48" viewBox="0 0 512 512">
+              <rect width="512" height="512" rx="108" fill="#0C1929"/>
+              <polyline points="96,264 168,264 204,264 256,100 308,404 344,264 416,264" fill="none" stroke="#fff" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="cell-label">48px</span>
+          </div>
+          <div class="grid-cell" style="background:#222;">
+            <svg width="32" height="32" viewBox="0 0 512 512">
+              <rect width="512" height="512" rx="108" fill="#0C1929"/>
+              <polyline points="96,264 168,264 204,264 256,100 308,404 344,264 416,264" fill="none" stroke="#fff" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="cell-label">32px</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">App Icon Spec</span>
+      </div>
+      <div class="card-body">
+        <table class="spec-table">
+          <tr><td>Canvas</td><td>512 × 512px (export at 1024 for @2x)</td></tr>
+          <tr><td>Container fill</td><td>#0C1929 (navy)</td></tr>
+          <tr><td>Container radius</td><td>21.09% of canvas (108px at 512)</td></tr>
+          <tr><td>Pulse inset</td><td>18.75% from each edge (96px at 512)</td></tr>
+          <tr><td>Pulse stroke</td><td>#FFFFFF, width = 36px at 512</td></tr>
+          <tr><td>Android adaptive</td><td>Use mark on 72% inner safe zone</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- 4. STATE SYSTEM -->
+  <!-- ============================================ -->
+  <div class="section">
+    <div class="section-label">04</div>
+    <div class="section-title">State System</div>
+    <div class="section-desc">The pulse changes form and color to communicate Health Key authorization state. Pulse = alive/authorized. Flatline = dead/not authorized. This maps directly to the Health Key's three states.</div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">State Variants</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-3" style="border-top:1px solid #1a1a1a;">
+          <!-- ACTIVE -->
+          <div class="grid-cell" style="background:#14532D;">
+            <svg width="80" height="80" viewBox="0 0 512 512">
+              <rect width="512" height="512" rx="108" fill="#14532D"/>
+              <polyline points="96,264 168,264 204,264 256,100 308,404 344,264 416,264" fill="none" stroke="#22C55E" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="cell-label" style="color:#22C55E;">ACTIVE</span>
+          </div>
+          <!-- DECISION -->
+          <div class="grid-cell" style="background:#451A03;">
+            <svg width="80" height="80" viewBox="0 0 512 512">
+              <rect width="512" height="512" rx="108" fill="#451A03"/>
+              <polyline points="96,264 168,264 204,264 256,100 308,404 344,264 416,264" fill="none" stroke="#F59E0B" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="cell-label" style="color:#F59E0B;">DECISION REQUIRED</span>
+          </div>
+          <!-- NOT AUTH -->
+          <div class="grid-cell" style="background:#450A0A;">
+            <svg width="80" height="80" viewBox="0 0 512 512">
+              <rect width="512" height="512" rx="108" fill="#450A0A"/>
+              <line x1="96" y1="264" x2="416" y2="264" stroke="#EF4444" stroke-width="36" stroke-linecap="round"/>
+            </svg>
+            <span class="cell-label" style="color:#EF4444;">NOT AUTHORIZED</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">State Logic</span>
+      </div>
+      <div class="card-body">
+        <table class="spec-table">
+          <tr><td>ACTIVE</td><td>Waveform: pulse | Stroke: #22C55E | Container bg: #14532D | Surface: #F0FDF4</td></tr>
+          <tr><td>DECISION REQUIRED</td><td>Waveform: pulse | Stroke: #F59E0B | Container bg: #451A03 | Surface: #FFFBEB</td></tr>
+          <tr><td>NOT AUTHORIZED</td><td>Waveform: flatline | Stroke: #EF4444 | Container bg: #450A0A | Surface: #FEF2F2</td></tr>
+          <tr><td>Rule</td><td>NOT AUTHORIZED always uses flatline (straight line), never pulse waveform</td></tr>
+          <tr><td>Rule</td><td>Container-less marks: pulse stroke changes color, no background</td></tr>
+          <tr><td>Rule</td><td>Container marks: both stroke AND background change per state</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- State marks without containers -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">State Marks — No Container</span>
+      </div>
+      <div class="card-body">
+        <div class="grid-3" style="border-top:1px solid #1a1a1a;">
+          <div class="grid-cell white">
+            <svg width="80" height="48" viewBox="0 0 80 64">
+              <polyline points="0,34 20,34 30,34 40,4 50,58 60,34 80,34" fill="none" stroke="#22C55E" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="cell-label" style="color:#22C55E;">Active</span>
+          </div>
+          <div class="grid-cell white">
+            <svg width="80" height="48" viewBox="0 0 80 64">
+              <polyline points="0,34 20,34 30,34 40,4 50,58 60,34 80,34" fill="none" stroke="#F59E0B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="cell-label" style="color:#F59E0B;">Decision</span>
+          </div>
+          <div class="grid-cell white">
+            <svg width="80" height="48" viewBox="0 0 80 64">
+              <line x1="0" y1="34" x2="80" y2="34" stroke="#EF4444" stroke-width="7" stroke-linecap="round"/>
+            </svg>
+            <span class="cell-label" style="color:#EF4444;">Not Authorized (flatline)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- 5. COLOR -->
+  <!-- ============================================ -->
+  <div class="section">
+    <div class="section-label">05</div>
+    <div class="section-title">Color</div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Brand Palette</span>
+      </div>
+      <div class="card-body">
+        <div class="swatch-row">
+          <div class="swatch" style="background:#0C1929;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Navy (Primary)</div>
+            <div class="swatch-hex">#0C1929 · rgb(12, 25, 41)</div>
+            <div class="swatch-token">--od-navy</div>
+          </div>
+        </div>
+        <div class="swatch-row">
+          <div class="swatch" style="background:#FFFFFF;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">White</div>
+            <div class="swatch-hex">#FFFFFF · rgb(255, 255, 255)</div>
+            <div class="swatch-token">--od-white</div>
+          </div>
+        </div>
+        <div class="swatch-row">
+          <div class="swatch" style="background:#F5F3EF;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Off-White (Surface)</div>
+            <div class="swatch-hex">#F5F3EF · rgb(245, 243, 239)</div>
+            <div class="swatch-token">--od-offwhite</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">State Palette</span>
+      </div>
+      <div class="card-body">
+        <div class="swatch-row">
+          <div class="swatch" style="background:#22C55E;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Active Green</div>
+            <div class="swatch-hex">#22C55E · bg: #14532D · surface: #F0FDF4</div>
+            <div class="swatch-token">--od-state-active / --od-state-active-bg / --od-state-active-surface</div>
+          </div>
+        </div>
+        <div class="swatch-row">
+          <div class="swatch" style="background:#F59E0B;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Decision Amber</div>
+            <div class="swatch-hex">#F59E0B · bg: #451A03 · surface: #FFFBEB</div>
+            <div class="swatch-token">--od-state-decision / --od-state-decision-bg / --od-state-decision-surface</div>
+          </div>
+        </div>
+        <div class="swatch-row">
+          <div class="swatch" style="background:#EF4444;"></div>
+          <div class="swatch-info">
+            <div class="swatch-name">Not Authorized Red</div>
+            <div class="swatch-hex">#EF4444 · bg: #450A0A · surface: #FEF2F2</div>
+            <div class="swatch-token">--od-state-notauth / --od-state-notauth-bg / --od-state-notauth-surface</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- 6. TYPOGRAPHY -->
+  <!-- ============================================ -->
+  <div class="section">
+    <div class="section-label">06</div>
+    <div class="section-title">Typography</div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Typefaces</span>
+      </div>
+      <div class="card-body">
+        <table class="spec-table">
+          <tr><td>Primary</td><td>Plus Jakarta Sans — weights 400, 500, 600, 700</td></tr>
+          <tr><td>Monospace</td><td>JetBrains Mono — weights 400, 500, 700</td></tr>
+          <tr><td>Fallback</td><td>-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif</td></tr>
+          <tr><td>Google Fonts URL</td><td>fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Wordmark Rules</span>
+      </div>
+      <div class="card-body">
+        <table class="spec-table">
+          <tr><td>Spelling</td><td>OpenDoc — capital O, capital D, no space, no hyphen. Never "Opendoc", "openDoc", "OPENDOC", or "Open Doc".</td></tr>
+          <tr><td>Font</td><td>Plus Jakarta Sans Bold (700)</td></tr>
+          <tr><td>Letter spacing</td><td>-0.02em</td></tr>
+          <tr><td>Minimum size</td><td>14px font-size</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- 7. DON'TS -->
+  <!-- ============================================ -->
+  <div class="section">
+    <div class="section-label">07</div>
+    <div class="section-title">Don'ts</div>
+
+    <div class="dont-grid">
+      <div class="dont-item">
+        <svg width="80" height="48" viewBox="0 0 80 64">
+          <polyline points="0,34 20,34 30,34 40,4 50,58 60,34 80,34" fill="none" stroke="#0C1929" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" transform="rotate(15, 40, 34)"/>
+        </svg>
+        <span class="label">Don't rotate</span>
+        <span class="desc">The mark must always be horizontal. The flatline anchors the reading.</span>
+      </div>
+      <div class="dont-item">
+        <svg width="80" height="48" viewBox="0 0 80 64">
+          <polyline points="0,34 20,34 30,34 40,4 50,58 60,34 80,34" fill="none" stroke="#0C1929" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="label">Don't thin the stroke</span>
+        <span class="desc">The 8.75% stroke ratio is calibrated. Thinner reads as a chart, not a mark.</span>
+      </div>
+      <div class="dont-item">
+        <svg width="80" height="48" viewBox="0 0 80 64">
+          <polyline points="0,34 20,34 30,34 40,4 50,58 60,34 80,34" fill="none" stroke="url(#grad1)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+          <defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#0C1929"/><stop offset="100%" style="stop-color:#22C55E"/></linearGradient></defs>
+        </svg>
+        <span class="label">Don't use gradients</span>
+        <span class="desc">The mark is one solid color. Gradients violate the Health Key design principles.</span>
+      </div>
+      <div class="dont-item">
+        <svg width="80" height="48" viewBox="0 0 80 64">
+          <polyline points="0,34 20,34 30,34 40,4 50,58 60,34 80,34" fill="none" stroke="#0C1929" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+        </svg>
+        <span class="label">Don't reduce opacity</span>
+        <span class="desc">Full opacity at all times. The pulse is present or it's a flatline. No in-between.</span>
+      </div>
+      <div class="dont-item">
+        <svg width="80" height="48" viewBox="0 0 80 64">
+          <polyline points="0,34 13,34 20,34 27,10 33,52 40,18 47,46 53,26 60,34 67,34 80,34" fill="none" stroke="#0C1929" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="label">Don't add peaks</span>
+        <span class="desc">Single peak only. Multiple peaks become a generic heartbeat monitor.</span>
+      </div>
+      <div class="dont-item">
+        <svg width="80" height="48" viewBox="0 0 80 64">
+          <polyline points="0,34 20,34 30,34 40,4 50,58 60,34 80,34" fill="none" stroke="#6366F1" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="label">Don't use off-brand colors</span>
+        <span class="desc">Navy, white, or state colors only. No purple, blue, or arbitrary hues.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- 8. FILE MANIFEST -->
+  <!-- ============================================ -->
+  <div class="section">
+    <div class="section-label">08</div>
+    <div class="section-title">Deliverables</div>
+    <div class="section-desc">Complete file manifest. All SVGs are vector, resolution-independent, and production-ready.</div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">SVG Assets</span>
+      </div>
+      <div class="card-body">
+        <div class="file-row"><div class="file-icon">SVG</div><div class="file-name">opendoc-logo-primary.svg</div><div class="file-desc">Full lockup, navy on transparent</div></div>
+        <div class="file-row"><div class="file-icon">SVG</div><div class="file-name">opendoc-logo-reversed.svg</div><div class="file-desc">Full lockup, white on transparent</div></div>
+        <div class="file-row"><div class="file-icon">SVG</div><div class="file-name">opendoc-mark-navy.svg</div><div class="file-desc">Mark only, navy</div></div>
+        <div class="file-row"><div class="file-icon">SVG</div><div class="file-name">opendoc-mark-white.svg</div><div class="file-desc">Mark only, white</div></div>
+        <div class="file-row"><div class="file-icon">SVG</div><div class="file-name">opendoc-wordmark-navy.svg</div><div class="file-desc">Wordmark only, navy</div></div>
+        <div class="file-row"><div class="file-icon">SVG</div><div class="file-name">opendoc-wordmark-white.svg</div><div class="file-desc">Wordmark only, white</div></div>
+        <div class="file-row"><div class="file-icon">SVG</div><div class="file-name">opendoc-appicon-navy.svg</div><div class="file-desc">App icon, 512×512, navy container</div></div>
+        <div class="file-row"><div class="file-icon">SVG</div><div class="file-name">opendoc-appicon-state-active.svg</div><div class="file-desc">App icon, ACTIVE state</div></div>
+        <div class="file-row"><div class="file-icon">SVG</div><div class="file-name">opendoc-appicon-state-decision.svg</div><div class="file-desc">App icon, DECISION REQUIRED state</div></div>
+        <div class="file-row"><div class="file-icon">SVG</div><div class="file-name">opendoc-appicon-state-notauth.svg</div><div class="file-desc">App icon, NOT AUTHORIZED state (flatline)</div></div>
+        <div class="file-row"><div class="file-icon">SVG</div><div class="file-name">opendoc-mark-state-active.svg</div><div class="file-desc">Mark only, green pulse</div></div>
+        <div class="file-row"><div class="file-icon">SVG</div><div class="file-name">opendoc-mark-state-decision.svg</div><div class="file-desc">Mark only, amber pulse</div></div>
+        <div class="file-row"><div class="file-icon">SVG</div><div class="file-name">opendoc-mark-state-notauth.svg</div><div class="file-desc">Mark only, red flatline</div></div>
+        <div class="file-row"><div class="file-icon">SVG</div><div class="file-name">opendoc-favicon.svg</div><div class="file-desc">Favicon, 32×32 with container</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Engineering Files</span>
+      </div>
+      <div class="card-body">
+        <div class="file-row"><div class="file-icon">JSON</div><div class="file-name">opendoc-design-tokens.json</div><div class="file-desc">Complete design token set (W3C format)</div></div>
+        <div class="file-row"><div class="file-icon">CSS</div><div class="file-name">opendoc-tokens.css</div><div class="file-desc">CSS custom properties + utility classes</div></div>
+        <div class="file-row"><div class="file-icon">JSX</div><div class="file-name">OpenDocLogo.jsx</div><div class="file-desc">React component — all variants, states, sizes</div></div>
+        <div class="file-row"><div class="file-icon">JS</div><div class="file-name">opendoc-tailwind-extend.js</div><div class="file-desc">Tailwind CSS theme extension</div></div>
+        <div class="file-row"><div class="file-icon">HTML</div><div class="file-name">opendoc-brand-guidelines.html</div><div class="file-desc">This document</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- 9. QUICK REFERENCE -->
+  <!-- ============================================ -->
+  <div class="section">
+    <div class="section-label">09</div>
+    <div class="section-title">Quick Reference</div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">React Usage</span>
+      </div>
+      <div class="card-body" style="padding: 20px 28px;">
+        <div class="code-block"><span class="comment">// Full lockup on light background</span>
+&lt;<span class="keyword">OpenDocLogo</span> /&gt;
+
+<span class="comment">// Reversed on dark background</span>
+&lt;<span class="keyword">OpenDocLogo</span> <span class="string">variant</span>=<span class="string">"reversed"</span> /&gt;
+
+<span class="comment">// App icon with Health Key state</span>
+&lt;<span class="keyword">OpenDocLogo</span> <span class="string">variant</span>=<span class="string">"appicon"</span> <span class="string">state</span>=<span class="string">"active"</span> /&gt;
+
+<span class="comment">// Small nav mark</span>
+&lt;<span class="keyword">OpenDocLogo</span> <span class="string">variant</span>=<span class="string">"mark"</span> <span class="string">size</span>=<span class="string">"sm"</span> /&gt;
+
+<span class="comment">// Not authorized flatline</span>
+&lt;<span class="keyword">OpenDocLogo</span> <span class="string">variant</span>=<span class="string">"mark"</span> <span class="string">state</span>=<span class="string">"notauth"</span> /&gt;</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">CSS Token Usage</span>
+      </div>
+      <div class="card-body" style="padding: 20px 28px;">
+        <div class="code-block"><span class="comment">/* Import tokens */</span>
+@import <span class="string">'opendoc-tokens.css'</span>;
+
+<span class="comment">/* Use brand colors */</span>
+.header { background: <span class="keyword">var</span>(--od-navy); color: <span class="keyword">var</span>(--od-white); }
+
+<span class="comment">/* Health Key state banner */</span>
+.health-key-active { background: <span class="keyword">var</span>(--od-state-active-surface); color: <span class="keyword">var</span>(--od-state-active); }
+.health-key-decision { background: <span class="keyword">var</span>(--od-state-decision-surface); color: <span class="keyword">var</span>(--od-state-decision); }
+.health-key-notauth { background: <span class="keyword">var</span>(--od-state-notauth-surface); color: <span class="keyword">var</span>(--od-state-notauth); }
+
+<span class="comment">/* Typography */</span>
+body { font-family: <span class="keyword">var</span>(--od-font-primary); }
+code { font-family: <span class="keyword">var</span>(--od-font-mono); }</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
