@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenDoc — Share Your Doctor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0C1929;--white:#FFFFFF;--offwhite:#F5F3EF;--active:#22C55E;--active-bg:#14532D;--active-surface:#F0FDF4;--n50:#FAFAF9;--n100:#F5F5F4;--n200:#E7E5E4;--n300:#D6D3D1;--n400:#A8A29E;--n500:#78716C;--n600:#57534E;--n700:#44403C;--n800:#292524;--n900:#1C1917;--font:'Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono','SF Mono',monospace;--blue:#2563EB;--blue-light:#EFF6FF}
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:var(--font);background:var(--offwhite);color:var(--navy);-webkit-font-smoothing:antialiased}
+
+.site-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:var(--white);border-bottom:1px solid var(--n200);position:sticky;top:0;z-index:100}
+.logo-lockup{display:inline-flex;align-items:center;gap:10px;text-decoration:none}
+.logo-mark svg{display:block;width:28px;height:22px}
+.logo-wordmark{font-weight:700;letter-spacing:-0.02em;font-size:18px;color:var(--navy)}
+.nav-help{font-size:14px;color:var(--n500);font-weight:500}.nav-help a{color:var(--navy);font-weight:600;text-decoration:none}
+
+.hero{background:var(--navy);padding:56px 24px 48px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 140%,rgba(34,197,94,.08) 0%,transparent 60%)}
+.hero-inner{position:relative;max-width:660px;margin:0 auto}
+.hero-pulse{margin-bottom:20px}.hero-pulse svg{width:56px;height:45px}
+.hero h1{font-size:36px;font-weight:700;color:var(--white);line-height:1.15;letter-spacing:-0.02em;margin-bottom:12px}
+.hero p{font-size:16px;color:rgba(255,255,255,.55);line-height:1.65;max-width:500px;margin:0 auto}
+
+.main{max-width:920px;margin:0 auto;padding:0 24px}
+.section-label{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--active);margin-bottom:10px}
+.divider{height:1px;background:var(--n200)}
+
+/* ===== CONCEPT ===== */
+.concept-section{padding:56px 0 48px}
+.concept-section h2{font-size:28px;font-weight:700;line-height:1.25;margin-bottom:12px}
+.concept-section>p{font-size:16px;color:var(--n600);line-height:1.7;max-width:620px;margin-bottom:32px}
+
+.concept-flow{display:flex;align-items:center;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.cf-step{background:var(--white);border:1px solid var(--n200);border-radius:10px;padding:20px 24px;text-align:center;flex:1;min-width:200px;max-width:260px}
+.cf-step .cf-emoji{font-size:28px;margin-bottom:8px}
+.cf-step .cf-label{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.cf-step .cf-desc{font-size:13px;color:var(--n500);line-height:1.5}
+.cf-arrow{color:var(--n300);font-size:24px;flex-shrink:0}
+
+.concept-message{text-align:center;margin-top:28px}
+.concept-message p{font-size:18px;font-weight:600;color:var(--navy);line-height:1.5;max-width:500px;margin:0 auto}
+
+/* ===== TOUCHPOINTS ===== */
+.touchpoints-section{padding:56px 0}
+.touchpoints-section h2{font-size:24px;font-weight:700;line-height:1.25;margin-bottom:8px}
+.touchpoints-section>p{font-size:15px;color:var(--n600);line-height:1.65;margin-bottom:36px;max-width:620px}
+
+.tp-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px}
+
+.tp-card{background:var(--white);border:1px solid var(--n200);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.tp-card-header{padding:20px 24px 16px;border-bottom:1px solid var(--n100)}
+.tp-card-header .tp-when{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--active);margin-bottom:6px}
+.tp-card-header h3{font-size:16px;font-weight:700;line-height:1.3}
+.tp-card-body{padding:20px 24px;flex:1;display:flex;flex-direction:column;gap:16px}
+.tp-card-body p{font-size:13px;color:var(--n600);line-height:1.6}
+
+/* Phone mockups */
+.tp-phone{background:var(--n800);border-radius:20px;padding:8px;max-width:220px;margin:0 auto;width:100%}
+.tp-notch{width:50px;height:4px;background:var(--n700);border-radius:2px;margin:0 auto 6px}
+.tp-screen{background:white;border-radius:12px;overflow:hidden}
+
+/* Health Key mini mockup */
+.hk-mini{padding:16px;text-align:center}
+.hk-mini .hk-state{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--active-bg);background:var(--active-surface);padding:4px 10px;border-radius:4px;display:inline-block;margin-bottom:10px}
+.hk-mini .hk-name{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.hk-mini .hk-service{font-size:11px;color:var(--n500);margin-bottom:10px}
+.hk-mini .hk-qr{width:60px;height:60px;background:var(--n100);border:2px dashed var(--n300);border-radius:6px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--n400);font-weight:600}
+.hk-mini .hk-share{display:block;width:100%;padding:8px;background:var(--navy);color:white;border:none;border-radius:7px;font-family:var(--font);font-size:11px;font-weight:700;text-align:center;cursor:default}
+
+/* Confirmation mini */
+.conf-mini{padding:16px;text-align:center}
+.conf-mini .conf-check{width:40px;height:40px;background:var(--active-surface);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:20px;color:var(--active-bg)}
+.conf-mini .conf-title{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.conf-mini .conf-detail{font-size:10px;color:var(--n500);margin-bottom:4px;line-height:1.4}
+.conf-mini .conf-divider{height:1px;background:var(--n100);margin:12px 0}
+.conf-mini .conf-prompt{font-size:11px;color:var(--n600);margin-bottom:8px;line-height:1.4}
+.conf-mini .conf-share{display:block;width:100%;padding:8px;background:var(--navy);color:white;border:none;border-radius:7px;font-family:var(--font);font-size:11px;font-weight:700;text-align:center;cursor:default}
+
+/* Star rating */
+.conf-stars{display:flex;gap:4px;justify-content:center;margin:12px 0 8px}
+.conf-star{font-size:24px;cursor:default;opacity:.25}
+.conf-star.filled{opacity:1}
+.conf-rate-label{font-size:10px;color:var(--n400);margin-bottom:4px}
+
+/* Text message mini */
+.text-mini{padding:16px}
+.text-mini .text-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--n100)}
+.text-mini .text-avatar{width:28px;height:28px;background:var(--navy);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.text-mini .text-avatar svg{width:14px;height:11px}
+.text-mini .text-from{font-size:11px;font-weight:700;color:var(--navy)}
+.text-mini .text-sub{font-size:9px;color:var(--n400)}
+.text-bubble{background:var(--n100);border-radius:12px 12px 12px 4px;padding:10px 14px;margin-bottom:8px;max-width:90%}
+.text-bubble p{font-size:11px;color:var(--navy);line-height:1.5;margin:0}
+.text-bubble .text-link{color:var(--blue);font-weight:600;text-decoration:underline;font-size:10px;display:block;margin-top:4px;word-break:break-all}
+.text-reply{display:flex;gap:8px;margin-top:12px}
+.text-reply-input{flex:1;background:var(--n100);border-radius:16px;padding:8px 14px;font-size:10px;color:var(--n400);border:none}
+.text-reply-send{width:28px;height:28px;background:var(--active);border-radius:50%;display:flex;align-items:center;justify-content:center;border:none;cursor:default}
+.text-reply-send svg{width:12px;height:12px}
+
+/* ===== WHAT FRIEND SEES ===== */
+.friend-section{padding:56px 0}
+.friend-section h2{font-size:24px;font-weight:700;line-height:1.25;margin-bottom:8px}
+.friend-section>p{font-size:15px;color:var(--n600);line-height:1.65;margin-bottom:32px;max-width:620px}
+
+.friend-layout{display:grid;grid-template-columns:260px 1fr;gap:32px;align-items:start}
+
+.friend-phone{background:var(--n800);border-radius:24px;padding:10px;max-width:260px}
+.friend-notch{width:60px;height:5px;background:var(--n700);border-radius:3px;margin:0 auto 8px}
+.friend-screen{background:white;border-radius:14px;overflow:hidden}
+.friend-header{padding:12px 16px;background:var(--navy);display:flex;align-items:center;gap:8px}
+.friend-header svg{width:16px;height:13px}
+.friend-header span{font-size:12px;font-weight:700;color:var(--white)}
+
+/* Mini widget */
+.fw{font-size:11px}
+.fw-top{padding:14px}
+.fw-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--active-bg);margin-bottom:6px}
+.fw-badge .fwd{width:4px;height:4px;background:var(--active);border-radius:50%}
+.fw-doc{font-size:20px;font-weight:700;color:var(--navy);letter-spacing:-0.01em;line-height:1.2;margin-bottom:2px}
+.fw-practice{font-size:10px;color:var(--n500);margin-bottom:8px}
+.fw-rating{display:flex;align-items:center;gap:4px;margin-bottom:10px}
+.fw-stars{display:flex;gap:1px;font-size:12px;color:#F59E0B}
+.fw-rating-text{font-size:9px;color:var(--n500);font-weight:600}
+.fw-divider{height:1px;background:var(--n100);margin:10px 0}
+.fw-proc{font-size:11px;font-weight:600;color:var(--n600);margin-bottom:2px}
+.fw-price{font-size:15px;font-weight:700;color:var(--active-bg);letter-spacing:-0.01em;line-height:1.2;margin-bottom:2px}
+.fw-guar{font-size:9px;color:var(--n400)}
+.fw-shared{font-size:9px;color:var(--blue);background:var(--blue-light);padding:4px 8px;border-radius:4px;display:inline-block;margin-top:8px}
+.fw-slots{display:flex;gap:4px;flex-wrap:wrap;padding:10px 14px;background:var(--n50);border-top:1px solid var(--n100)}
+.fw-slot{padding:5px 8px;border-radius:5px;font-size:9px;font-weight:600;border:1px solid var(--n200);background:white;color:var(--navy)}
+.fw-slot.sel{border-color:var(--navy);background:var(--navy);color:white}
+.fw-slot .fsd{display:block;font-size:8px;color:var(--n400);margin-bottom:1px}
+.fw-slot.sel .fsd{color:rgba(255,255,255,.5)}
+.fw-cta-area{padding:12px 14px;border-top:1px solid var(--n100)}
+.fw-cta{display:block;width:100%;padding:10px;background:var(--navy);color:white;border:none;border-radius:7px;font-family:var(--font);font-size:12px;font-weight:700;text-align:center}
+.fw-sub{text-align:center;font-size:8px;color:var(--n400);margin-top:6px;line-height:1.4}
+
+.friend-callouts{display:flex;flex-direction:column;gap:16px;padding-top:8px}
+.friend-callout{background:var(--white);border:1px solid var(--n200);border-radius:10px;padding:20px 24px}
+.friend-callout .fc-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--active);margin-bottom:8px}
+.friend-callout h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.friend-callout p{font-size:13px;color:var(--n600);line-height:1.6}
+
+/* ===== TRACKING ===== */
+.tracking-section{padding:48px 0}
+.tracking-section h2{font-size:24px;font-weight:700;line-height:1.25;margin-bottom:8px}
+.tracking-section>p{font-size:15px;color:var(--n600);line-height:1.65;margin-bottom:28px;max-width:620px}
+
+.track-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.track-card{background:var(--navy);border-radius:12px;padding:28px;text-align:center}
+.track-card .tc-num{font-family:var(--mono);font-size:32px;font-weight:700;color:var(--active);margin-bottom:6px}
+.track-card .tc-label{font-size:13px;color:rgba(255,255,255,.6);line-height:1.4}
+
+/* ===== FAQ ===== */
+.faq-section{padding:48px 0}
+.faq-section h2{font-size:24px;font-weight:700;margin-bottom:24px}
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.faq-card{background:var(--white);border:1px solid var(--n200);border-radius:10px;padding:24px}
+.faq-card h3{font-size:14px;font-weight:700;margin-bottom:6px}
+.faq-card p{font-size:13px;color:var(--n600);line-height:1.65}
+
+/* ===== SUPPORT ===== */
+.support-section{padding:48px 0 72px}
+.support-box{background:var(--active-surface);border:1px solid #BBF7D0;border-radius:12px;padding:32px 36px;display:flex;align-items:center;justify-content:space-between}
+.support-box .support-text h3{font-size:18px;font-weight:700;color:var(--active-bg);margin-bottom:4px}
+.support-box .support-text p{font-size:14px;color:var(--active-bg);opacity:.7}
+.support-btn{padding:12px 24px;border-radius:8px;font-family:var(--font);font-size:14px;font-weight:700;cursor:pointer;text-decoration:none;background:var(--active-bg);color:var(--white);border:none;transition:opacity .15s}
+.support-btn:hover{opacity:.9}
+
+@media(max-width:768px){
+  .tp-grid{grid-template-columns:1fr}
+  .friend-layout{grid-template-columns:1fr}
+  .friend-phone{margin:0 auto}
+  .track-grid,.faq-grid{grid-template-columns:1fr}
+  .hero{padding:40px 20px}.hero h1{font-size:28px}
+  .support-box{flex-direction:column;gap:20px;text-align:center}
+  .site-nav{padding:14px 20px}
+  .concept-flow{flex-direction:column;align-items:stretch}
+  .cf-step{max-width:none}
+  .cf-arrow{transform:rotate(90deg)}
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="logo-lockup" href="#">
+    <span class="logo-mark"><svg viewBox="0 0 80 64" fill="none"><polyline points="0,32 20,32 30,32 40,4 50,58 60,32 80,32" stroke="#0C1929" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>
+    <span class="logo-wordmark">OpenDoc</span>
+  </a>
+  <span class="nav-help">Need help? <a href="/cdn-cgi/l/email-protection#9deee8ededf2efe9ddf2edf8f3f9f2feb3fef2f0"><span class="__cf_email__" data-cfemail="9feceaefeff0edebdff0effaf1fbf0fcb1fcf0f2">[email&#160;protected]</span></a></span>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-pulse"><svg viewBox="0 0 80 64" fill="none"><polyline points="0,32 20,32 30,32 40,4 50,58 60,32 80,32" stroke="#22C55E" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+    <h1>Your best patients<br>send you more patients</h1>
+    <p>After a great visit, patients can share a link to the exact service they purchased. Their friend sees the doctor, the price, the availability — and books.</p>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- CONCEPT -->
+  <div class="concept-section">
+    <div class="section-label">How It Works</div>
+    <h2>Happy patients share. That's the whole system.</h2>
+    <p>The rating identifies your promoters. The text gives them something to share.</p>
+
+    <div class="concept-flow">
+      <div class="cf-step">
+        <div class="cf-emoji">⭐</div>
+        <div class="cf-label">Patient rates you after their visit</div>
+        <div class="cf-desc">Visit is complete. They get a simple prompt: "How was your experience?" They tap 5 stars.</div>
+      </div>
+      <div class="cf-arrow">→</div>
+      <div class="cf-step">
+        <div class="cf-emoji">💬</div>
+        <div class="cf-label">They get a thank-you text with a shareable link</div>
+        <div class="cf-desc">Only patients who rated you highly get this. It's a link to the exact service they purchased.</div>
+      </div>
+      <div class="cf-arrow">→</div>
+      <div class="cf-step">
+        <div class="cf-emoji">📅</div>
+        <div class="cf-label">Their friend opens the link and books</div>
+        <div class="cf-desc">They see Dr. Mitchell, the $275 price, real availability. They book and pay on the spot.</div>
+      </div>
+    </div>
+
+    <div class="concept-message">
+      <p>Word of mouth already drives most of your new patients. This just makes it convert.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- TOUCHPOINTS -->
+  <div class="touchpoints-section">
+    <div class="section-label">The Flow</div>
+    <h2>Rate, thank, share</h2>
+    <p>After every visit, the patient rates the experience. If they rated you highly, they get a thank-you text with a link they can send to a friend. Three natural moments, one simple flow.</p>
+
+    <div class="tp-grid">
+      <!-- 1: Health Key -->
+      <div class="tp-card">
+        <div class="tp-card-header">
+          <div class="tp-when">On the Health Key</div>
+          <h3>A share button right on their credential</h3>
+        </div>
+        <div class="tp-card-body">
+          <p>The Health Key is the thing they look at before and after their visit. A "Share My Doctor" button sits naturally below the QR code.</p>
+          <div class="tp-phone">
+            <div class="tp-notch"></div>
+            <div class="tp-screen">
+              <div class="hk-mini">
+                <div class="hk-state">● Active — Paid</div>
+                <div class="hk-name">SARAH CHEN</div>
+                <div class="hk-service">Orthopedic Consultation — $275<br>Canton Orthopedic Associates</div>
+                <div class="hk-qr">QR Code</div>
+                <div class="hk-share">Share My Doctor →</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2: Post-visit rating -->
+      <div class="tp-card">
+        <div class="tp-card-header">
+          <div class="tp-when">After the Visit</div>
+          <h3>Patient rates the experience</h3>
+        </div>
+        <div class="tp-card-body">
+          <p>When the provider marks the visit complete, the patient sees a simple rating prompt. That's it — just a quick rating.</p>
+          <div class="tp-phone">
+            <div class="tp-notch"></div>
+            <div class="tp-screen">
+              <div class="conf-mini">
+                <div class="conf-check">✓</div>
+                <div class="conf-title">Visit Complete</div>
+                <div class="conf-detail">Orthopedic Consultation<br>with Dr. Mitchell</div>
+                <div class="conf-divider"></div>
+                <div class="conf-prompt">How was your experience?</div>
+                <div class="conf-stars">
+                  <span class="conf-star filled">★</span>
+                  <span class="conf-star filled">★</span>
+                  <span class="conf-star filled">★</span>
+                  <span class="conf-star filled">★</span>
+                  <span class="conf-star filled">★</span>
+                </div>
+                <div class="conf-rate-label">Tap to rate</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3: Thank you text (high raters only) -->
+      <div class="tp-card">
+        <div class="tp-card-header">
+          <div class="tp-when">If They Rated You Highly</div>
+          <h3>They get a thank-you text with a link to share</h3>
+        </div>
+        <div class="tp-card-body">
+          <p>Patients who gave a high rating receive a thank-you text with a shareable link. They forward it to a friend. That's how word of mouth converts.</p>
+          <div class="tp-phone">
+            <div class="tp-notch"></div>
+            <div class="tp-screen">
+              <div class="text-mini">
+                <div class="text-header">
+                  <div class="text-avatar"><svg viewBox="0 0 80 64" fill="none"><polyline points="0,32 20,32 30,32 40,4 50,58 60,32 80,32" stroke="#22C55E" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+                  <div><div class="text-from">OpenDoc</div><div class="text-sub">Just now</div></div>
+                </div>
+                <div class="text-bubble">
+                  <p>Thanks, Sarah! Glad your visit with Dr. Mitchell went well. Know someone who could use the same care? Send them your link:</p>
+                  <span class="text-link">opendoc.com/book/canton-ortho/orthopedic-consultation</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- WHAT THE FRIEND SEES -->
+  <div class="friend-section">
+    <div class="section-label">The Friend's Experience</div>
+    <h2>They open the link and book in under 30 seconds</h2>
+    <p>The friend sees the doctor, the rating, the service, the price, and open appointments. They book and pay right there.</p>
+
+    <div class="friend-layout">
+      <div class="friend-phone">
+        <div class="friend-notch"></div>
+        <div class="friend-screen">
+          <div class="friend-header">
+            <svg viewBox="0 0 80 64" fill="none"><polyline points="0,32 20,32 30,32 40,4 50,58 60,32 80,32" stroke="#22C55E" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+            <span>OpenDoc</span>
+          </div>
+          <div class="fw">
+            <div class="fw-top">
+              <div class="fw-badge"><span class="fwd"></span> OpenDoc</div>
+              <div class="fw-doc">Dr. David Mitchell</div>
+              <div class="fw-practice">Canton Orthopedic Associates — Canton, GA</div>
+              <div class="fw-rating">
+                <div class="fw-stars">★★★★★</div>
+                <span class="fw-rating-text">4.9 · 127 patients</span>
+              </div>
+              <div class="fw-divider"></div>
+              <div class="fw-proc">Orthopedic Consultation</div>
+              <div class="fw-price">$275</div>
+              <div class="fw-guar">All-in price — no additional charges</div>
+              <div class="fw-shared">Shared by a patient</div>
+            </div>
+            <div class="fw-slots">
+              <div class="fw-slot"><span class="fsd">Mon 3/23</span>9:00 AM</div>
+              <div class="fw-slot sel"><span class="fsd">Mon 3/23</span>2:15 PM</div>
+              <div class="fw-slot"><span class="fsd">Tue 3/24</span>10:30 AM</div>
+            </div>
+            <div class="fw-cta-area">
+              <button class="fw-cta">Book with Dr. Mitchell — $275</button>
+              <div class="fw-sub">Held securely. Free cancel 72hrs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="friend-callouts">
+        <div class="friend-callout">
+          <div class="fc-label">The Doctor First</div>
+          <h3>Their friend recommended a doctor — so that's what they see first</h3>
+          <p>Dr. Mitchell's name is the biggest thing on the screen. The practice, the rating, the service, the price — it's all there. But the doctor is the reason they opened the link.</p>
+        </div>
+        <div class="friend-callout">
+          <div class="fc-label">Social Proof</div>
+          <h3>4.9 stars from 127 patients</h3>
+          <p>Real ratings from real OpenDoc patients. The friend doesn't just have their buddy's word — they see that 127 other people felt the same way.</p>
+        </div>
+        <div class="friend-callout">
+          <div class="fc-label">Under 30 Seconds</div>
+          <h3>Open the link. Pick a time. Pay. Done.</h3>
+          <p>No account creation. No insurance questions. No phone call. The entire experience from opening the link to having a confirmed, paid appointment takes less than 30 seconds.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- TRACKING -->
+  <div class="tracking-section">
+    <div class="section-label">What You See in Your Dashboard</div>
+    <h2>Track word-of-mouth like a real channel</h2>
+    <p>For the first time, you can see how many patients came from other patients — and what it's worth.</p>
+
+    <div class="track-grid">
+      <div class="track-card">
+        <div class="tc-num">34</div>
+        <div class="tc-label">Links shared by patients this month</div>
+      </div>
+      <div class="track-card">
+        <div class="tc-num">12</div>
+        <div class="tc-label">New patients booked from shares</div>
+      </div>
+      <div class="track-card">
+        <div class="tc-num">$3,300</div>
+        <div class="tc-label">Revenue from word of mouth</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <div class="section-label">Quick Answers</div>
+    <h2>Common questions</h2>
+    <div class="faq-grid">
+      <div class="faq-card"><h3>What happens if a patient rates me low?</h3><p>They don't get the share link. Low ratings are captured privately in your dashboard so you can follow up directly. Nothing goes public. This protects your reputation and gives you a chance to make it right.</p></div>
+      <div class="faq-card"><h3>What counts as a "high" rating?</h3><p>4 or 5 stars. Only patients who had a genuinely good experience receive the share text. You're only amplifying your best moments.</p></div>
+      <div class="faq-card"><h3>Does this cost me anything extra?</h3><p>No. Ratings and patient sharing are built into OpenDoc. The same transaction fee applies whether the patient found you through your website, a referral, or a friend's link.</p></div>
+      <div class="faq-card"><h3>Can I see my ratings?</h3><p>Yes. Your dashboard shows your average rating, rating distribution, and trends over time. Ratings are internal to OpenDoc — they're not published publicly unless you choose to display them.</p></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SUPPORT -->
+  <div class="support-section">
+    <div class="support-box">
+      <div class="support-text">
+        <h3>Ratings and sharing are on by default</h3>
+        <p>Every completed visit prompts a rating. High raters get the share text automatically. Manage settings in your OpenDoc dashboard.</p>      </div>
+      <a class="support-btn" href="#">Open Dashboard</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
