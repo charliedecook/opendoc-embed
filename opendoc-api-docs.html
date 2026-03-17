@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenDoc Platform API — Developer Reference</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --green: #2D6A4F;
+  --green-light: #D8F3DC;
+  --green-dark: #1B4332;
+  --green-muted: #40916C;
+  --bg: #FAFAF8;
+  --bg-card: #FFFFFF;
+  --bg-code: #1E2A24;
+  --bg-sidebar: #F2F1EE;
+  --text: #1A1A1A;
+  --text2: #555555;
+  --text3: #888888;
+  --border: #E4E2DE;
+  --border-light: #EFEDE9;
+  --method-get: #2D6A4F;
+  --method-post: #2563EB;
+  --method-patch: #D97706;
+  --method-delete: #DC2626;
+  --method-get-bg: #D8F3DC;
+  --method-post-bg: #DBEAFE;
+  --method-patch-bg: #FEF3C7;
+  --method-delete-bg: #FEE2E2;
+  --font-serif: 'Source Serif 4', Georgia, serif;
+  --font-sans: 'DM Sans', -apple-system, sans-serif;
+  --font-mono: 'Source Code Pro', monospace;
+  --radius: 8px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-lg: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  width: 280px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+  z-index: 100;
+  padding: 0 0 40px;
+}
+
+.sidebar-header {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg-sidebar);
+  z-index: 10;
+}
+
+.sidebar-logo {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: -0.3px;
+}
+
+.sidebar-logo span {
+  font-weight: 400;
+  color: var(--text2);
+  font-size: 13px;
+  margin-left: 6px;
+  font-family: var(--font-sans);
+}
+
+.sidebar-search {
+  margin-top: 12px;
+  position: relative;
+}
+
+.sidebar-search input {
+  width: 100%;
+  padding: 8px 12px 8px 32px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: var(--font-sans);
+  background: var(--bg-card);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.sidebar-search input:focus { border-color: var(--green); }
+
+.sidebar-search::before {
+  content: "⌕";
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text3);
+  font-size: 14px;
+}
+
+.nav-section {
+  padding: 12px 0 4px;
+}
+
+.nav-section-title {
+  padding: 6px 20px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text3);
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 20px;
+  font-size: 13px;
+  color: var(--text2);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+}
+
+.nav-item:hover {
+  color: var(--text);
+  background: rgba(0,0,0,0.03);
+}
+
+.nav-item.active {
+  color: var(--green);
+  border-left-color: var(--green);
+  background: rgba(45,106,79,0.04);
+  font-weight: 600;
+}
+
+.nav-method {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  padding: 1px 4px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  min-width: 36px;
+  text-align: center;
+}
+
+.nav-method.GET { color: var(--method-get); background: var(--method-get-bg); }
+.nav-method.POST { color: var(--method-post); background: var(--method-post-bg); }
+.nav-method.PATCH { color: var(--method-patch); background: var(--method-patch-bg); }
+.nav-method.DELETE { color: var(--method-delete); background: var(--method-delete-bg); }
+
+.nav-path {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Main ── */
+.main {
+  margin-left: 280px;
+  flex: 1;
+  max-width: 960px;
+  padding: 40px 48px 120px;
+}
+
+/* ── Hero ── */
+.hero {
+  margin-bottom: 48px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero h1 {
+  font-family: var(--font-serif);
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--green-dark);
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+
+.hero .version {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--green-light);
+  color: var(--green);
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.hero-desc {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.7;
+  max-width: 680px;
+}
+
+.hero-desc p { margin-bottom: 12px; }
+
+.hero-servers {
+  margin-top: 20px;
+  display: flex;
+  gap: 12px;
+}
+
+.server-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 13px;
+}
+
+.server-badge code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--green);
+  font-weight: 500;
+}
+
+.server-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.server-dot.sandbox { background: var(--method-patch); }
+
+/* ── Invariant Banner ── */
+.invariant-banner {
+  background: var(--bg-code);
+  color: #D8F3DC;
+  padding: 20px 24px;
+  border-radius: var(--radius);
+  margin-bottom: 48px;
+  font-size: 14px;
+  line-height: 1.7;
+  border-left: 4px solid var(--green);
+}
+
+.invariant-banner strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+/* ── Section ── */
+.section {
+  margin-bottom: 48px;
+  scroll-margin-top: 24px;
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--green-dark);
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
+
+.section-desc {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+  margin-bottom: 24px;
+  white-space: pre-line;
+}
+
+/* ── Endpoint Card ── */
+.endpoint {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s;
+  scroll-margin-top: 24px;
+}
+
+.endpoint:hover { box-shadow: var(--shadow-lg); }
+
+.endpoint-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+}
+
+.endpoint-header:hover { background: rgba(0,0,0,0.01); }
+
+.method-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  min-width: 52px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.method-badge.GET { color: var(--method-get); background: var(--method-get-bg); }
+.method-badge.POST { color: var(--method-post); background: var(--method-post-bg); }
+.method-badge.PATCH { color: var(--method-patch); background: var(--method-patch-bg); }
+.method-badge.DELETE { color: var(--method-delete); background: var(--method-delete-bg); }
+
+.endpoint-path {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.endpoint-path .param { color: var(--green-muted); }
+
+.endpoint-summary {
+  font-size: 13px;
+  color: var(--text2);
+  margin-left: auto;
+  text-align: right;
+  flex-shrink: 0;
+  max-width: 260px;
+}
+
+.endpoint-chevron {
+  color: var(--text3);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+.endpoint.open .endpoint-chevron { transform: rotate(90deg); }
+
+.endpoint-body {
+  display: none;
+  padding: 0 20px 20px;
+  border-top: 1px solid var(--border-light);
+}
+
+.endpoint.open .endpoint-body { display: block; }
+
+.endpoint-desc {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.7;
+  padding: 16px 0;
+  white-space: pre-line;
+}
+
+.endpoint-desc strong { color: var(--text); font-weight: 600; }
+
+/* ── Sub-sections in endpoint ── */
+.sub-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text3);
+  margin: 16px 0 8px;
+}
+
+/* ── Schema display ── */
+.schema-block {
+  background: var(--bg-code);
+  border-radius: 6px;
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.8;
+  color: #C9D1D9;
+  overflow-x: auto;
+  margin: 8px 0;
+}
+
+.schema-block .key { color: #7EE787; }
+.schema-block .type { color: #79C0FF; }
+.schema-block .req { color: #FFA657; }
+.schema-block .desc { color: #8B949E; font-style: italic; }
+.schema-block .enum-val { color: #D2A8FF; }
+
+/* ── Response codes ── */
+.response-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 13px;
+}
+
+.response-row:last-child { border-bottom: none; }
+
+.status-code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  min-width: 40px;
+  text-align: center;
+}
+
+.status-code.s2xx { color: var(--method-get); background: var(--method-get-bg); }
+.status-code.s4xx { color: var(--method-delete); background: var(--method-delete-bg); }
+
+/* ── Schema Reference Cards ── */
+.schema-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  overflow: hidden;
+  scroll-margin-top: 24px;
+}
+
+.schema-card-header {
+  padding: 12px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.15s;
+}
+
+.schema-card-header:hover { background: rgba(0,0,0,0.01); }
+
+.schema-name {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--green);
+}
+
+.schema-card-body {
+  display: none;
+  padding: 0 20px 16px;
+  border-top: 1px solid var(--border-light);
+}
+
+.schema-card.open .schema-card-body { display: block; }
+
+/* ── State Machine ── */
+.state-machine {
+  background: var(--bg-code);
+  border-radius: 6px;
+  padding: 16px 20px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 2;
+  color: #C9D1D9;
+  white-space: pre;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.state-machine .state { color: #7EE787; font-weight: 600; }
+.state-machine .arrow { color: #FFA657; }
+.state-machine .trigger { color: #8B949E; }
+
+/* ── Stats bar ── */
+.stats-bar {
+  display: flex;
+  gap: 24px;
+  margin: 20px 0 32px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-num {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Auth badges ── */
+.auth-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #FEF3C7;
+  color: #92400E;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* ── Mobile ── */
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; padding: 24px 20px 80px; }
+}
+</style>
+</head>
+<body>
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo">OpenDoc <span>API v1.1</span></div>
+    <div class="sidebar-search">
+      <input type="text" id="search" placeholder="Search endpoints..." autocomplete="off">
+    </div>
+  </div>
+  <div id="nav"></div>
+</div>
+
+<div class="main" id="main"></div>
+
+<script>
+const SPEC = {"info": {"title": "OpenDoc Platform API", "version": "1.1.0", "description": "# OpenDoc Platform API\n\nHealthcare transaction infrastructure. Resolve intent to bounded, pre-priced \nhealthcare transactions. Create, authorize, and settle Health Keys. Query the \nHSO registry. Route clinical intent to providers. Manage funding and settlement.\n\n## Foundational Invariant: Cash-Only Transactions\n\nOpenDoc operates exclusively on cash-price transactions. Insurance cannot \nexist inside the transaction loop. This is not a preference \u2014 it is a \nmathematical necessity. The Cash Price Invariant proves by contradiction \nthat price guarantees are impossible when a third-party adjudicator with \npost-visit repricing authority is in the settlement path.\n\nEvery price on this platform is a cash price. Every price is final at \nacceptance. Every price is HIGH confidence. There are no estimates, no \n\"allowed amounts,\" no deductible calculations, and no EOB dependencies.\n\nPlatform partners who wish to help patients compare their cash-price \noptions against insurance alternatives may do so in their own UIs using \nexternal data sources. OpenDoc does not perform that comparison.\n\n## Core Concepts\n\n- **HSO (Health Service Object)**: Atomic, pre-care contract binding service \n  definition, provider obligation, price, and completion semantics.\n- **mHSO (Membership HSO)**: Time-bounded, price-deterministic contract for \n  longitudinal care access and coordination.\n- **Health Key**: Patient-controlled transaction credential. States: READY, \n  ACTIVE, DECISION_REQUIRED, NOT_AUTHORIZED, COMPLETED, SETTLED, CANCELLED.\n- **Offer**: A provider \u00d7 HSO \u00d7 location binding with a specific cash price.\n- **Funding**: Upfront, escrowed capital from any source (patient, individual, \n  charity, employer, BNPL). All sources are additive, escrowed independently, \n  and settled on service completion.\n\n## Authentication\n\nAll requests require a Bearer token issued during client registration.  \nPatient-context endpoints require a patient session token obtained via \nOAuth 2.0 authorization code flow with PKCE.  \nProvider-context endpoints require a provider session token or platform \ndelegation token with provider authorization.\n\n## Standard Response Envelope\n\nEvery response includes the following top-level fields:\n- `request_id` (UUID) \u2014 unique per request\n- `api_version` \u2014 e.g. \"1.0\"\n- `schema_version` \u2014 e.g. \"1.0\"  \n- `timestamp` \u2014 ISO 8601\n\nThese are omitted from individual schema definitions for brevity but are \nalways present in the wire format.\n\n## Idempotency\n\nAll state-mutating operations (POST, PATCH, DELETE) accept an \n`Idempotency-Key` header (UUID). Duplicate requests with the same key \nreturn the original response without re-executing the operation.\n\n## Rate Limits\n\nLimits are per-client and per-patient. Tier 2/3 consent data access has \ndaily budgets to prevent slow exfiltration. Rate limit headers are returned \non every response: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `Retry-After`.\n\n## Banned Terminology\n\nPer the Anti-PRD, the following terms never appear in API responses:\n\"balance due\", \"final bill\", \"insurance price\", \"covered service\", \n\"approved\", \"denied\", \"HSA-eligible\", \"you owe\", \"pending adjudication\".\n", "contact": {"name": "OpenDoc Platform Team", "email": "platform@opendoc.com"}, "license": {"name": "Proprietary", "url": "https://opendoc.com/terms"}}, "servers": [{"url": "https://api.opendoc.com/v1", "description": "Production"}, {"url": "https://sandbox.api.opendoc.com/v1", "description": "Sandbox (test data, no real transactions)"}], "tag_groups": {"Taxonomy": {"description": "Canonical clinical and service taxonomies. Query symptoms, diagnoses, \nHSO scope vocabulary, and specialty classifications. These are the \nlookup tables that power resolve_to_care and membership scope definitions.\n", "endpoints": [{"method": "GET", "path": "/taxonomy/complaints", "operationId": "listComplaints", "tags": ["Taxonomy"], "summary": "Search the symptom/complaint catalog", "description": "Query the canonical complaint taxonomy. Each complaint has a \nstable ID (e.g. `complaint.knee_pain`), consumer-facing synonyms, \nand mapped HSO candidates. This is the lookup table for \n`resolve_to_care` intent_type=COMPLAINT.\n", "parameters": [{"name": "q", "in": "query", "description": "Free-text search against names and consumer synonyms", "schema": {"type": "string", "example": "my knee hurts"}}, {"name": "specialty", "in": "query", "schema": {"type": "string"}}, {"$ref": "#/components/parameters/PageCursor"}, {"$ref": "#/components/parameters/PageLimit"}], "security": [], "responses": {"200": {"description": "Complaint list", "schema": {"type": "object", "properties": {"data": {"type": "array", "items": {"$ref": "#/components/schemas/Complaint"}}, "pagination": {"$ref": "#/components/schemas/Pagination"}}}}}}, {"method": "GET", "path": "/taxonomy/complaints/{complaint_id}", "operationId": "getComplaint", "tags": ["Taxonomy"], "summary": "Get a specific complaint with mapped HSOs", "description": "", "parameters": [{"name": "complaint_id", "in": "path", "required": true, "schema": {"type": "string", "example": "complaint.knee_pain"}}], "security": [], "responses": {"200": {"description": "Complaint detail", "schema": {"$ref": "#/components/schemas/Complaint"}}}}, {"method": "GET", "path": "/taxonomy/diagnoses", "operationId": "listDiagnoses", "tags": ["Taxonomy"], "summary": "Search the diagnosis catalog", "description": "Query the canonical diagnosis taxonomy. Used for \n`resolve_to_care` intent_type=DIAGNOSIS.\n", "parameters": [{"name": "q", "in": "query", "schema": {"type": "string"}}, {"name": "specialty", "in": "query", "schema": {"type": "string"}}, {"$ref": "#/components/parameters/PageCursor"}, {"$ref": "#/components/parameters/PageLimit"}], "security": [], "responses": {"200": {"description": "Diagnosis list", "schema": {"type": "object", "properties": {"data": {"type": "array", "items": {"$ref": "#/components/schemas/Diagnosis"}}, "pagination": {"$ref": "#/components/schemas/Pagination"}}}}}}, {"method": "GET", "path": "/taxonomy/diagnoses/{diagnosis_id}", "operationId": "getDiagnosis", "tags": ["Taxonomy"], "summary": "Get a specific diagnosis with mapped HSOs", "description": "", "parameters": [{"name": "diagnosis_id", "in": "path", "required": true, "schema": {"type": "string"}}], "security": [], "responses": {"200": {"description": "Diagnosis detail", "schema": {"$ref": "#/components/schemas/Diagnosis"}}}}, {"method": "GET", "path": "/taxonomy/scope-codes", "operationId": "listScopeCodes", "tags": ["Taxonomy"], "summary": "List controlled vocabulary for mHSO scope", "description": "Returns the full controlled vocabulary of inclusion and exclusion \ncodes used in membership tier scope definitions. Required for \nbuilding tier creation UIs.\n", "parameters": [{"name": "type", "in": "query", "description": "Filter to inclusion or exclusion codes", "schema": {"type": "string", "enum": ["INCLUSION", "EXCLUSION", "ALL"], "default": "ALL"}}, {"name": "category", "in": "query", "schema": {"type": "string", "example": "visit"}}], "security": [], "responses": {"200": {"description": "Scope code vocabulary", "schema": {"type": "object", "properties": {"data": {"type": "array", "items": {"$ref": "#/components/schemas/ScopeCode"}}, "required_exclusions": {"type": "array", "items": {"type": "string"}, "description": "Codes that MUST appear in every tier's excluded_scope. \nTier creation validation fails without these.\n", "example": ["EXCL.HOSPITAL.*", "EXCL.ANES.GENERAL", "EXCL.IMAGING.ADVANCED"]}}}}}}, {"method": "GET", "path": "/taxonomy/specialties", "operationId": "listSpecialties", "tags": ["Taxonomy"], "summary": "List specialty and subspecialty classifications", "description": "", "parameters": [], "security": [], "responses": {"200": {"description": "Specialty tree", "schema": {"type": "object", "properties": {"data": {"type": "array", "items": {"type": "object", "properties": {"specialty": {"type": "string"}, "subspecialties": {"type": "array", "items": {"type": "string"}}, "hso_count": {"type": "integer"}}}}}}}}}]}, "HSO Registry": {"description": "The canonical catalog of Health Service Objects. Read-only for platform \npartners. HSOs are maintained by OpenDoc and versioned centrally.\n", "endpoints": [{"method": "GET", "path": "/hsos", "operationId": "listHSOs", "tags": ["HSO Registry"], "summary": "Search the HSO catalog", "description": "", "parameters": [{"name": "specialty", "in": "query", "schema": {"type": "string"}}, {"name": "subspecialty", "in": "query", "schema": {"type": "string"}}, {"name": "category", "in": "query", "schema": {"type": "string"}}, {"name": "q", "in": "query", "description": "Free-text search against names, aliases, and consumer synonyms", "schema": {"type": "string"}}, {"name": "geo", "in": "query", "description": "Postal code \u2014 filter to HSOs with active offers nearby", "schema": {"type": "string"}}, {"name": "radius_miles", "in": "query", "schema": {"type": "integer", "default": 25, "minimum": 1, "maximum": 100}}, {"name": "medicare_excluded", "in": "query", "schema": {"type": "boolean"}}, {"name": "membership_eligible", "in": "query", "schema": {"type": "boolean"}}, {"$ref": "#/components/parameters/PageCursor"}, {"$ref": "#/components/parameters/PageLimit"}], "security": [], "responses": {"200": {"description": "Paginated HSO list", "schema": {"$ref": "#/components/schemas/HSO_List"}}}}, {"method": "GET", "path": "/hsos/{hso_id}", "operationId": "getHSO", "tags": ["HSO Registry"], "summary": "Get a single HSO", "description": "Returns the full canonical HSO specification. The `hso_id` is a \nsemantic dot-notation identifier (e.g. `hso.ortho.knee.proc.total_replacement`) \nthat encodes taxonomy position. It is immutable \u2014 it identifies the \nservice definition, not a database row.\n", "parameters": [{"$ref": "#/components/parameters/HSO_ID"}], "security": [], "responses": {"200": {"description": "HSO detail", "schema": {"$ref": "#/components/schemas/HSO"}}, "404": {"description": ""}}}, {"method": "GET", "path": "/hsos/{hso_id}/offers", "operationId": "listHSOOffers", "tags": ["HSO Registry"], "summary": "List offers for this HSO", "description": "", "parameters": [{"$ref": "#/components/parameters/HSO_ID"}, {"name": "geo", "in": "query", "schema": {"type": "string"}}, {"name": "radius_miles", "in": "query", "schema": {"type": "integer", "default": 25}}, {"$ref": "#/components/parameters/PageCursor"}, {"$ref": "#/components/parameters/PageLimit"}], "security": [], "responses": {"200": {"description": "Offers for this HSO", "schema": {"$ref": "#/components/schemas/Offer_List"}}}}]}, "Providers": {"description": "Provider directory. Read access for platform partners. Write access \nfor providers and platforms with provider delegation.\n", "endpoints": [{"method": "GET", "path": "/providers", "operationId": "listProviders", "tags": ["Providers"], "summary": "Search the provider directory", "description": "", "parameters": [{"name": "q", "in": "query", "schema": {"type": "string"}}, {"name": "specialty", "in": "query", "schema": {"type": "string"}}, {"name": "geo", "in": "query", "schema": {"type": "string"}}, {"name": "radius_miles", "in": "query", "schema": {"type": "integer", "default": 25}}, {"name": "medicare_opted_out", "in": "query", "schema": {"type": "boolean"}}, {"name": "accepting_new_patients", "in": "query", "schema": {"type": "boolean"}}, {"$ref": "#/components/parameters/PageCursor"}, {"$ref": "#/components/parameters/PageLimit"}], "security": [], "responses": {"200": {"description": "Provider list", "schema": {"$ref": "#/components/schemas/Provider_List"}}}}, {"method": "POST", "path": "/providers", "operationId": "createProvider", "tags": ["Providers"], "summary": "Activate a provider on the platform", "description": "Registers a new provider entity. Requires NPI verification. \nProvider begins in PENDING state until verification completes.\n\nCan be called by the provider directly or by a platform partner \nwith provider delegation authorization.\n", "parameters": [], "security": [{"BearerAuth": []}, {"ProviderAuth": []}], "requestBody": {"required": true, "schema": {"$ref": "#/components/schemas/ProviderCreate"}}, "responses": {"201": {"description": "Provider created (PENDING verification)", "schema": {"$ref": "#/components/schemas/Provider"}}}}, {"method": "GET", "path": "/providers/{provider_id}", "operationId": "getProvider", "tags": ["Providers"], "summary": "Get provider detail", "description": "", "parameters": [{"$ref": "#/components/parameters/ProviderID"}], "security": [], "responses": {"200": {"description": "Provider detail", "schema": {"$ref": "#/components/schemas/Provider"}}, "404": {"description": ""}}}, {"method": "PATCH", "path": "/providers/{provider_id}", "operationId": "updateProvider", "tags": ["Providers"], "summary": "Update provider details", "description": "Update operational fields (accepting_new_patients, telehealth, \nlocations). NPI and legal identity cannot be changed via PATCH.\n", "parameters": [{"$ref": "#/components/parameters/ProviderID"}], "security": [{"ProviderAuth": []}], "requestBody": {"required": true, "schema": {"$ref": "#/components/schemas/ProviderUpdate"}}, "responses": {"200": {"description": "Provider updated", "schema": {"$ref": "#/components/schemas/Provider"}}}}, {"method": "GET", "path": "/providers/{provider_id}/offers", "operationId": "listProviderOffers", "tags": ["Providers"], "summary": "List all offers from a provider", "description": "", "parameters": [{"$ref": "#/components/parameters/ProviderID"}, {"name": "location_id", "in": "query", "schema": {"type": "string", "format": "uuid"}}, {"$ref": "#/components/parameters/PageCursor"}, {"$ref": "#/components/parameters/PageLimit"}], "security": [], "responses": {"200": {"description": "Provider's offers", "schema": {"$ref": "#/components/schemas/Offer_List"}}}}]}, "Offers": {"description": "An Offer is the binding of Provider \u00d7 HSO \u00d7 Location \u00d7 Cash Price. \nWrite access for providers. Read access for all authenticated clients.\n", "endpoints": [{"method": "POST", "path": "/offers", "operationId": "createOffer", "tags": ["Offers"], "summary": "Create an offer (bind provider to HSO at a price)", "description": "Creates an Offer: the binding of a provider to an HSO at a \nspecific location with a specific cash price. The price is \nimmutable once a Health Key references this offer.\n\nThe price must be the provider's real, deliverable cash price. \nPer the pricing guide: \"Does this price work even if insurance \npays nothing? If yes, you are ready to list.\"\n", "parameters": [], "security": [{"ProviderAuth": []}], "requestBody": {"required": true, "schema": {"$ref": "#/components/schemas/OfferCreate"}}, "responses": {"201": {"description": "Offer created", "schema": {"$ref": "#/components/schemas/Offer"}}, "400": {"description": "Validation failure. Common causes: provider not verified, \nHSO not in provider capabilities, location not registered.\n", "schema": {"$ref": "#/components/schemas/Error"}}}}, {"method": "GET", "path": "/offers/{offer_id}", "operationId": "getOffer", "tags": ["Offers"], "summary": "Get offer detail", "description": "", "parameters": [{"$ref": "#/components/parameters/OfferID"}], "security": [], "responses": {"200": {"description": "Offer detail", "schema": {"$ref": "#/components/schemas/Offer"}}}}, {"method": "PATCH", "path": "/offers/{offer_id}", "operationId": "updateOffer", "tags": ["Offers"], "summary": "Update offer price or availability", "description": "Update the cash price or availability for an offer. Price changes \napply prospectively only \u2014 any Health Key already referencing \nthis offer retains the price at time of creation.\n\n**Cash Price Invariant**: A price accepted by a patient is final. \nThis endpoint changes future offer pricing, never retroactive.\n", "parameters": [{"$ref": "#/components/parameters/OfferID"}], "security": [{"ProviderAuth": []}], "requestBody": {"required": true, "schema": {"type": "object", "properties": {"price_cents": {"type": "integer", "minimum": 100, "description": "New cash price (applies to future Health Keys only)"}, "active": {"type": "boolean", "description": "Set false to pause this offer without deleting"}, "availability": {"$ref": "#/components/schemas/AvailabilitySummary"}}}}, "responses": {"200": {"description": "Offer updated", "schema": {"$ref": "#/components/schemas/Offer"}}}}, {"method": "DELETE", "path": "/offers/{offer_id}", "operationId": "retireOffer", "tags": ["Offers"], "summary": "Retire an offer", "description": "Permanently retires an offer. Existing Health Keys referencing \nthis offer are unaffected. No new Health Keys can be created \nagainst a retired offer.\n", "parameters": [{"$ref": "#/components/parameters/OfferID"}], "security": [{"ProviderAuth": []}], "responses": {"200": {"description": "Offer retired", "schema": {"$ref": "#/components/schemas/Offer"}}}}]}, "Resolve to Care": {"description": "The Clinical Routing Engine (CRE). Converts patient intent into ranked \nHSO candidates, provider candidates, and cash pricing. Deterministic: \nsame inputs + same policy version = same outputs.\n", "endpoints": [{"method": "POST", "path": "/resolve", "operationId": "resolveToCare", "tags": ["Resolve to Care"], "summary": "Resolve patient intent to bounded transaction candidates", "description": "The Clinical Routing Engine (CRE). Accepts a patient's clinical \nintent and returns a deterministic, ranked set of HSO candidates, \nprovider candidates, and **cash pricing**.\n\n**Cash-only**: All prices returned are cash prices. There is no \ninsurance context in the resolution pipeline. `pricing_confidence` \nis always HIGH for cash transactions. The `financial_context` \nfield exists solely to help platform partners display comparative \ninformation in their own UIs (e.g. \"your HSA balance can cover \nthis\") \u2014 it does not affect pricing, ranking, or resolution.\n\n**Determinism guarantee**: Same inputs + same `policy_version` = \nsame ranked outputs.\n\n**Human confirmation constraint**: The response includes a \n`confirmation_url`. No third-party app may book, generate a \nbinding credential, or trigger payment without explicit patient \nconfirmation in the Health Key UI.\n", "parameters": [], "security": [], "requestBody": {"required": true, "schema": {"$ref": "#/components/schemas/ResolveRequest"}}, "responses": {"200": {"description": "Resolution result", "schema": {"$ref": "#/components/schemas/ResolveResponse"}}, "400": {"description": ""}, "403": {"description": "Consent required", "schema": {"$ref": "#/components/schemas/Error"}}, "429": {"description": ""}}}]}, "Patients": {"description": "Patient identity creation and management. Patients are created via \nOAuth-linked registration or platform-initiated enrollment.\n", "endpoints": [{"method": "POST", "path": "/patients", "operationId": "createPatient", "tags": ["Patients"], "summary": "Register a patient", "description": "Creates a patient identity on the platform. Can be initiated by:\n\n1. **Direct registration** \u2014 patient authenticates via OAuth and \n   a patient record is created from verified identity claims.\n2. **Platform-initiated** \u2014 a platform partner creates a patient \n   record during their own onboarding flow, linked to the \n   patient's identity via OAuth token exchange.\n\nThe patient_id is the durable identifier used across all \nsubsequent API calls. A patient must exist before a Health Key \ncan be created.\n", "parameters": [], "security": [], "requestBody": {"required": true, "schema": {"$ref": "#/components/schemas/PatientCreate"}}, "responses": {"201": {"description": "Patient created", "schema": {"$ref": "#/components/schemas/Patient"}}, "409": {"description": "Patient already exists (matched on identity claims)", "schema": {"$ref": "#/components/schemas/Error"}}}}, {"method": "GET", "path": "/patients/{patient_id}", "operationId": "getPatient", "tags": ["Patients"], "summary": "Get patient identity", "description": "Returns patient identity fields. Clinical data is NOT returned \nhere \u2014 that requires consent-gated access via separate endpoints.\n", "parameters": [{"$ref": "#/components/parameters/PatientID"}], "security": [], "responses": {"200": {"description": "Patient identity", "schema": {"$ref": "#/components/schemas/Patient"}}}}]}, "Health Keys": {"description": "The Health Key lifecycle \u2014 creation, authorization, state management, \nQR payload, scan verification. See State Transitions section.\n", "endpoints": [{"method": "GET", "path": "/health-keys", "operationId": "listHealthKeys", "tags": ["Health Keys"], "summary": "List Health Keys", "description": "Query Health Keys by patient, provider, state, or date range.\nPlatform partners see only Health Keys created through their \nintegration.\n", "parameters": [{"name": "patient_id", "in": "query", "schema": {"type": "string", "format": "uuid"}}, {"name": "provider_id", "in": "query", "schema": {"type": "string", "format": "uuid"}}, {"name": "state", "in": "query", "schema": {"type": "array", "items": {"$ref": "#/components/schemas/HealthKeyState"}}}, {"name": "created_after", "in": "query", "schema": {"type": "string", "format": "date-time"}}, {"name": "created_before", "in": "query", "schema": {"type": "string", "format": "date-time"}}, {"$ref": "#/components/parameters/PageCursor"}, {"$ref": "#/components/parameters/PageLimit"}], "security": [], "responses": {"200": {"description": "Health Key list", "schema": {"type": "object", "properties": {"data": {"type": "array", "items": {"$ref": "#/components/schemas/HealthKey"}}, "pagination": {"$ref": "#/components/schemas/Pagination"}}}}}}, {"method": "POST", "path": "/health-keys", "operationId": "createHealthKey", "tags": ["Health Keys"], "summary": "Create a Health Key", "description": "Creates a Health Key in READY state binding a patient to an offer.\nThe price is locked at creation from the offer's current cash price.\n\n**State: READY** \u2014 identity-only. Patient must authorize to \ntransition to ACTIVE.\n\nSee State Transitions table in HealthKeyState schema.\n", "parameters": [], "security": [], "requestBody": {"required": true, "schema": {"$ref": "#/components/schemas/HealthKeyCreate"}}, "responses": {"201": {"description": "Health Key created (READY)", "schema": {"$ref": "#/components/schemas/HealthKey"}}, "400": {"description": ""}}}, {"method": "GET", "path": "/health-keys/{health_key_id}", "operationId": "getHealthKey", "tags": ["Health Keys"], "summary": "Get Health Key detail", "description": "", "parameters": [{"$ref": "#/components/parameters/HealthKeyID"}], "security": [], "responses": {"200": {"description": "Health Key detail", "schema": {"$ref": "#/components/schemas/HealthKey"}}}}, {"method": "POST", "path": "/health-keys/{health_key_id}/authorize", "operationId": "authorizeHealthKey", "tags": ["Health Keys"], "summary": "Patient authorizes the Health Key", "description": "Transitions READY \u2192 ACTIVE. Patient confirms service, provider, \nand maximum financial responsibility.\n\n**Requires direct patient interaction.** The `confirmation_artifact` \nis a cryptographic proof of patient presence generated by the \nHealth Key UI. Required in production; optional in sandbox.\n\nValid transition: READY \u2192 ACTIVE\n", "parameters": [{"$ref": "#/components/parameters/HealthKeyID"}], "security": [], "requestBody": {"required": true, "schema": {"type": "object", "required": ["patient_confirmation", "confirmation_artifact"], "properties": {"patient_confirmation": {"type": "boolean", "enum": [true]}, "confirmation_artifact": {"type": "string", "description": "Cryptographic proof of patient presence"}}}}, "responses": {"200": {"description": "Health Key authorized (ACTIVE)", "schema": {"$ref": "#/components/schemas/HealthKey"}}, "409": {"description": "Invalid state transition (not in READY state)", "schema": {"$ref": "#/components/schemas/Error"}}}}, {"method": "POST", "path": "/health-keys/{health_key_id}/complete", "operationId": "completeHealthKey", "tags": ["Health Keys"], "summary": "Attest service completion (Proof of Service)", "description": "Provider or system attests completion. Triggers immediate \nsettlement. PoS tier determines dispute immunity.\n\nValid transition: ACTIVE \u2192 COMPLETED (then auto \u2192 SETTLED after \ndispute window)\n\nSettlement is immediate. No batching, no delays, no discretionary holds.\n", "parameters": [{"$ref": "#/components/parameters/HealthKeyID"}], "security": [{"ProviderAuth": []}], "requestBody": {"required": true, "schema": {"$ref": "#/components/schemas/ProofOfService"}}, "responses": {"200": {"description": "Service completed, settlement initiated", "schema": {"$ref": "#/components/schemas/HealthKey"}}, "409": {"description": "Invalid state transition (not ACTIVE)", "schema": {"$ref": "#/components/schemas/Error"}}}}, {"method": "POST", "path": "/health-keys/{health_key_id}/cancel", "operationId": "cancelHealthKey", "tags": ["Health Keys"], "summary": "Cancel the Health Key", "description": "Valid transitions: READY \u2192 CANCELLED, ACTIVE \u2192 CANCELLED.\nCannot cancel COMPLETED, SETTLED, or already CANCELLED.\n\nRefund behavior depends on service_state at cancellation time.\n", "parameters": [{"$ref": "#/components/parameters/HealthKeyID"}], "security": [], "requestBody": {"required": false, "schema": {"type": "object", "required": ["initiated_by"], "properties": {"reason": {"type": "string", "enum": ["PATIENT_REQUEST", "PROVIDER_CANCELLATION", "SYSTEM_ERROR"]}, "initiated_by": {"type": "string", "enum": ["PATIENT", "PROVIDER", "SYSTEM"]}}}}, "responses": {"200": {"description": "Health Key cancelled", "schema": {"$ref": "#/components/schemas/HealthKey"}}, "409": {"description": "Cannot cancel in current state", "schema": {"$ref": "#/components/schemas/Error"}}}}, {"method": "GET", "path": "/health-keys/{health_key_id}/qr", "operationId": "getHealthKeyQR", "tags": ["Health Keys"], "summary": "Get the QR authority token", "description": "Returns the QR payload for scanning. No PHI in plaintext. \nThe signed token carries its own validity window for offline \nverification \u2014 scannable in clinic basements and OR environments.\n", "parameters": [{"$ref": "#/components/parameters/HealthKeyID"}, {"name": "format", "in": "query", "schema": {"type": "string", "enum": ["json", "png", "svg"], "default": "json"}}], "security": [], "responses": {"200": {"description": "QR payload or image", "schema": {"$ref": "#/components/schemas/QRPayload"}}}}, {"method": "POST", "path": "/scan", "operationId": "scanHealthKey", "tags": ["Health Keys"], "summary": "Scan and verify a Health Key QR", "description": "The boarding-pass scan. Resolves the full transaction: identity, \nprovider, HSO, state, bounds, funding. When this succeeds, \nnegotiation stops.\n\nSupports offline verification: if the signed token is within its \n`offline_valid_until` window and the signature is valid, returns \na VERIFIED result with `verification_mode: OFFLINE`.\n", "parameters": [], "security": [], "requestBody": {"required": true, "schema": {"type": "object", "required": ["qr_token"], "properties": {"qr_token": {"type": "string"}, "scanner_provider_id": {"type": "string", "format": "uuid"}}}}, "responses": {"200": {"description": "Health Key verified", "schema": {"$ref": "#/components/schemas/ScanResult"}}, "400": {"description": "Invalid or expired token", "schema": {"$ref": "#/components/schemas/Error"}}}}]}, "Memberships": {"description": "Membership HSO (mHSO) lifecycle. Provider-side tier management and \npatient-side enrollment, renewal, and cancellation.\n", "endpoints": [{"method": "GET", "path": "/membership-tiers", "operationId": "listMembershipTiers", "tags": ["Memberships"], "summary": "Search membership tiers", "description": "", "parameters": [{"name": "template", "in": "query", "schema": {"type": "string", "enum": ["DPC", "PSYCHIATRY", "MATERNITY", "CHRONIC_SPECIALTY", "CUSTOM"]}}, {"name": "geo", "in": "query", "schema": {"type": "string"}}, {"name": "radius_miles", "in": "query", "schema": {"type": "integer", "default": 25}}, {"name": "provider_id", "in": "query", "schema": {"type": "string", "format": "uuid"}}, {"name": "hsa_eligible", "in": "query", "schema": {"type": "boolean"}}, {"name": "capacity_state", "in": "query", "schema": {"type": "string", "enum": ["OPEN", "WAITLIST", "FULL"]}}, {"$ref": "#/components/parameters/PageCursor"}, {"$ref": "#/components/parameters/PageLimit"}], "security": [], "responses": {"200": {"description": "Membership tier list", "schema": {"$ref": "#/components/schemas/MembershipTier_List"}}}}, {"method": "POST", "path": "/membership-tiers", "operationId": "createMembershipTier", "tags": ["Memberships"], "summary": "Create a membership tier", "description": "Provider creates a new membership tier with structured scope, \npricing, capacity, and SLA definitions. Created in DRAFT state.\n\n**Validation enforced at creation:**\n- Required exclusions (EXCL.HOSPITAL.*, EXCL.ANES.GENERAL, \n  EXCL.IMAGING.ADVANCED) must be present. Fails without them.\n- HSA-eligible tiers enforce IRS 2026-05 fee caps ($150/mo \n  individual, $300/mo family) and prohibited inclusions.\n- Empty exclusion lists are rejected. This is a validation \n  failure, not a warning.\n", "parameters": [], "security": [{"ProviderAuth": []}], "requestBody": {"required": true, "schema": {"$ref": "#/components/schemas/MembershipTierCreate"}}, "responses": {"201": {"description": "Tier created (DRAFT)", "schema": {"$ref": "#/components/schemas/MembershipTier"}}, "400": {"description": "Validation failure. Check required_exclusions, fee caps \n(if HSA-eligible), and scope code validity.\n", "schema": {"$ref": "#/components/schemas/Error"}}}}, {"method": "GET", "path": "/membership-tiers/{tier_id}", "operationId": "getMembershipTier", "tags": ["Memberships"], "summary": "Get tier detail", "description": "", "parameters": [{"$ref": "#/components/parameters/TierID"}], "security": [], "responses": {"200": {"description": "Tier detail", "schema": {"$ref": "#/components/schemas/MembershipTier"}}}}, {"method": "PATCH", "path": "/membership-tiers/{tier_id}", "operationId": "updateMembershipTier", "tags": ["Memberships"], "summary": "Update a membership tier", "description": "Editing a DRAFT tier modifies in-place (same version). Editing \nan ACTIVE tier creates version N+1 with state DRAFT. Existing \nmembers remain on the prior version \u2014 never auto-migrated.\n", "parameters": [{"$ref": "#/components/parameters/TierID"}], "security": [{"ProviderAuth": []}], "requestBody": {"required": true, "schema": {"$ref": "#/components/schemas/MembershipTierUpdate"}}, "responses": {"200": {"description": "Tier updated (or new version created)", "schema": {"$ref": "#/components/schemas/MembershipTier"}}}}, {"method": "POST", "path": "/membership-tiers/{tier_id}/activate", "operationId": "activateMembershipTier", "tags": ["Memberships"], "summary": "Activate a DRAFT tier for enrollment", "description": "Transitions DRAFT \u2192 ACTIVE. Final validation runs on activation.", "parameters": [{"$ref": "#/components/parameters/TierID"}], "security": [{"ProviderAuth": []}], "responses": {"200": {"description": "Tier activated", "schema": {"$ref": "#/components/schemas/MembershipTier"}}}}, {"method": "POST", "path": "/membership-tiers/{tier_id}/retire", "operationId": "retireMembershipTier", "tags": ["Memberships"], "summary": "Retire a tier", "description": "ACTIVE \u2192 RETIRED. No new enrollments. Existing members complete \ntheir current term on the locked version.\n", "parameters": [{"$ref": "#/components/parameters/TierID"}], "security": [{"ProviderAuth": []}], "responses": {"200": {"description": "Tier retired", "schema": {"$ref": "#/components/schemas/MembershipTier"}}}}, {"method": "POST", "path": "/memberships", "operationId": "createMembership", "tags": ["Memberships"], "summary": "Enroll patient in a membership tier", "description": "Creates a MembershipInstance. Triggers first period payment. \nOn success, generates a membership Health Key.\n", "parameters": [], "security": [], "requestBody": {"required": true, "schema": {"$ref": "#/components/schemas/MembershipCreate"}}, "responses": {"201": {"description": "Membership created", "schema": {"$ref": "#/components/schemas/MembershipInstance"}}}}, {"method": "GET", "path": "/memberships/{membership_id}", "operationId": "getMembership", "tags": ["Memberships"], "summary": "Get membership detail", "description": "", "parameters": [{"$ref": "#/components/parameters/MembershipID"}], "security": [], "responses": {"200": {"description": "Membership detail", "schema": {"$ref": "#/components/schemas/MembershipInstance"}}}}, {"method": "POST", "path": "/memberships/{membership_id}/renew", "operationId": "renewMembership", "tags": ["Memberships"], "summary": "Renew a membership", "description": "For MANUAL renewal mode: patient explicitly renews. For AUTO: \nsystem calls this internally. Triggers payment for next period.\n\nValid when state is RENEWAL_REQUIRED or ACTIVE (early renewal).\n", "parameters": [{"$ref": "#/components/parameters/MembershipID"}], "security": [], "requestBody": {"required": false, "schema": {"type": "object", "properties": {"payment_method_id": {"type": "string", "description": "Optional \u2014 uses stored method if omitted"}}}}, "responses": {"200": {"description": "Membership renewed", "schema": {"$ref": "#/components/schemas/MembershipInstance"}}}}, {"method": "POST", "path": "/memberships/{membership_id}/cancel", "operationId": "cancelMembership", "tags": ["Memberships"], "summary": "Cancel a membership", "description": "", "parameters": [{"$ref": "#/components/parameters/MembershipID"}], "security": [], "requestBody": {"required": false, "schema": {"type": "object", "properties": {"reason": {"type": "string"}}}}, "responses": {"200": {"description": "Membership cancelled", "schema": {"$ref": "#/components/schemas/MembershipInstance"}}}}, {"method": "POST", "path": "/memberships/{membership_id}/excluded-service", "operationId": "initiateExcludedService", "tags": ["Memberships"], "summary": "Initiate excluded-service handoff (Rail B)", "description": "Provider determines patient needs a service outside membership \nscope. System generates a standard atomic HSO checkout. Patient \nreceives a new Health Key for the discrete transaction. The \nmembership Health Key is unaffected. Both coexist.\n", "parameters": [{"$ref": "#/components/parameters/MembershipID"}], "security": [{"ProviderAuth": []}], "requestBody": {"required": true, "schema": {"type": "object", "required": ["hso_id"], "properties": {"hso_id": {"type": "string", "description": "The excluded service HSO"}, "preferred_provider_id": {"type": "string", "format": "uuid", "description": "Optional referral to specific provider"}, "notes": {"type": "string", "maxLength": 500}}}}, "responses": {"201": {"description": "Excluded service initiated. Returns the offer candidates \nand a checkout URL for the patient.\n", "schema": {"type": "object", "properties": {"referral_id": {"type": "string", "format": "uuid"}, "hso": {"$ref": "#/components/schemas/HSO"}, "offer_candidates": {"type": "array", "items": {"$ref": "#/components/schemas/Offer"}}, "patient_checkout_url": {"type": "string", "format": "uri"}}}}}}]}, "Funding": {"description": "Multi-source funding orchestration. All sources escrowed independently, \nsettled on service completion. See Funding State Machine.\n", "endpoints": [{"method": "GET", "path": "/health-keys/{health_key_id}/funding", "operationId": "getHealthKeyFunding", "tags": ["Funding"], "summary": "Get funding status", "description": "", "parameters": [{"$ref": "#/components/parameters/HealthKeyID"}], "security": [], "responses": {"200": {"description": "Funding status", "schema": {"$ref": "#/components/schemas/FundingStatus"}}}}, {"method": "POST", "path": "/health-keys/{health_key_id}/funding", "operationId": "addFunding", "tags": ["Funding"], "summary": "Add a funding contribution", "description": "Adds a funding contribution. Each is escrowed independently.\n\n**Checkout gate**: Health Key cannot transition from READY to \nACTIVE until funding_state = FUNDED (pool >= required amount).\n\n**Withdrawal**: Contributions can be withdrawn only while \nfunding_state is INITIATED or FUNDING_IN_PROGRESS. Once FUNDED, \ncontributions are locked.\n", "parameters": [{"$ref": "#/components/parameters/HealthKeyID"}], "security": [], "requestBody": {"required": true, "schema": {"$ref": "#/components/schemas/FundingContribution"}}, "responses": {"201": {"description": "Contribution added", "schema": {"$ref": "#/components/schemas/FundingStatus"}}}}, {"method": "POST", "path": "/funding-links", "operationId": "createFundingLink", "tags": ["Funding"], "summary": "Create a shareable funding link", "description": "No account required to fund via link.", "parameters": [], "security": [], "requestBody": {"required": true, "schema": {"type": "object", "required": ["health_key_id"], "properties": {"health_key_id": {"type": "string", "format": "uuid"}, "suggested_amount_cents": {"type": "integer", "minimum": 100}, "funder_type": {"type": "string", "enum": ["INDIVIDUAL", "CHARITY"], "default": "INDIVIDUAL"}, "expires_at": {"type": "string", "format": "date-time"}}}}, "responses": {"201": {"description": "Funding link created", "schema": {"type": "object", "properties": {"funding_link_id": {"type": "string", "format": "uuid"}, "url": {"type": "string", "format": "uri"}, "expires_at": {"type": "string", "format": "date-time"}}}}}}]}, "Settlement": {"description": "Event-based settlement. Funds move exactly once on Proof of Service. \nDisputes are downstream only, time-bounded, and reason-enumerated.\n", "endpoints": [{"method": "GET", "path": "/health-keys/{health_key_id}/settlement", "operationId": "getSettlement", "tags": ["Settlement"], "summary": "Get settlement status", "description": "", "parameters": [{"$ref": "#/components/parameters/HealthKeyID"}], "security": [], "responses": {"200": {"description": "Settlement status", "schema": {"$ref": "#/components/schemas/SettlementStatus"}}}}, {"method": "POST", "path": "/health-keys/{health_key_id}/disputes", "operationId": "createDispute", "tags": ["Settlement"], "summary": "Open a dispute", "description": "Valid only after payment release, within the dispute window:\n- Visits / Tests: T0 + 7 calendar days\n- Surgery: T0 + 14 calendar days\n\nAfter window expiration, disputes are barred. Funds are final.\n", "parameters": [{"$ref": "#/components/parameters/HealthKeyID"}], "security": [], "requestBody": {"required": true, "schema": {"type": "object", "required": ["reason"], "properties": {"reason": {"type": "string", "enum": ["SERVICE_DID_NOT_OCCUR", "WRONG_SERVICE", "NO_SHOW_ATTRIBUTION_ERROR", "DUPLICATE_CHARGE"]}, "description": {"type": "string", "maxLength": 1000}, "evidence_refs": {"type": "array", "items": {"type": "string"}}}}}, "responses": {"201": {"description": "Dispute opened", "schema": {"$ref": "#/components/schemas/Dispute"}}, "400": {"description": "Dispute window expired or invalid state", "schema": {"$ref": "#/components/schemas/Error"}}}}]}, "Consent": {"description": "Tiered patient consent. Tier 1 default. Tier 2/3 require explicit \nopt-in. Revocation is immediate.\n", "endpoints": [{"method": "GET", "path": "/consent/grants", "operationId": "listConsentGrants", "tags": ["Consent"], "summary": "List consent grants for the current patient", "description": "", "parameters": [], "security": [], "responses": {"200": {"description": "Consent grants", "schema": {"type": "object", "properties": {"grants": {"type": "array", "items": {"$ref": "#/components/schemas/ConsentGrant"}}}}}}}, {"method": "POST", "path": "/consent/grants", "operationId": "requestConsentGrant", "tags": ["Consent"], "summary": "Request a consent grant", "description": "", "parameters": [], "security": [], "requestBody": {"required": true, "schema": {"type": "object", "required": ["patient_id", "tier", "purpose"], "properties": {"patient_id": {"type": "string", "format": "uuid"}, "tier": {"$ref": "#/components/schemas/ConsentTier"}, "purpose": {"type": "string", "enum": ["TRANSACTION_RESOLUTION", "DATA_RETRIEVAL"]}, "grant_type": {"type": "string", "enum": ["PERSISTENT", "SESSION_ONLY", "ONE_SHOT"], "default": "SESSION_ONLY"}, "scopes": {"type": "array", "items": {"type": "string"}}}}}, "responses": {"200": {"description": "Consent already granted", "schema": {"$ref": "#/components/schemas/ConsentGrant"}}, "202": {"description": "Patient approval required", "schema": {"type": "object", "properties": {"status": {"type": "string", "enum": ["CONSENT_REQUIRED"]}, "consent_url": {"type": "string", "format": "uri"}, "grant_id": {"type": "string", "format": "uuid"}}}}}}, {"method": "POST", "path": "/consent/grants/{grant_id}/revoke", "operationId": "revokeConsentGrant", "tags": ["Consent"], "summary": "Revoke a consent grant (immediate)", "description": "", "parameters": [{"name": "grant_id", "in": "path", "required": true, "schema": {"type": "string", "format": "uuid"}}], "security": [], "requestBody": {"required": false, "schema": {"type": "object", "properties": {"reason": {"type": "string"}}}}, "responses": {"200": {"description": "Grant revoked, all tokens invalidated", "schema": {"$ref": "#/components/schemas/ConsentGrant"}}}}]}, "Audit": {"description": "Patient-visible access logs and platform observability.\n", "endpoints": [{"method": "GET", "path": "/audit/access-log", "operationId": "getAccessLog", "tags": ["Audit"], "summary": "Patient-visible access history", "description": "Returns a chronological log of all data access events for the \nauthenticated patient: which client accessed what data, when, \nunder which consent grant, using which tools/scopes.\n", "parameters": [{"name": "client_id", "in": "query", "schema": {"type": "string", "format": "uuid"}}, {"name": "since", "in": "query", "schema": {"type": "string", "format": "date-time"}}, {"$ref": "#/components/parameters/PageCursor"}, {"$ref": "#/components/parameters/PageLimit"}], "security": [], "responses": {"200": {"description": "Access log", "schema": {"type": "object", "properties": {"data": {"type": "array", "items": {"$ref": "#/components/schemas/AccessLogEntry"}}, "pagination": {"$ref": "#/components/schemas/Pagination"}}}}}}]}, "Webhooks": {"description": "Event notifications to platform partners with HMAC signature verification.\n", "endpoints": [{"method": "GET", "path": "/webhooks", "operationId": "listWebhooks", "tags": ["Webhooks"], "summary": "List webhook endpoints", "description": "", "parameters": [], "security": [], "responses": {"200": {"description": "Webhooks", "schema": {"type": "object", "properties": {"webhooks": {"type": "array", "items": {"$ref": "#/components/schemas/WebhookEndpoint"}}}}}}}, {"method": "POST", "path": "/webhooks", "operationId": "createWebhook", "tags": ["Webhooks"], "summary": "Register a webhook endpoint", "description": "", "parameters": [], "security": [], "requestBody": {"required": true, "schema": {"type": "object", "required": ["url", "events"], "properties": {"url": {"type": "string", "format": "uri"}, "events": {"type": "array", "items": {"$ref": "#/components/schemas/WebhookEventType"}}}}}, "responses": {"201": {"description": "Webhook created (secret returned once)", "schema": {"$ref": "#/components/schemas/WebhookEndpoint"}}}}, {"method": "PATCH", "path": "/webhooks/{webhook_id}", "operationId": "updateWebhook", "tags": ["Webhooks"], "summary": "Update webhook URL or events", "description": "", "parameters": [{"name": "webhook_id", "in": "path", "required": true, "schema": {"type": "string", "format": "uuid"}}], "security": [], "requestBody": {"required": true, "schema": {"type": "object", "properties": {"url": {"type": "string", "format": "uri"}, "events": {"type": "array", "items": {"$ref": "#/components/schemas/WebhookEventType"}}, "status": {"type": "string", "enum": ["ACTIVE", "DISABLED"]}}}}, "responses": {"200": {"description": "Webhook updated", "schema": {"$ref": "#/components/schemas/WebhookEndpoint"}}}}, {"method": "DELETE", "path": "/webhooks/{webhook_id}", "operationId": "deleteWebhook", "tags": ["Webhooks"], "summary": "Delete a webhook endpoint", "description": "", "parameters": [{"name": "webhook_id", "in": "path", "required": true, "schema": {"type": "string", "format": "uuid"}}], "security": [], "responses": {"204": {"description": "Webhook deleted"}}}, {"method": "POST", "path": "/webhooks/{webhook_id}/test", "operationId": "testWebhook", "tags": ["Webhooks"], "summary": "Send a test event", "description": "", "parameters": [{"name": "webhook_id", "in": "path", "required": true, "schema": {"type": "string", "format": "uuid"}}], "security": [], "requestBody": {"required": false, "schema": {"type": "object", "properties": {"event_type": {"$ref": "#/components/schemas/WebhookEventType"}}}}, "responses": {"200": {"description": "Test event sent", "schema": {"type": "object", "properties": {"delivered": {"type": "boolean"}, "response_code": {"type": "integer"}, "latency_ms": {"type": "integer"}}}}}}]}, "Platform": {"description": "Client registration, API key management, usage dashboards.\n", "endpoints": [{"method": "POST", "path": "/clients", "operationId": "registerClient", "tags": ["Platform"], "summary": "Register a new platform client", "description": "Creates a client identity for API access. Starts in SANDBOX tier. \nProduction access requires verification + security attestations.\n", "parameters": [], "security": [], "requestBody": {"required": true, "schema": {"type": "object", "required": ["name", "redirect_uris", "contact_email"], "properties": {"name": {"type": "string"}, "description": {"type": "string"}, "redirect_uris": {"type": "array", "items": {"type": "string", "format": "uri"}}, "contact_email": {"type": "string", "format": "email"}, "webhook_url": {"type": "string", "format": "uri"}}}}, "responses": {"201": {"description": "Client created (credentials returned once)", "schema": {"type": "object", "properties": {"client_id": {"type": "string", "format": "uuid"}, "client_secret": {"type": "string", "description": "Shown only at creation. Store securely."}, "tier": {"type": "string", "enum": ["SANDBOX", "PRODUCTION", "ENTERPRISE"]}, "rate_limits": {"type": "object", "properties": {"requests_per_minute": {"type": "integer"}, "daily_tier2_budget": {"type": "integer"}}}}}}}}, {"method": "GET", "path": "/clients/me", "operationId": "getClientInfo", "tags": ["Platform"], "summary": "Get current client details", "description": "", "parameters": [], "security": [], "responses": {"200": {"description": "Client info", "schema": {"type": "object", "properties": {"client_id": {"type": "string", "format": "uuid"}, "name": {"type": "string"}, "tier": {"type": "string", "enum": ["SANDBOX", "PRODUCTION", "ENTERPRISE"]}, "rate_limits": {"type": "object"}, "created_at": {"type": "string", "format": "date-time"}}}}}}, {"method": "GET", "path": "/clients/me/usage", "operationId": "getClientUsage", "tags": ["Platform"], "summary": "Get API usage statistics", "description": "", "parameters": [{"name": "period", "in": "query", "schema": {"type": "string", "enum": ["today", "this_week", "this_month", "last_30_days"], "default": "this_month"}}], "security": [], "responses": {"200": {"description": "Usage stats", "schema": {"type": "object", "properties": {"period": {"type": "string"}, "total_requests": {"type": "integer"}, "requests_by_endpoint": {"type": "object", "additionalProperties": {"type": "integer"}}, "health_keys_created": {"type": "integer"}, "transactions_settled": {"type": "integer"}, "resolve_calls": {"type": "integer"}}}}}}]}}, "schemas": {"Error": {"type": "object", "required": ["code", "message"], "properties": {"request_id": {"type": "string", "format": "uuid"}, "code": {"type": "string", "enum": ["INVALID_ARGUMENT", "UNAUTHORIZED", "CONSENT_REQUIRED", "FORBIDDEN_SCOPE", "NOT_FOUND", "CONFLICT", "INVALID_STATE_TRANSITION", "RATE_LIMITED", "UPSTREAM_UNAVAILABLE", "TIMEOUT", "INTERNAL", "VALIDATION_FAILED"]}, "message": {"type": "string"}, "details": {"type": "object", "additionalProperties": true}}}, "Pagination": {"type": "object", "properties": {"next_cursor": {"type": "string", "nullable": true}, "has_more": {"type": "boolean"}, "total_count": {"type": "integer"}}}, "Complaint": {"type": "object", "required": ["complaint_id", "name"], "properties": {"complaint_id": {"type": "string", "example": "complaint.knee_pain"}, "name": {"type": "string", "example": "Knee Pain"}, "consumer_synonyms": {"type": "array", "items": {"type": "string"}, "example": ["my knee hurts", "knee ache", "sore knee"]}, "specialty": {"type": "string"}, "mapped_hso_ids": {"type": "array", "items": {"type": "string"}, "description": "HSO candidates this complaint may resolve to"}, "discriminators": {"type": "array", "items": {"type": "object", "properties": {"id": {"type": "string"}, "question": {"type": "string"}, "type": {"type": "string", "enum": ["AGE_THRESHOLD", "SEX_BASED", "PREGNANCY_POSSIBLE", "EXISTING_DIAGNOSIS", "ACUITY", "OTHER"]}}}, "description": "Discriminator questions that the CRE may use for routing. \nThe HKIL can auto-resolve these from Health Key data.\n"}}}, "Diagnosis": {"type": "object", "required": ["diagnosis_id", "name"], "properties": {"diagnosis_id": {"type": "string", "example": "dx.osteoarthritis.knee"}, "name": {"type": "string"}, "consumer_synonyms": {"type": "array", "items": {"type": "string"}}, "specialty": {"type": "string"}, "mapped_hso_ids": {"type": "array", "items": {"type": "string"}}, "care_phases": {"type": "array", "items": {"type": "string", "enum": ["NEW_DIAGNOSIS", "EVALUATION_FOLLOW_UP", "EVALUATION_ESTABLISHED", "PROCEDURAL"]}}}}, "ScopeCode": {"type": "object", "required": ["code", "label", "type"], "properties": {"code": {"type": "string", "example": "INCL.VISIT.OFFICE"}, "label": {"type": "string", "example": "Office visits"}, "type": {"type": "string", "enum": ["INCLUSION", "EXCLUSION"]}, "category": {"type": "string", "example": "visit"}, "description": {"type": "string"}, "required_exclusion": {"type": "boolean", "description": "If true, must appear in every tier's excluded_scope"}}}, "HSO": {"type": "object", "required": ["hso_id", "hso_alias", "name", "specialty", "subspecialty", "category", "specific"], "properties": {"hso_id": {"type": "string", "description": "Semantic dot-notation identifier. Immutable. Encodes \ntaxonomy position: `hso.{specialty}.{sub}.{cat}.{specific}`\n", "example": "hso.ortho.knee.proc.total_replacement"}, "hso_alias": {"type": "string", "example": "Total Knee Replacement"}, "name": {"type": "string"}, "specialty": {"type": "string"}, "subspecialty": {"type": "string"}, "category": {"type": "string"}, "specific": {"type": "string"}, "description": {"type": "string"}, "scope": {"type": "object", "properties": {"included": {"type": "array", "items": {"type": "string"}}, "excluded": {"type": "array", "items": {"type": "string"}}}}, "constraints": {"type": "object", "properties": {"age_min": {"type": "integer", "nullable": true}, "age_max": {"type": "integer", "nullable": true}, "sex": {"type": "string", "nullable": true, "enum": ["M", "F", "ANY"]}, "requires_prior_hso": {"type": "string", "nullable": true}}}, "inputs_required": {"type": "array", "items": {"type": "string"}}, "outputs_expected": {"type": "array", "items": {"type": "string"}}, "medicare_exclusion": {"type": "object", "properties": {"excluded": {"type": "boolean"}, "exclusion_type": {"type": "string", "nullable": true, "enum": ["STATUTORY", "COVERAGE_DETERMINATION"]}, "exclusion_reason": {"type": "string", "nullable": true}}}, "membership_eligible": {"type": "boolean"}, "consumer_search_terms": {"type": "array", "items": {"type": "string"}}, "active_offer_count": {"type": "integer", "description": "Number of active offers for this HSO"}}}, "HSO_List": {"type": "object", "properties": {"data": {"type": "array", "items": {"$ref": "#/components/schemas/HSO"}}, "pagination": {"$ref": "#/components/schemas/Pagination"}}}, "ProviderCreate": {"type": "object", "required": ["npi", "display_name", "specialty", "locations"], "properties": {"npi": {"type": "string", "pattern": "^\\d{10}$"}, "display_name": {"type": "string"}, "legal_name": {"type": "string"}, "specialty": {"type": "string"}, "subspecialty": {"type": "string"}, "credentials": {"type": "array", "items": {"type": "string"}}, "locations": {"type": "array", "minItems": 1, "items": {"$ref": "#/components/schemas/ProviderLocationInput"}}, "accepting_new_patients": {"type": "boolean", "default": true}, "telehealth_available": {"type": "boolean", "default": false}}}, "ProviderUpdate": {"type": "object", "properties": {"display_name": {"type": "string"}, "accepting_new_patients": {"type": "boolean"}, "telehealth_available": {"type": "boolean"}, "locations": {"type": "array", "items": {"$ref": "#/components/schemas/ProviderLocationInput"}}}}, "Provider": {"type": "object", "required": ["provider_id", "display_name", "npi", "status"], "properties": {"provider_id": {"type": "string", "format": "uuid"}, "status": {"type": "string", "enum": ["PENDING", "VERIFIED", "SUSPENDED"]}, "display_name": {"type": "string"}, "legal_name": {"type": "string"}, "npi": {"type": "string"}, "org_id": {"type": "string"}, "provider_type": {"type": "string", "enum": ["INDIVIDUAL", "ORGANIZATION"]}, "specialty": {"type": "string"}, "subspecialty": {"type": "string"}, "credentials": {"type": "array", "items": {"type": "string"}}, "locations": {"type": "array", "items": {"$ref": "#/components/schemas/ProviderLocation"}}, "capabilities": {"type": "array", "items": {"type": "string"}, "description": "HSO IDs (populated from active offers)"}, "operational_signals": {"$ref": "#/components/schemas/OperationalSignals"}, "medicare_opted_out": {"type": "boolean"}, "accepting_new_patients": {"type": "boolean"}, "telehealth_available": {"type": "boolean"}, "created_at": {"type": "string", "format": "date-time"}}}, "ProviderLocationInput": {"type": "object", "required": ["name", "address"], "properties": {"name": {"type": "string"}, "address": {"type": "object", "required": ["street", "city", "state", "postal_code"], "properties": {"street": {"type": "string"}, "city": {"type": "string"}, "state": {"type": "string"}, "postal_code": {"type": "string"}}}, "facility_type": {"type": "string", "enum": ["ASC", "OFFICE", "CLINIC", "HOSPITAL_OUTPATIENT", "OTHER"], "default": "OFFICE"}}}, "ProviderLocation": {"type": "object", "properties": {"location_id": {"type": "string", "format": "uuid"}, "name": {"type": "string"}, "address": {"type": "object", "properties": {"street": {"type": "string"}, "city": {"type": "string"}, "state": {"type": "string"}, "postal_code": {"type": "string"}}}, "geo": {"type": "object", "properties": {"lat": {"type": "number"}, "lng": {"type": "number"}}}, "facility_type": {"type": "string"}}}, "OperationalSignals": {"type": "object", "description": "Operational reliability. Not clinical. No star ratings. No prose reviews.", "properties": {"acceptance_rate": {"type": "number", "minimum": 0, "maximum": 1}, "cancellation_rate": {"type": "number", "minimum": 0, "maximum": 1}, "average_settlement_days": {"type": "number"}, "dispute_rate": {"type": "number", "minimum": 0, "maximum": 1}, "transactability_score": {"type": "integer", "minimum": 0, "maximum": 100}}}, "Provider_List": {"type": "object", "properties": {"data": {"type": "array", "items": {"$ref": "#/components/schemas/Provider"}}, "pagination": {"$ref": "#/components/schemas/Pagination"}}}, "OfferCreate": {"type": "object", "required": ["provider_id", "hso_id", "location_id", "price_cents"], "properties": {"provider_id": {"type": "string", "format": "uuid"}, "hso_id": {"type": "string"}, "location_id": {"type": "string", "format": "uuid"}, "price_cents": {"type": "integer", "minimum": 100, "description": "Cash price in cents. This is a commitment: \"I will deliver \nthis service for this amount regardless of insurance.\"\n"}, "binding_mode": {"type": "string", "enum": ["INDIVIDUALLY_BOUND", "ROLE_BOUND", "ORGANIZATION_BOUND", "HYBRID_NAMED_LEAD"], "default": "ORGANIZATION_BOUND"}, "availability": {"$ref": "#/components/schemas/AvailabilitySummary"}}}, "AvailabilitySummary": {"type": "object", "properties": {"next_available": {"type": "string", "format": "date"}, "slots_this_week": {"type": "integer"}}}, "Offer": {"type": "object", "required": ["offer_id", "provider_id", "hso_id", "location_id", "price"], "properties": {"offer_id": {"type": "string", "format": "uuid"}, "provider_id": {"type": "string", "format": "uuid"}, "provider_display_name": {"type": "string"}, "hso_id": {"type": "string"}, "hso_name": {"type": "string"}, "location_id": {"type": "string", "format": "uuid"}, "location": {"$ref": "#/components/schemas/ProviderLocation"}, "price": {"type": "object", "required": ["amount_cents", "currency"], "properties": {"amount_cents": {"type": "integer", "example": 420000}, "currency": {"type": "string", "default": "USD"}, "immutable_once_accepted": {"type": "boolean", "default": true, "description": "Cash Price Invariant: once a Health Key references this \noffer, the price at that moment is final for that \ntransaction. Offer price changes apply prospectively only.\n"}}}, "availability": {"$ref": "#/components/schemas/AvailabilitySummary"}, "distance_minutes": {"type": "integer", "nullable": true}, "transactability_score": {"type": "integer", "minimum": 0, "maximum": 100}, "binding_mode": {"type": "string", "enum": ["INDIVIDUALLY_BOUND", "ROLE_BOUND", "ORGANIZATION_BOUND", "HYBRID_NAMED_LEAD"]}, "active": {"type": "boolean"}, "created_at": {"type": "string", "format": "date-time"}}}, "Offer_List": {"type": "object", "properties": {"data": {"type": "array", "items": {"$ref": "#/components/schemas/Offer"}}, "pagination": {"$ref": "#/components/schemas/Pagination"}}}, "ResolveRequest": {"type": "object", "required": ["intent_type", "intent_id", "geo"], "properties": {"patient_id": {"type": "string", "format": "uuid", "description": "Optional. Enables HKIL personalization with consent."}, "intent_type": {"type": "string", "enum": ["COMPLAINT", "DIAGNOSIS", "REQUESTED_SERVICE"]}, "intent_id": {"type": "string", "description": "Must match a valid ID from /taxonomy endpoints", "example": "complaint.knee_pain"}, "geo": {"type": "object", "required": ["postal_code"], "properties": {"postal_code": {"type": "string"}, "lat": {"type": "number"}, "lng": {"type": "number"}}}, "time_window": {"type": "object", "properties": {"earliest_start": {"type": "string", "format": "date-time"}, "latest_start": {"type": "string", "format": "date-time"}}}, "financial_context": {"type": "object", "description": "**Informational only.** Does NOT affect pricing or ranking. \nExists to help platform partners display comparative context \nin their UIs (e.g. \"your HSA balance can cover this\").\n\nAll prices in the response are cash prices regardless of \nwhat is provided here.\n", "properties": {"hsa_balance_cents": {"type": "integer", "description": "Patient's HSA balance (for display comparison)"}, "annual_budget_remaining_cents": {"type": "integer", "description": "Employer/charity remaining budget (for display)"}}}, "patient_preferences": {"type": "object", "properties": {"max_drive_minutes": {"type": "integer"}, "gender_preference": {"type": "string", "enum": ["MALE", "FEMALE", "NO_PREFERENCE"]}, "language_preference": {"type": "string"}, "existing_provider_ids": {"type": "array", "items": {"type": "string", "format": "uuid"}}}}, "clinical_context_refs": {"type": "array", "items": {"type": "string"}, "description": "Reference IDs only. Requires Tier 2 consent."}}}, "ResolveResponse": {"type": "object", "required": ["resolution_id", "hso_candidates", "provider_candidates", "pricing", "required_patient_confirmation"], "properties": {"resolution_id": {"type": "string", "format": "uuid"}, "input_hash": {"type": "string"}, "policy_version": {"type": "string"}, "consent_tier_used": {"$ref": "#/components/schemas/ConsentTier"}, "data_accessed_refs": {"type": "array", "items": {"type": "string"}}, "hso_candidates": {"type": "array", "items": {"type": "object", "required": ["hso_id", "hso_label", "confidence"], "properties": {"hso_id": {"type": "string"}, "hso_label": {"type": "string"}, "confidence": {"type": "number", "minimum": 0, "maximum": 1}, "reason_codes": {"type": "array", "items": {"type": "string"}}}}}, "provider_candidates": {"type": "array", "items": {"type": "object", "required": ["provider_id", "display_name", "offer_id"], "properties": {"provider_id": {"type": "string", "format": "uuid"}, "display_name": {"type": "string"}, "offer_id": {"type": "string", "format": "uuid"}, "availability_summary": {"$ref": "#/components/schemas/AvailabilitySummary"}, "transactability_score": {"type": "integer", "minimum": 0, "maximum": 100}, "distance_minutes": {"type": "integer"}, "reason_codes": {"type": "array", "items": {"type": "string"}}}}}, "pricing": {"type": "object", "description": "**Always cash pricing. Always HIGH confidence.** There is no \nestimate, no deductible calculation, no allowed amount. The \nprice is the cash price from the offer.\n", "properties": {"cash_price_cents": {"type": "integer", "description": "The cash price. Final. Deterministic."}, "currency": {"type": "string", "default": "USD"}, "pricing_confidence": {"type": "string", "enum": ["HIGH"], "default": "HIGH", "description": "Always HIGH for cash transactions. This field exists for \nschema completeness. It is never MEDIUM or LOW.\n"}}}, "confirmation_url": {"type": "string", "format": "uri", "description": "Deep link for patient confirmation in Health Key UI"}, "required_patient_confirmation": {"type": "boolean", "enum": [true], "description": "Always true. Non-negotiable."}, "disclaimer_code": {"type": "string", "enum": ["NOT_MEDICAL_ADVICE"], "description": "Always NOT_MEDICAL_ADVICE. PRICING_ESTIMATE and \nELIGIBILITY_DEPENDENT are removed \u2014 cash prices are not \nestimates and are not eligibility-dependent.\n"}}}, "PatientCreate": {"type": "object", "required": ["full_name", "date_of_birth"], "properties": {"full_name": {"type": "string"}, "date_of_birth": {"type": "string", "format": "date"}, "email": {"type": "string", "format": "email"}, "phone": {"type": "string"}, "oauth_token": {"type": "string", "description": "OAuth token from patient authentication flow. Used to \nverify identity and link to existing records.\n"}, "external_id": {"type": "string", "description": "Platform partner's ID for this patient (for correlation)"}}}, "Patient": {"type": "object", "required": ["patient_id", "full_name", "date_of_birth"], "properties": {"patient_id": {"type": "string", "format": "uuid"}, "full_name": {"type": "string"}, "full_name_upper": {"type": "string", "description": "ALL CAPS rendering for Health Key display"}, "date_of_birth": {"type": "string", "format": "date"}, "email": {"type": "string", "format": "email"}, "phone": {"type": "string"}, "external_id": {"type": "string", "nullable": true}, "created_at": {"type": "string", "format": "date-time"}}}, "HealthKeyCreate": {"type": "object", "required": ["patient_id", "offer_id"], "properties": {"patient_id": {"type": "string", "format": "uuid"}, "offer_id": {"type": "string", "format": "uuid"}, "resolution_id": {"type": "string", "format": "uuid", "description": "Audit trail link to resolve_to_care"}, "scheduled_at": {"type": "string", "format": "date-time"}}}, "HealthKey": {"type": "object", "required": ["health_key_id", "patient", "provider", "service", "state", "exposure_boundary"], "properties": {"health_key_id": {"type": "string", "format": "uuid"}, "health_key_type": {"type": "string", "enum": ["EPISODIC", "MEMBERSHIP"]}, "patient": {"type": "object", "properties": {"patient_id": {"type": "string", "format": "uuid"}, "full_name": {"type": "string", "description": "ALL CAPS"}, "date_of_birth": {"type": "string", "format": "date"}}}, "provider": {"type": "object", "properties": {"provider_id": {"type": "string", "format": "uuid"}, "display_name": {"type": "string"}, "location": {"$ref": "#/components/schemas/ProviderLocation"}}}, "service": {"type": "object", "properties": {"hso_id": {"type": "string"}, "hso_name": {"type": "string", "description": "Exact HSO registry name"}, "offer_id": {"type": "string", "format": "uuid"}, "scope": {"type": "object", "properties": {"included": {"type": "array", "items": {"type": "string"}}, "excluded": {"type": "array", "items": {"type": "string"}}}}}}, "state": {"$ref": "#/components/schemas/HealthKeyState"}, "exposure_boundary": {"type": "object", "properties": {"max_patient_responsibility_cents": {"type": "integer", "description": "The cash price. Largest element on screen. Emotional \nanchor of the Health Key.\n"}, "currency": {"type": "string", "default": "USD"}}}, "funding_state": {"$ref": "#/components/schemas/FundingState"}, "service_state": {"$ref": "#/components/schemas/ServiceState"}, "payment_state": {"$ref": "#/components/schemas/PaymentState"}, "valid_transitions": {"type": "array", "items": {"type": "string"}, "description": "The set of states this Health Key can transition to from \nits current state. Computed server-side.\n", "example": ["ACTIVE", "CANCELLED"]}, "scheduled_at": {"type": "string", "format": "date-time", "nullable": true}, "qr_token": {"type": "string", "description": "Use /health-keys/{id}/qr to render"}, "created_at": {"type": "string", "format": "date-time"}, "updated_at": {"type": "string", "format": "date-time"}, "last_sync_at": {"type": "string", "format": "date-time"}}}, "HealthKeyState": {"type": "string", "enum": ["READY", "ACTIVE", "DECISION_REQUIRED", "NOT_AUTHORIZED", "COMPLETED", "SETTLED", "CANCELLED"], "description": "## State Definitions\n- **READY**: Created, identity-only. Patient has not yet confirmed.\n- **ACTIVE**: Patient authorized. Service can proceed. QR scannable.\n- **DECISION_REQUIRED**: Re-consent needed (scope/price change). Amber.\n- **NOT_AUTHORIZED**: Execution blocked. Red.\n- **COMPLETED**: Service delivered, PoS confirmed. Settlement in progress.\n- **SETTLED**: Dispute window expired. Funds final. Terminal.\n- **CANCELLED**: Transaction cancelled. Terminal.\n\n## Valid State Transitions\n```\nREADY \u2192 ACTIVE              (patient authorizes)\nREADY \u2192 CANCELLED           (patient or system cancels)\nACTIVE \u2192 COMPLETED          (Proof of Service attested)\nACTIVE \u2192 DECISION_REQUIRED  (scope/price change detected)\nACTIVE \u2192 NOT_AUTHORIZED     (funding lapse, provider withdrawal)\nACTIVE \u2192 CANCELLED          (patient, provider, or system cancels)\nDECISION_REQUIRED \u2192 ACTIVE  (patient re-consents)\nDECISION_REQUIRED \u2192 NOT_AUTHORIZED (patient declines)\nDECISION_REQUIRED \u2192 CANCELLED (patient cancels)\nNOT_AUTHORIZED \u2192 READY      (conditions restored, restart flow)\nNOT_AUTHORIZED \u2192 CANCELLED  (abandoned)\nCOMPLETED \u2192 SETTLED         (dispute window expires, auto-transition)\n```\nTerminal states: SETTLED, CANCELLED. No transitions out.\n\n## Relationship to ServiceState and PaymentState\n- READY: service=S1_SELECTED, payment=P1_AUTHORIZED\n- ACTIVE + scheduled: service=S2_SCHEDULED, payment=P2_ESCROWED\n- ACTIVE + service window: service=S3_PRE_SERVICE or S4_SERVICE_TIME\n- COMPLETED: service=S6_POS_CONFIRMED, payment=P4_RELEASED\n- SETTLED: service=S7_FINALIZED, payment=P5_SETTLED\n"}, "ServiceState": {"type": "string", "enum": ["S1_SELECTED", "S2_SCHEDULED", "S3_PRE_SERVICE", "S4_SERVICE_TIME", "S5_POS_EVALUATION", "S6_POS_CONFIRMED", "S7_FINALIZED"]}, "PaymentState": {"type": "string", "enum": ["P1_AUTHORIZED", "P2_ESCROWED", "P3_PENDING_POS", "P4_RELEASED", "P5_SETTLED"]}, "FundingState": {"type": "string", "enum": ["INITIATED", "FUNDING_IN_PROGRESS", "FUNDED", "LOCKED", "SERVICE_COMPLETED", "SETTLED", "REFUND_PENDING", "REFUNDED", "CANCELLED"], "description": "## Funding State Machine\n```\nINITIATED \u2192 FUNDING_IN_PROGRESS  (first contribution added)\nFUNDING_IN_PROGRESS \u2192 FUNDED     (pool >= required amount)\nFUNDING_IN_PROGRESS \u2192 CANCELLED  (all contributions withdrawn)\nFUNDED \u2192 LOCKED                  (Health Key authorized)\nLOCKED \u2192 SERVICE_COMPLETED       (PoS confirmed)\nSERVICE_COMPLETED \u2192 SETTLED      (funds released to provider)\nSETTLED \u2192 REFUND_PENDING         (overage detected)\nREFUND_PENDING \u2192 REFUNDED        (refunds issued pro-rata)\nAny pre-LOCKED \u2192 CANCELLED       (Health Key cancelled)\n```\n**FUNDED is the gate**: Health Key cannot authorize until \nfunding_state = FUNDED.\n\n**LOCKED is irreversible**: Contributions cannot be withdrawn \nafter LOCKED.\n"}, "QRPayload": {"type": "object", "properties": {"health_key_id": {"type": "string", "format": "uuid"}, "patient_token": {"type": "string", "description": "Tokenized patient ID (no PHI)"}, "provider_id": {"type": "string", "format": "uuid"}, "hso_id": {"type": "string"}, "state": {"$ref": "#/components/schemas/HealthKeyState"}, "scope_hash": {"type": "string", "description": "Hash of included/excluded scope for integrity check"}, "signature": {"type": "string", "description": "Cryptographic signature"}, "issued_at": {"type": "string", "format": "date-time"}, "expires_at": {"type": "string", "format": "date-time"}, "offline_valid_until": {"type": "string", "format": "date-time", "description": "Offline verification window. If the current time is before \nthis timestamp and the signature is valid, the QR can be \nverified without server connectivity. For clinic basements, \nORs, and low-connectivity environments.\n"}, "last_sync_at": {"type": "string", "format": "date-time"}}}, "ScanResult": {"type": "object", "required": ["valid", "health_key"], "properties": {"valid": {"type": "boolean"}, "health_key": {"$ref": "#/components/schemas/HealthKey"}, "scan_timestamp": {"type": "string", "format": "date-time"}, "verification_mode": {"type": "string", "enum": ["ONLINE", "OFFLINE"], "description": "ONLINE: verified against server. OFFLINE: verified from \nsigned token only (within offline_valid_until window).\n"}, "verification_status": {"type": "string", "enum": ["VERIFIED_ACTIVE", "VERIFIED_DECISION_REQUIRED", "NOT_AUTHORIZED", "EXPIRED", "INVALID_SIGNATURE", "PROVIDER_MISMATCH", "OFFLINE_AUTHORIZATION_VALID"]}}}, "ProofOfService": {"type": "object", "required": ["pos_type"], "properties": {"pos_type": {"type": "string", "enum": ["TIME_BASED", "EMR_CONNECTED", "ARTIFACT_UPLOADED", "EMR_PLUS_ARTIFACT", "MANUAL_OVERRIDE"]}, "pos_tier": {"type": "integer", "minimum": 0, "maximum": 3, "description": "Confidence tier. Determines dispute immunity.\n3: EMR + artifact \u2192 near-irreversible\n2: EMR only \u2192 partial immunity  \n1: Time-based \u2192 minimal immunity\n0: Manual override \u2192 full dispute eligibility\n"}, "artifacts": {"type": "array", "items": {"type": "object", "properties": {"artifact_type": {"type": "string", "enum": ["ASSESSMENT_AND_PLAN", "OPERATIVE_REPORT", "TEST_RESULT", "OTHER"]}, "reference_id": {"type": "string"}}}}, "attested_by": {"type": "string"}, "completion_timestamp": {"type": "string", "format": "date-time"}}}, "MembershipTierCreate": {"type": "object", "required": ["provider_id", "name", "template", "fee_cents", "fee_cadence", "term_months", "included_scope", "excluded_scope"], "properties": {"provider_id": {"type": "string", "format": "uuid"}, "name": {"type": "string"}, "template": {"type": "string", "enum": ["DPC", "PSYCHIATRY", "MATERNITY", "CHRONIC_SPECIALTY", "CUSTOM"]}, "fee_cents": {"type": "integer", "minimum": 100}, "fee_cadence": {"type": "string", "enum": ["MONTHLY", "QUARTERLY", "ANNUALLY"]}, "term_months": {"type": "integer", "minimum": 1}, "auto_renew": {"type": "boolean", "default": true}, "max_members": {"type": "integer"}, "waitlist_enabled": {"type": "boolean", "default": false}, "included_scope": {"type": "array", "minItems": 1, "items": {"type": "string"}, "description": "Scope codes from /taxonomy/scope-codes"}, "excluded_scope": {"type": "array", "minItems": 3, "items": {"type": "string"}, "description": "Must include required exclusions"}, "messaging_sla_hours": {"type": "integer"}, "appointment_sla_days": {"type": "integer"}, "cancellation_policy": {"type": "object", "required": ["type"], "properties": {"type": {"type": "string", "enum": ["NO_REFUND", "PRORATED", "FULL_REFUND_WITHIN_N_DAYS"]}, "refund_window_days": {"type": "integer"}}}, "hsa_eligible": {"type": "boolean", "default": false}, "location_id": {"type": "string", "format": "uuid"}}}, "MembershipTierUpdate": {"type": "object", "properties": {"name": {"type": "string"}, "fee_cents": {"type": "integer"}, "max_members": {"type": "integer"}, "waitlist_enabled": {"type": "boolean"}, "included_scope": {"type": "array", "items": {"type": "string"}}, "excluded_scope": {"type": "array", "items": {"type": "string"}}, "messaging_sla_hours": {"type": "integer"}, "appointment_sla_days": {"type": "integer"}}}, "MembershipTier": {"type": "object", "required": ["tier_id", "provider_id", "name", "fee", "term", "included_scope", "excluded_scope"], "properties": {"tier_id": {"type": "string", "format": "uuid"}, "version": {"type": "integer"}, "tier_state": {"type": "string", "enum": ["DRAFT", "ACTIVE", "SUSPENDED", "RETIRED", "FULL"], "description": "DRAFT \u2192 ACTIVE (on activate)\nACTIVE \u2192 SUSPENDED (provider pauses sales)\nACTIVE \u2192 RETIRED (no new sales, existing complete term)\nACTIVE \u2192 FULL (max_members reached, auto)\nSUSPENDED \u2192 ACTIVE (resume)\nFULL \u2192 ACTIVE (member cancels, capacity opens)\n"}, "provider_id": {"type": "string", "format": "uuid"}, "provider_display_name": {"type": "string"}, "template": {"type": "string", "enum": ["DPC", "PSYCHIATRY", "MATERNITY", "CHRONIC_SPECIALTY", "CUSTOM"]}, "name": {"type": "string"}, "description": {"type": "string"}, "fee": {"type": "object", "properties": {"amount_cents": {"type": "integer"}, "cadence": {"type": "string", "enum": ["MONTHLY", "QUARTERLY", "ANNUALLY"]}, "currency": {"type": "string", "default": "USD"}}}, "term": {"type": "object", "properties": {"duration_months": {"type": "integer"}, "auto_renew": {"type": "boolean"}}}, "mpr": {"type": "object", "properties": {"total_cents": {"type": "integer", "description": "fee \u00d7 periods in term. Computable. Deterministic."}, "currency": {"type": "string"}}}, "included_scope": {"type": "array", "items": {"$ref": "#/components/schemas/ScopeCode"}}, "excluded_scope": {"type": "array", "items": {"$ref": "#/components/schemas/ScopeCode"}}, "capacity": {"type": "object", "properties": {"max_members": {"type": "integer"}, "current_members": {"type": "integer"}, "waitlist_enabled": {"type": "boolean"}, "waitlist_count": {"type": "integer"}}}, "sla": {"type": "object", "properties": {"messaging_response_hours": {"type": "integer"}, "appointment_within_days": {"type": "integer"}}}, "cancellation_policy": {"type": "object", "properties": {"type": {"type": "string", "enum": ["NO_REFUND", "PRORATED", "FULL_REFUND_WITHIN_N_DAYS"]}, "refund_window_days": {"type": "integer", "nullable": true}}}, "hsa_eligible": {"type": "boolean"}, "location": {"$ref": "#/components/schemas/ProviderLocation"}, "not_insurance_disclosure": {"type": "string", "default": "This membership is not insurance and does not replace health insurance coverage."}}}, "MembershipTier_List": {"type": "object", "properties": {"data": {"type": "array", "items": {"$ref": "#/components/schemas/MembershipTier"}}, "pagination": {"$ref": "#/components/schemas/Pagination"}}}, "MembershipCreate": {"type": "object", "required": ["patient_id", "tier_id", "payment_method_id"], "properties": {"patient_id": {"type": "string", "format": "uuid"}, "tier_id": {"type": "string", "format": "uuid"}, "payment_method_id": {"type": "string"}, "renewal_mode": {"type": "string", "enum": ["AUTO", "MANUAL"], "default": "AUTO"}}}, "MembershipInstance": {"type": "object", "required": ["membership_id", "patient_id", "tier_id", "state"], "properties": {"membership_id": {"type": "string", "format": "uuid"}, "patient_id": {"type": "string", "format": "uuid"}, "tier_id": {"type": "string", "format": "uuid"}, "tier_version": {"type": "integer"}, "state": {"type": "string", "enum": ["ACTIVE", "GRACE_PERIOD", "RENEWAL_REQUIRED", "LAPSED", "CANCELLED"], "description": "ACTIVE \u2192 GRACE_PERIOD (payment fails, within grace window)\nACTIVE \u2192 RENEWAL_REQUIRED (term ending, manual renewal mode)\nGRACE_PERIOD \u2192 ACTIVE (payment succeeds during grace)\nGRACE_PERIOD \u2192 LAPSED (grace expires without payment)\nRENEWAL_REQUIRED \u2192 ACTIVE (patient renews)\nRENEWAL_REQUIRED \u2192 LAPSED (renewal window expires)\nLAPSED \u2192 CANCELLED (recovery window expires)\nAny \u2192 CANCELLED (patient or system cancels)\n"}, "term_start": {"type": "string", "format": "date"}, "term_end": {"type": "string", "format": "date"}, "current_period_start": {"type": "string", "format": "date"}, "current_period_end": {"type": "string", "format": "date"}, "current_period_payment_status": {"type": "string", "enum": ["PAID", "PAST_DUE", "GRACE"]}, "renewal_mode": {"type": "string", "enum": ["AUTO", "MANUAL"]}, "health_key_id": {"type": "string", "format": "uuid"}, "mpr": {"type": "object", "properties": {"total_cents": {"type": "integer"}, "paid_cents": {"type": "integer"}, "remaining_cents": {"type": "integer"}}}, "created_at": {"type": "string", "format": "date-time"}}}, "FundingContribution": {"type": "object", "required": ["source_type", "amount_cents", "payment_method_token"], "properties": {"source_type": {"type": "string", "enum": ["PATIENT", "INDIVIDUAL", "CHARITY", "EMPLOYER", "BNPL"]}, "amount_cents": {"type": "integer", "minimum": 100}, "currency": {"type": "string", "default": "USD"}, "funder_id": {"type": "string", "format": "uuid", "nullable": true, "description": "For INDIVIDUAL/CHARITY/EMPLOYER"}, "payment_method_token": {"type": "string"}, "metadata": {"type": "object", "additionalProperties": true}}}, "FundingStatus": {"type": "object", "properties": {"health_key_id": {"type": "string", "format": "uuid"}, "state": {"$ref": "#/components/schemas/FundingState"}, "required_upfront_cents": {"type": "integer", "description": "The cash price. Checkout gate."}, "total_funded_cents": {"type": "integer"}, "remaining_cents": {"type": "integer"}, "contributions": {"type": "array", "items": {"type": "object", "properties": {"contribution_id": {"type": "string", "format": "uuid"}, "source_type": {"type": "string", "enum": ["PATIENT", "INDIVIDUAL", "CHARITY", "EMPLOYER", "BNPL"]}, "amount_cents": {"type": "integer"}, "escrow_status": {"type": "string", "enum": ["PENDING", "ESCROWED", "RELEASED", "REFUNDED"]}, "refund_amount_cents": {"type": "integer", "nullable": true}, "funder_display_name": {"type": "string", "nullable": true}, "created_at": {"type": "string", "format": "date-time"}}}}}}, "SettlementStatus": {"type": "object", "properties": {"health_key_id": {"type": "string", "format": "uuid"}, "payment_state": {"$ref": "#/components/schemas/PaymentState"}, "service_state": {"$ref": "#/components/schemas/ServiceState"}, "escrow": {"type": "object", "properties": {"total_escrowed_cents": {"type": "integer"}, "created_at": {"type": "string", "format": "date-time"}}}, "release": {"type": "object", "nullable": true, "properties": {"released_cents": {"type": "integer"}, "released_at": {"type": "string", "format": "date-time", "description": "T0 \u2014 dispute window starts"}, "pos_tier": {"type": "integer", "minimum": 0, "maximum": 3}}}, "dispute_window": {"type": "object", "nullable": true, "properties": {"opens_at": {"type": "string", "format": "date-time"}, "closes_at": {"type": "string", "format": "date-time"}, "is_open": {"type": "boolean"}}}, "finality": {"type": "object", "nullable": true, "properties": {"finalized_at": {"type": "string", "format": "date-time"}, "is_final": {"type": "boolean"}}}}}, "Dispute": {"type": "object", "properties": {"dispute_id": {"type": "string", "format": "uuid"}, "health_key_id": {"type": "string", "format": "uuid"}, "reason": {"type": "string", "enum": ["SERVICE_DID_NOT_OCCUR", "WRONG_SERVICE", "NO_SHOW_ATTRIBUTION_ERROR", "DUPLICATE_CHARGE"]}, "status": {"type": "string", "enum": ["OPEN", "AUTO_RESOLVED", "UNDER_REVIEW", "ARBITRATION", "UPHELD", "DENIED"]}, "immunity_tier": {"type": "integer", "minimum": 0, "maximum": 3}, "created_at": {"type": "string", "format": "date-time"}, "resolution": {"type": "object", "nullable": true, "properties": {"outcome": {"type": "string", "enum": ["REFUND", "PARTIAL_REFUND", "DENIED"]}, "refund_cents": {"type": "integer", "nullable": true}, "resolved_at": {"type": "string", "format": "date-time"}}}}}, "ConsentTier": {"type": "string", "enum": ["TIER1", "TIER2", "TIER3"], "description": "TIER1: Identity + summary (default, minimum necessary for resolution).\nTIER2: Medications, conditions, labs, allergies (opt-in).\nTIER3: Encounter history, sensitive longitudinal data (opt-in, restricted).\n"}, "ConsentGrant": {"type": "object", "properties": {"grant_id": {"type": "string", "format": "uuid"}, "patient_id": {"type": "string", "format": "uuid"}, "client_id": {"type": "string", "format": "uuid"}, "tier": {"$ref": "#/components/schemas/ConsentTier"}, "grant_type": {"type": "string", "enum": ["PERSISTENT", "SESSION_ONLY", "ONE_SHOT"]}, "purpose": {"type": "string", "enum": ["TRANSACTION_RESOLUTION", "DATA_RETRIEVAL"]}, "scopes": {"type": "array", "items": {"type": "string"}}, "status": {"type": "string", "enum": ["PENDING_APPROVAL", "ACTIVE", "SUSPENDED", "REVOKED", "EXPIRED"]}, "created_at": {"type": "string", "format": "date-time"}, "expires_at": {"type": "string", "format": "date-time", "nullable": true}, "revoked_at": {"type": "string", "format": "date-time", "nullable": true}}}, "AccessLogEntry": {"type": "object", "properties": {"entry_id": {"type": "string", "format": "uuid"}, "client_id": {"type": "string", "format": "uuid"}, "client_name": {"type": "string"}, "consent_grant_id": {"type": "string", "format": "uuid"}, "tier": {"$ref": "#/components/schemas/ConsentTier"}, "tools_invoked": {"type": "array", "items": {"type": "string"}}, "data_categories_accessed": {"type": "array", "items": {"type": "string"}}, "timestamp": {"type": "string", "format": "date-time"}}}, "WebhookEndpoint": {"type": "object", "properties": {"webhook_id": {"type": "string", "format": "uuid"}, "url": {"type": "string", "format": "uri"}, "events": {"type": "array", "items": {"$ref": "#/components/schemas/WebhookEventType"}}, "secret": {"type": "string", "description": "HMAC signing secret (shown only at creation)"}, "status": {"type": "string", "enum": ["ACTIVE", "DISABLED"]}, "created_at": {"type": "string", "format": "date-time"}}}, "WebhookEventType": {"type": "string", "enum": ["health_key.created", "health_key.authorized", "health_key.decision_required", "health_key.not_authorized", "health_key.completed", "health_key.settled", "health_key.cancelled", "settlement.escrowed", "settlement.released", "settlement.finalized", "funding.contribution_added", "funding.funded", "funding.locked", "funding.refund_issued", "dispute.opened", "dispute.resolved", "membership.created", "membership.renewed", "membership.grace_period", "membership.lapsed", "membership.cancelled", "membership_tier.activated", "membership_tier.retired", "offer.created", "offer.updated", "offer.retired", "consent.granted", "consent.revoked", "provider.verified"]}}};
+
+// ── Helpers ──
+function escHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function formatPath(p) {
+  return escHtml(p).replace(/\{([^}]+)\}/g, '<span class="param">{$1}</span>');
+}
+
+function resolveRef(obj, root) {
+  if (!obj) return obj;
+  if (obj['$ref']) {
+    const parts = obj['$ref'].split('/');
+    let resolved = root || SPEC;
+    // Navigate: skip first empty string from leading #
+    for (let i = 1; i < parts.length; i++) {
+      // Handle the tag_groups vs schemas path
+      if (parts[i] === 'components') continue;
+      resolved = resolved[parts[i]];
+      if (!resolved) return { type: 'object', description: obj['$ref'] };
+    }
+    return resolved;
+  }
+  return obj;
+}
+
+function renderSchemaProps(schema, depth = 0) {
+  if (!schema) return '';
+  
+  // Handle allOf
+  if (schema.allOf) {
+    let merged = {};
+    schema.allOf.forEach(s => {
+      const resolved = resolveRef(s, SPEC);
+      if (resolved && resolved.properties) {
+        Object.assign(merged, resolved.properties);
+      }
+    });
+    schema = { type: 'object', properties: merged, required: schema.required || [] };
+  }
+  
+  const resolved = resolveRef(schema, SPEC);
+  if (!resolved || !resolved.properties) return '';
+  
+  const required = new Set(resolved.required || []);
+  const indent = '  '.repeat(depth);
+  let lines = [];
+  
+  for (const [key, prop] of Object.entries(resolved.properties)) {
+    const p = resolveRef(prop, SPEC);
+    const typeStr = p.enum ? p.enum.map(e => `"${e}"`).join(' | ') :
+                    p.type === 'array' ? `array` :
+                    p.format ? `${p.type}<${p.format}>` : (p.type || 'object');
+    const reqMark = required.has(key) ? ' <span class="req">required</span>' : '';
+    const desc = p.description ? `  <span class="desc">// ${escHtml(p.description.split('\n')[0].substring(0, 80))}</span>` : '';
+    
+    lines.push(`${indent}<span class="key">${escHtml(key)}</span>: <span class="type">${escHtml(typeStr)}</span>${reqMark}${desc}`);
+    
+    // Recurse one level for nested objects
+    if (depth < 1 && p.properties) {
+      for (const [sk, sp] of Object.entries(p.properties)) {
+        const sr = resolveRef(sp, SPEC);
+        const st = sr.type || 'object';
+        lines.push(`${indent}  <span class="key">${escHtml(sk)}</span>: <span class="type">${escHtml(st)}</span>`);
+      }
+    }
+  }
+  
+  return lines.join('\n');
+}
+
+function getRefName(schema) {
+  if (!schema) return null;
+  if (schema['$ref']) {
+    const parts = schema['$ref'].split('/');
+    return parts[parts.length - 1];
+  }
+  return null;
+}
+
+// ── Build Navigation ──
+function buildNav() {
+  let html = '';
+  const tg = SPEC.tag_groups;
+  
+  for (const [tagName, group] of Object.entries(tg)) {
+    html += `<div class="nav-section" data-tag="${escHtml(tagName)}">`;
+    html += `<div class="nav-section-title">${escHtml(tagName)}</div>`;
+    
+    for (const ep of group.endpoints) {
+      const id = `${ep.method}-${ep.path}`.replace(/[^a-zA-Z0-9]/g, '-');
+      html += `<a class="nav-item" href="#${id}" data-search="${ep.method} ${ep.path} ${ep.summary}">`;
+      html += `<span class="nav-method ${ep.method}">${ep.method}</span>`;
+      html += `<span class="nav-path">${escHtml(ep.path)}</span>`;
+      html += `</a>`;
+    }
+    
+    html += `</div>`;
+  }
+  
+  document.getElementById('nav').innerHTML = html;
+}
+
+// ── Build Main Content ──
+function buildMain() {
+  const info = SPEC.info;
+  let html = '';
+  
+  // Hero
+  html += `<div class="hero">`;
+  html += `<h1>OpenDoc Platform API</h1>`;
+  html += `<div class="version">v${escHtml(info.version)}</div>`;
+  html += `<div class="hero-desc"><p>Healthcare transaction infrastructure. Resolve intent to bounded, pre-priced healthcare transactions. Create, authorize, and settle Health Keys.</p></div>`;
+  html += `<div class="hero-servers">`;
+  for (const s of SPEC.servers) {
+    const cls = s.description.includes('Sandbox') ? 'sandbox' : '';
+    html += `<div class="server-badge"><div class="server-dot ${cls}"></div><code>${escHtml(s.url)}</code><span style="color:var(--text3);font-size:12px">${escHtml(s.description)}</span></div>`;
+  }
+  html += `</div></div>`;
+  
+  // Invariant banner
+  html += `<div class="invariant-banner">`;
+  html += `<strong>Cash Price Invariant</strong> — Every price on this platform is a cash price. Every price is final at acceptance. Insurance cannot exist inside the transaction loop. This is not a preference — it is a mathematical necessity proven by contradiction. Platform partners who wish to help patients compare cash-price options against insurance alternatives may do so in their own UIs. OpenDoc does not perform that comparison.`;
+  html += `</div>`;
+  
+  // Stats
+  let epCount = 0;
+  for (const g of Object.values(SPEC.tag_groups)) epCount += g.endpoints.length;
+  html += `<div class="stats-bar">`;
+  html += `<div class="stat"><div class="stat-num">${epCount}</div><div class="stat-label">Endpoints</div></div>`;
+  html += `<div class="stat"><div class="stat-num">${Object.keys(SPEC.schemas).length}</div><div class="stat-label">Schemas</div></div>`;
+  html += `<div class="stat"><div class="stat-num">${Object.keys(SPEC.tag_groups).length}</div><div class="stat-label">Resource Groups</div></div>`;
+  html += `<div class="stat"><div class="stat-num">3</div><div class="stat-label">Auth Schemes</div></div>`;
+  html += `</div>`;
+  
+  // Sections by tag
+  for (const [tagName, group] of Object.entries(SPEC.tag_groups)) {
+    const sectionId = tagName.replace(/[^a-zA-Z0-9]/g, '-');
+    html += `<div class="section" id="section-${sectionId}">`;
+    html += `<div class="section-title">${escHtml(tagName)}</div>`;
+    html += `<div class="section-desc">${escHtml(group.description.trim())}</div>`;
+    
+    for (const ep of group.endpoints) {
+      const id = `${ep.method}-${ep.path}`.replace(/[^a-zA-Z0-9]/g, '-');
+      
+      html += `<div class="endpoint" id="${id}">`;
+      html += `<div class="endpoint-header" onclick="toggleEndpoint(this)">`;
+      html += `<span class="method-badge ${ep.method}">${ep.method}</span>`;
+      html += `<span class="endpoint-path">${formatPath(ep.path)}</span>`;
+      html += `<span class="endpoint-summary">${escHtml(ep.summary)}</span>`;
+      
+      // Auth badge
+      if (ep.security && ep.security.length > 0) {
+        const secName = Object.keys(ep.security[0])[0];
+        if (secName === 'ProviderAuth') {
+          html += `<span class="auth-badge">Provider Auth</span>`;
+        }
+      }
+      
+      html += `<span class="endpoint-chevron">▶</span>`;
+      html += `</div>`;
+      
+      html += `<div class="endpoint-body">`;
+      
+      // Description
+      if (ep.description) {
+        html += `<div class="endpoint-desc">${escHtml(ep.description.trim())}</div>`;
+      }
+      
+      // Request body
+      if (ep.requestBody) {
+        html += `<div class="sub-title">Request Body${ep.requestBody.required ? ' (required)' : ''}</div>`;
+        const schema = ep.requestBody.schema;
+        const refName = getRefName(schema);
+        if (refName && SPEC.schemas[refName]) {
+          html += `<div style="font-size:12px;color:var(--text3);margin-bottom:4px;font-family:var(--font-mono)">${refName}</div>`;
+          html += `<div class="schema-block">${renderSchemaProps(SPEC.schemas[refName])}</div>`;
+        } else if (schema && schema.properties) {
+          html += `<div class="schema-block">${renderSchemaProps(schema)}</div>`;
+        }
+      }
+      
+      // Parameters
+      if (ep.parameters && ep.parameters.length > 0) {
+        const params = ep.parameters.filter(p => !p['$ref'] || true);
+        if (params.length > 0) {
+          html += `<div class="sub-title">Parameters</div>`;
+          html += `<div class="schema-block">`;
+          for (const p of params) {
+            const rp = resolveRef(p, SPEC);
+            if (rp && rp.name) {
+              const inStr = rp.in || 'query';
+              const typeStr = rp.schema ? (rp.schema.type || 'string') : 'string';
+              const reqStr = rp.required ? ' <span class="req">required</span>' : '';
+              html += `<span class="key">${escHtml(rp.name)}</span> <span class="type">(${inStr}, ${typeStr})</span>${reqStr}\n`;
+            }
+          }
+          html += `</div>`;
+        }
+      }
+      
+      // Responses
+      if (ep.responses) {
+        html += `<div class="sub-title">Responses</div>`;
+        for (const [code, resp] of Object.entries(ep.responses)) {
+          const cls = code.startsWith('2') ? 's2xx' : 's4xx';
+          html += `<div class="response-row">`;
+          html += `<span class="status-code ${cls}">${code}</span>`;
+          html += `<span>${escHtml(resp.description)}`;
+          
+          if (resp.schema) {
+            const rn = getRefName(resp.schema);
+            if (rn) {
+              html += ` <a href="#schema-${rn}" style="color:var(--green);font-family:var(--font-mono);font-size:12px" onclick="openSchema('${rn}')">${rn}</a>`;
+            }
+          }
+          
+          html += `</span></div>`;
+        }
+      }
+      
+      html += `</div></div>`;
+    }
+    
+    html += `</div>`;
+  }
+  
+  // Schema Reference Section
+  html += `<div class="section" id="section-schemas">`;
+  html += `<div class="section-title">Schema Reference</div>`;
+  html += `<div class="section-desc">All data models used across the API.</div>`;
+  
+  for (const [name, schema] of Object.entries(SPEC.schemas)) {
+    html += `<div class="schema-card" id="schema-${name}">`;
+    html += `<div class="schema-card-header" onclick="toggleSchema(this)">`;
+    html += `<span class="schema-name">${escHtml(name)}</span>`;
+    
+    // Show enum values inline for simple enums
+    if (schema.enum && !schema.properties) {
+      html += `<span style="font-size:12px;color:var(--text3);font-family:var(--font-mono)">${schema.enum.length} values</span>`;
+    } else if (schema.properties) {
+      html += `<span style="font-size:12px;color:var(--text3)">${Object.keys(schema.properties).length} fields</span>`;
+    }
+    
+    html += `<span class="endpoint-chevron">▶</span>`;
+    html += `</div>`;
+    html += `<div class="schema-card-body">`;
+    
+    if (schema.description) {
+      // Check for state machine diagrams
+      const desc = schema.description;
+      if (desc.includes('→') && desc.includes('```')) {
+        const parts = desc.split('```');
+        html += `<div class="endpoint-desc">${escHtml(parts[0].trim())}</div>`;
+        if (parts[1]) {
+          html += `<div class="state-machine">${escHtml(parts[1].trim())}</div>`;
+        }
+        if (parts[2]) {
+          html += `<div class="endpoint-desc">${escHtml(parts[2].trim())}</div>`;
+        }
+      } else {
+        html += `<div class="endpoint-desc">${escHtml(desc.trim())}</div>`;
+      }
+    }
+    
+    if (schema.enum && !schema.properties) {
+      html += `<div class="schema-block">`;
+      for (const v of schema.enum) {
+        html += `<span class="enum-val">"${escHtml(v)}"</span>\n`;
+      }
+      html += `</div>`;
+    }
+    
+    if (schema.properties) {
+      html += `<div class="schema-block">${renderSchemaProps(schema)}</div>`;
+    }
+    
+    html += `</div></div>`;
+  }
+  
+  html += `</div>`;
+  
+  document.getElementById('main').innerHTML = html;
+}
+
+// ── Interactions ──
+function toggleEndpoint(header) {
+  header.parentElement.classList.toggle('open');
+}
+
+function toggleSchema(header) {
+  header.parentElement.classList.toggle('open');
+}
+
+function openSchema(name) {
+  const el = document.getElementById('schema-' + name);
+  if (el) {
+    el.classList.add('open');
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+// ── Search ──
+document.getElementById('search').addEventListener('input', function(e) {
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll('.nav-item').forEach(item => {
+    const text = item.getAttribute('data-search').toLowerCase();
+    item.style.display = !q || text.includes(q) ? '' : 'none';
+  });
+  document.querySelectorAll('.nav-section').forEach(sec => {
+    const visible = sec.querySelectorAll('.nav-item[style=""],.nav-item:not([style])');
+    const hasVisible = Array.from(sec.querySelectorAll('.nav-item')).some(i => i.style.display !== 'none');
+    sec.style.display = !q || hasVisible ? '' : 'none';
+  });
+});
+
+// ── Scroll spy ──
+function updateActiveNav() {
+  const items = document.querySelectorAll('.nav-item');
+  const endpoints = document.querySelectorAll('.endpoint');
+  let current = null;
+  
+  endpoints.forEach(ep => {
+    const rect = ep.getBoundingClientRect();
+    if (rect.top < 200) current = ep.id;
+  });
+  
+  items.forEach(item => {
+    const href = item.getAttribute('href');
+    item.classList.toggle('active', href === '#' + current);
+  });
+}
+
+window.addEventListener('scroll', updateActiveNav);
+
+// ── Init ──
+buildNav();
+buildMain();
+</script>
+
+</body>
+</html>
