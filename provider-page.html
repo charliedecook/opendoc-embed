@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr. Michael Torres — Orthopedic Surgery — Total Joint Specialists, Canton GA | OpenDoc</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap');
+  :root {
+    --green: #2D6A4F;
+    --green-hover: #245A42;
+    --green-light: #E8F5EE;
+    --green-muted: #D4EDDA;
+    --green-dark: #1B4332;
+    --off-white: #F6F4F0;
+    --cream: #FAF9F6;
+    --white: #FFFFFF;
+    --text-primary: #1A1A1A;
+    --text-secondary: #4A4A4A;
+    --text-tertiary: #767676;
+    --border: #E0DDD8;
+    --border-light: #EEECE8;
+    --amber: #C2850C;
+    --amber-bg: #FFF8E7;
+    --red: #B5232A;
+    --red-bg: #FFF0F0;
+    --radius: 10px;
+    --radius-lg: 14px;
+    --radius-sm: 6px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+    --font-serif: 'Georgia', 'Times New Roman', serif;
+    --font-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --transition: 0.2s ease;
+    --content-width: 1140px;
+    --right-col: 380px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+  body { font-family: var(--font-sans); background: var(--off-white); color: var(--text-primary); line-height: 1.6; }
+
+  .site-header { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 28px; position: sticky; top: 0; z-index: 100; }
+  .header-inner { max-width: var(--content-width); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; height: 56px; }
+  .logo { font-family: var(--font-serif); font-size: 20px; font-weight: 700; color: var(--green); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+  .logo-dot { width: 22px; height: 22px; border: 2.5px solid var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .logo-dot::after { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
+  .header-search { display: flex; align-items: center; background: var(--off-white); border: 1px solid var(--border); border-radius: 28px; padding: 8px 16px; gap: 8px; width: 420px; }
+  .header-search input { border: none; background: none; font-family: var(--font-sans); font-size: 14px; color: var(--text-primary); flex: 1; outline: none; }
+  .header-search input::placeholder { color: var(--text-tertiary); }
+  .search-icon { color: var(--text-tertiary); font-size: 14px; }
+  .header-nav { display: flex; align-items: center; gap: 24px; font-size: 14px; }
+  .header-nav a { color: var(--text-secondary); text-decoration: none; font-weight: 500; }
+  .header-nav a:hover { color: var(--green); }
+  .btn-signin { border: 1.5px solid var(--border); border-radius: 24px; padding: 6px 16px; font-weight: 600; color: var(--text-primary); background: var(--white); font-size: 13.5px; cursor: pointer; font-family: var(--font-sans); }
+
+  .page-wrap { max-width: var(--content-width); margin: 0 auto; padding: 0 28px 80px; }
+  .breadcrumb { padding: 14px 0 0; font-size: 12.5px; color: var(--text-tertiary); }
+  .breadcrumb a { color: var(--text-tertiary); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--green); }
+  .breadcrumb span { margin: 0 5px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr var(--right-col); gap: 36px; align-items: start; margin-top: 8px; }
+  .left-col { min-width: 0; }
+
+  .identity-block { padding: 28px 0 24px; border-bottom: 1px solid var(--border-light); }
+  .identity-top { display: flex; gap: 18px; align-items: flex-start; }
+  .provider-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-family: var(--font-serif); font-size: 26px; font-weight: 700; color: #fff; flex-shrink: 0; }
+  .provider-info { flex: 1; }
+  .provider-name { font-family: var(--font-serif); font-size: 24px; font-weight: 700; color: var(--text-primary); line-height: 1.2; letter-spacing: -0.3px; }
+  .provider-role { font-size: 15px; color: var(--text-secondary); margin-top: 3px; }
+  .provider-org { font-size: 14px; color: var(--text-tertiary); margin-top: 1px; }
+  .verification-row { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+  .v-badge { font-size: 11px; font-weight: 600; color: var(--green-dark); background: var(--green-light); padding: 3px 10px; border-radius: 20px; letter-spacing: 0.2px; }
+  .hk-bound { font-size: 11px; font-weight: 700; color: var(--green-dark); background: var(--green-muted); padding: 3px 12px; border-radius: 20px; letter-spacing: 0.3px; display: inline-flex; align-items: center; gap: 5px; }
+  .hk-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+
+  .capability-block { margin-top: 20px; }
+  .cap-label { font-size: 11px; font-weight: 700; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .cap-text { font-size: 14.5px; color: var(--text-secondary); line-height: 1.65; max-width: 620px; }
+
+  .fit-block { margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .fit-card { padding: 14px 16px; border-radius: var(--radius); font-size: 13px; line-height: 1.6; }
+  .fit-card.good { background: var(--green-light); border: 1px solid #C2DFD0; }
+  .fit-card.not { background: var(--off-white); border: 1px solid var(--border); }
+  .fit-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .fit-card.good .fit-label { color: var(--green-dark); }
+  .fit-card.not .fit-label { color: var(--text-tertiary); }
+  .fit-card ul { list-style: none; padding: 0; }
+  .fit-card li { padding: 2px 0 2px 16px; position: relative; color: var(--text-secondary); }
+  .fit-card.good li::before { content: '✓'; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+  .fit-card.not li::before { content: '—'; position: absolute; left: 0; color: var(--text-tertiary); }
+
+  .loc-strip { padding: 16px 0; border-bottom: 1px solid var(--border-light); display: flex; gap: 20px; flex-wrap: wrap; font-size: 13.5px; color: var(--text-secondary); }
+  .loc-item { display: flex; align-items: center; gap: 5px; }
+  .loc-icon { font-size: 12px; color: var(--text-tertiary); }
+
+  .section { padding-top: 32px; }
+  .section-header { font-family: var(--font-serif); font-size: 19px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.2px; margin-bottom: 4px; }
+  .section-sub { font-size: 13.5px; color: var(--text-tertiary); margin-bottom: 18px; }
+
+  .service-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 14px; overflow: hidden; cursor: pointer; transition: border-color var(--transition), box-shadow var(--transition); }
+  .service-card:hover { border-color: #C2DFD0; box-shadow: var(--shadow-sm); }
+  .service-card.selected { border-color: var(--green); border-width: 2px; box-shadow: 0 0 0 1px var(--green); }
+  .service-card-top { padding: 18px 20px 14px; }
+  .sc-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; }
+  .sc-name { font-family: var(--font-serif); font-size: 17px; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+  .sc-type-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 4px; margin-top: 4px; display: inline-block; }
+  .sc-type-tag.eval { background: #EBF4FA; color: #1E5C8A; }
+  .sc-type-tag.procedure { background: var(--green-light); color: var(--green-dark); }
+  .sc-price-block { text-align: right; flex-shrink: 0; }
+  .sc-price { font-family: var(--font-serif); font-size: 24px; font-weight: 700; color: var(--green); line-height: 1; }
+  .sc-price-label { font-size: 10.5px; color: var(--text-tertiary); margin-top: 2px; }
+  .sc-desc { font-size: 13.5px; color: var(--text-secondary); margin-top: 8px; line-height: 1.6; }
+
+  .sc-scope { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border-light); }
+  .scope-col { padding: 14px 20px; font-size: 12.5px; }
+  .scope-col + .scope-col { border-left: 1px solid var(--border-light); }
+  .scope-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .scope-col.inc .scope-lbl { color: var(--green); }
+  .scope-col.exc .scope-lbl { color: var(--text-tertiary); }
+  .scope-col ul { list-style: none; padding: 0; }
+  .scope-col li { padding: 2px 0; color: var(--text-secondary); line-height: 1.5; }
+
+  .episode-block { border-top: 1px solid var(--border-light); padding: 14px 20px; background: var(--cream); }
+  .ep-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-tertiary); margin-bottom: 8px; }
+  .ep-steps { display: flex; }
+  .ep-step { flex: 1; padding: 8px 12px; font-size: 12.5px; line-height: 1.5; }
+  .ep-step + .ep-step { border-left: 2px solid var(--border); }
+  .ep-step-num { font-size: 9.5px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 2px; }
+  .ep-step-title { font-weight: 600; color: var(--text-primary); font-size: 12.5px; }
+  .ep-step-desc { color: var(--text-tertiary); font-size: 11.5px; margin-top: 1px; }
+
+  .prep-block { border-top: 1px solid var(--border-light); padding: 12px 20px; font-size: 12.5px; color: var(--text-secondary); }
+  .prep-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--amber); margin-bottom: 5px; }
+  .prep-block ul { list-style: none; padding: 0; }
+  .prep-block li { padding: 2px 0 2px 15px; position: relative; line-height: 1.5; }
+  .prep-block li::before { content: '→'; position: absolute; left: 0; color: var(--amber); font-weight: 600; font-size: 12px; }
+
+  .scope-trigger { border-top: 1px solid var(--border-light); padding: 10px 20px; background: var(--amber-bg); font-size: 12px; color: var(--amber); line-height: 1.5; }
+  .scope-trigger strong { color: #8B6914; }
+
+  .right-col { position: sticky; top: 72px; }
+  .tx-panel { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  .tx-price-section { padding: 24px 22px 18px; text-align: center; border-bottom: 1px solid var(--border-light); }
+  .tx-price-label-top { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+  .tx-price { font-family: var(--font-serif); font-size: 38px; font-weight: 700; color: var(--green); line-height: 1; }
+  .tx-price-sub { font-size: 12px; color: var(--text-tertiary); margin-top: 4px; line-height: 1.4; }
+
+  .tx-covers { border-bottom: 1px solid var(--border-light); }
+  .tx-covers-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 22px; font-size: 14px; font-weight: 600; color: var(--text-primary); cursor: pointer; user-select: none; }
+  .tx-covers-arrow { font-size: 11px; color: var(--text-tertiary); transition: transform 0.2s; }
+  .tx-covers.open .tx-covers-arrow { transform: rotate(180deg); }
+  .tx-covers-body { display: none; padding: 0 22px 14px; font-size: 12.5px; color: var(--text-secondary); line-height: 1.6; }
+  .tx-covers.open .tx-covers-body { display: block; }
+
+  .tx-service-info { padding: 14px 22px; border-bottom: 1px solid var(--border-light); }
+  .tx-svc-name { font-family: var(--font-serif); font-size: 15px; font-weight: 600; color: var(--text-primary); }
+  .tx-svc-meta { font-size: 12.5px; color: var(--text-tertiary); margin-top: 2px; }
+
+  .tx-dates { padding: 16px 22px; border-bottom: 1px solid var(--border-light); }
+  .tx-dates-label { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+  .tx-dates-sub { font-size: 12.5px; color: var(--text-tertiary); margin-bottom: 12px; }
+  .date-row { display: flex; gap: 6px; align-items: center; }
+  .date-arrow { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--border); background: var(--white); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--text-tertiary); cursor: pointer; flex-shrink: 0; }
+  .date-arrow:hover { border-color: var(--green); color: var(--green); }
+  .date-slots { display: flex; gap: 4px; flex: 1; justify-content: center; }
+  .date-slot { display: flex; flex-direction: column; align-items: center; padding: 8px 10px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); cursor: pointer; min-width: 52px; transition: all 0.15s; }
+  .date-slot:hover { border-color: var(--green); }
+  .date-slot.selected { border-color: var(--green); background: var(--green-light); }
+  .date-slot-day { font-size: 10.5px; color: var(--text-tertiary); font-weight: 600; }
+  .date-slot-num { font-size: 18px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
+  .date-slot-mo { font-size: 10px; color: var(--text-tertiary); }
+  .date-slot.selected .date-slot-day, .date-slot.selected .date-slot-num, .date-slot.selected .date-slot-mo { color: var(--green-dark); }
+  .date-slot.disabled { opacity: 0.35; pointer-events: none; }
+
+  .tx-guarantee { margin: 16px 22px; background: var(--green-light); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 12.5px; color: var(--green-dark); line-height: 1.5; display: flex; gap: 8px; align-items: flex-start; }
+  .tx-guarantee-icon { flex-shrink: 0; margin-top: 1px; width: 18px; height: 18px; border-radius: 50%; background: var(--green); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .tx-cta { padding: 0 22px 20px; }
+  .btn-initiate { display: block; width: 100%; background: var(--green); color: var(--white); font-family: var(--font-sans); font-size: 15px; font-weight: 700; padding: 14px 20px; border: none; border-radius: var(--radius); cursor: pointer; transition: background var(--transition); }
+  .btn-initiate:hover { background: var(--green-hover); }
+  .tx-footer-links { text-align: center; padding: 0 22px 16px; font-size: 12px; color: var(--text-tertiary); }
+  .tx-footer-links span { color: var(--green-dark); font-weight: 600; }
+  .tx-footer-links a { color: var(--green); font-size: 12px; }
+
+  .trust-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .trust-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 14px; text-align: center; }
+  .trust-val { font-family: var(--font-serif); font-size: 26px; font-weight: 700; color: var(--green); line-height: 1; }
+  .trust-lbl { font-size: 11.5px; color: var(--text-tertiary); margin-top: 5px; line-height: 1.3; }
+  .trust-n { font-size: 10px; color: var(--text-tertiary); margin-top: 3px; font-style: italic; }
+
+  .routing-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 10px; }
+  .routing-card.urgent { border-color: #E8A0A0; background: var(--red-bg); }
+  .routing-card.prereq { border-color: #E0D4A0; background: var(--amber-bg); }
+  .routing-card.alt { border-left: 3px solid var(--green); }
+  .routing-type { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+  .routing-card.urgent .routing-type { color: var(--red); }
+  .routing-card.prereq .routing-type { color: var(--amber); }
+  .routing-card.alt .routing-type { color: var(--green); }
+  .routing-text { font-size: 13.5px; color: var(--text-secondary); line-height: 1.6; }
+  .routing-text strong { color: var(--text-primary); }
+  .routing-link { display: inline-block; margin-top: 6px; font-size: 12.5px; font-weight: 600; color: var(--green); text-decoration: none; }
+  .routing-link:hover { text-decoration: underline; }
+
+  .disclosure { cursor: pointer; user-select: none; }
+  .disc-header { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .disc-arrow { font-size: 11px; color: var(--text-tertiary); transition: transform 0.2s; }
+  .disclosure.open .disc-arrow { transform: rotate(180deg); }
+  .disc-body { display: none; padding-bottom: 12px; font-size: 13.5px; color: var(--text-secondary); line-height: 1.65; }
+  .disclosure.open .disc-body { display: block; }
+
+  .page-footer { border-top: 1px solid var(--border); padding: 28px 28px 40px; text-align: center; font-size: 11.5px; color: var(--text-tertiary); line-height: 1.7; max-width: var(--content-width); margin: 0 auto; }
+  .footer-brand { font-family: var(--font-serif); font-weight: 700; color: var(--green); font-size: 15px; margin-bottom: 4px; }
+
+  @media (max-width: 900px) {
+    .two-col { grid-template-columns: 1fr; }
+    .right-col { position: static; order: -1; }
+    .tx-panel { margin-bottom: 16px; }
+    .header-search { display: none; }
+    .header-nav { gap: 14px; }
+    .fit-block { grid-template-columns: 1fr; }
+    .trust-grid { grid-template-columns: repeat(2, 1fr); }
+    .sc-scope { grid-template-columns: 1fr; }
+    .scope-col + .scope-col { border-left: none; border-top: 1px solid var(--border-light); }
+    .ep-steps { flex-direction: column; }
+    .ep-step + .ep-step { border-left: none; border-top: 2px solid var(--border); }
+    .identity-top { flex-direction: column; align-items: center; text-align: center; }
+    .verification-row { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="#" class="logo"><span class="logo-dot"></span> opendoc</a>
+    <div class="header-search">
+      <span class="search-icon">⌕</span>
+      <input type="text" placeholder="Search for a service, provider, diagnosis, or symptom">
+    </div>
+    <nav class="header-nav">
+      <a href="#">How It Works</a>
+      <a href="#">For Providers</a>
+      <button class="btn-signin">Sign in</button>
+    </nav>
+  </div>
+</header>
+
+<div class="page-wrap">
+  <nav class="breadcrumb">
+    <a href="#">Providers</a><span>›</span>
+    <a href="#">Orthopedic Surgery</a><span>›</span>
+    <a href="#">Canton, GA</a><span>›</span>
+    Dr. Michael Torres
+  </nav>
+
+  <div class="two-col">
+    <div class="left-col">
+
+      <!-- IDENTITY & CAPABILITY -->
+      <div class="identity-block">
+        <div class="identity-top">
+          <div class="provider-avatar">MT</div>
+          <div class="provider-info">
+            <h1 class="provider-name">Dr. Michael Torres, MD</h1>
+            <div class="provider-role">Orthopedic Surgery — Adult Reconstruction & Joint Replacement</div>
+            <div class="provider-org">Total Joint Specialists · Canton, GA</div>
+            <div class="verification-row">
+              <span class="v-badge">Board certified — ABOS</span>
+              <span class="v-badge">GA license active</span>
+              <span class="hk-bound"><span class="hk-dot"></span> Health Key Bound</span>
+            </div>
+          </div>
+        </div>
+        <div class="capability-block">
+          <div class="cap-label">Specialization</div>
+          <div class="cap-text">Primary and revision total joint replacement of the hip and knee. Evaluation and surgical management of degenerative arthritis, avascular necrosis, and failed prior joint replacement. Outpatient joint replacement in an ambulatory surgery center setting.</div>
+        </div>
+        <div class="fit-block">
+          <div class="fit-card good">
+            <div class="fit-label">Best fit for</div>
+            <ul>
+              <li>Bone-on-bone hip or knee arthritis</li>
+              <li>Failed conservative treatment (PT, injections, NSAIDs)</li>
+              <li>Avascular necrosis of the hip</li>
+              <li>Failed prior hip or knee replacement</li>
+              <li>Candidates for outpatient joint replacement</li>
+            </ul>
+          </div>
+          <div class="fit-card not">
+            <div class="fit-label">Not the right fit for</div>
+            <ul>
+              <li>Soft tissue injuries (ACL, meniscus, rotator cuff)</li>
+              <li>Spine or back pain</li>
+              <li>Foot and ankle conditions</li>
+              <li>Hand or wrist conditions</li>
+              <li>Pediatric orthopedics</li>
+              <li>Sports medicine without joint degeneration</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="loc-strip">
+        <div class="loc-item"><span class="loc-icon">◉</span> Advanced Center for Joint Replacement — 120 North St, Canton, GA 30114</div>
+        <div class="loc-item"><span class="loc-icon">◷</span> In-person · Telehealth evaluation</div>
+        <div class="loc-item"><span class="loc-icon">⟳</span> Updated 4h ago</div>
+      </div>
+
+      <!-- SERVICE CATALOG — Evaluations first -->
+      <div class="section" id="services">
+        <h2 class="section-header">Services & Prices</h2>
+        <div class="section-sub">Each service is a binding contract. The price shown is your guaranteed maximum.</div>
+
+        <!-- EVALUATION -->
+        <div class="service-card selected" data-service="eval" onclick="selectService(this)">
+          <div class="service-card-top">
+            <div class="sc-header">
+              <div>
+                <div class="sc-name">Joint Replacement Evaluation</div>
+                <span class="sc-type-tag eval">Evaluation</span>
+                <div class="sc-desc">Comprehensive evaluation to determine whether you are a candidate for hip or knee replacement. History, physical exam, imaging review, and decision framework. Evaluation only — no surgery is scheduled from this encounter.</div>
+              </div>
+              <div class="sc-price-block">
+                <div class="sc-price">$275</div>
+                <div class="sc-price-label">Maximum responsibility</div>
+              </div>
+            </div>
+          </div>
+          <div class="sc-scope">
+            <div class="scope-col inc"><div class="scope-lbl">Included</div><ul><li>Surgeon consultation (45–60 min)</li><li>Physical examination</li><li>Imaging review (bring your own)</li><li>Surgical candidacy assessment</li><li>Written summary of findings</li></ul></div>
+            <div class="scope-col exc"><div class="scope-lbl">Not included</div><ul><li>New imaging (X-ray, MRI) if needed</li><li>Injections or other treatments</li><li>Surgery scheduling or booking</li><li>Second opinion documentation for insurer</li></ul></div>
+          </div>
+          <div class="episode-block">
+            <div class="ep-label">What to expect</div>
+            <div class="ep-steps">
+              <div class="ep-step"><div class="ep-step-num">Single visit</div><div class="ep-step-title">Evaluation only</div><div class="ep-step-desc">One appointment. You leave with a clear answer: yes you're a candidate, no you're not, or further workup is needed.</div></div>
+            </div>
+          </div>
+          <div class="prep-block">
+            <div class="prep-lbl">Before you commit</div>
+            <ul><li>Bring all relevant imaging — the more complete, the better the assessment</li><li>List of treatments already tried (PT, injections, medications)</li><li>Questions about surgery, recovery, and alternatives</li></ul>
+          </div>
+        </div>
+
+        <!-- TOTAL KNEE REPLACEMENT -->
+        <div class="service-card" data-service="tkr" onclick="selectService(this)">
+          <div class="service-card-top">
+            <div class="sc-header">
+              <div>
+                <div class="sc-name">Total Knee Replacement</div>
+                <span class="sc-type-tag procedure">Procedure</span>
+                <div class="sc-desc">Complete replacement of the knee joint with prosthetic components. Outpatient ASC procedure. Includes surgeon, facility, anesthesia, implant, and 90-day post-operative care.</div>
+              </div>
+              <div class="sc-price-block"><div class="sc-price">$14,200</div><div class="sc-price-label">Maximum responsibility</div></div>
+            </div>
+          </div>
+          <div class="sc-scope">
+            <div class="scope-col inc"><div class="scope-lbl">Included</div><ul><li>Surgeon fee (primary & assist)</li><li>ASC facility fee</li><li>Anesthesia</li><li>Primary implant (cemented or cementless)</li><li>Pre-operative labs & imaging review</li><li>90-day post-operative visits (3 visits)</li><li>Physical therapy prescription</li></ul></div>
+            <div class="scope-col exc"><div class="scope-lbl">Not included</div><ul><li>Pre-operative medical clearance (PCP)</li><li>Post-operative physical therapy sessions</li><li>Durable medical equipment (walker, CPM)</li><li>Prescription medications post-discharge</li><li>Revision surgery if required</li></ul></div>
+          </div>
+          <div class="episode-block">
+            <div class="ep-label">What to expect</div>
+            <div class="ep-steps">
+              <div class="ep-step"><div class="ep-step-num">Step 1</div><div class="ep-step-title">Surgical evaluation</div><div class="ep-step-desc">In-person. Review imaging, confirm candidacy, discuss implant options. ~45 min.</div></div>
+              <div class="ep-step"><div class="ep-step-num">Step 2</div><div class="ep-step-title">Pre-op clearance</div><div class="ep-step-desc">Medical clearance from PCP. Labs, EKG if indicated. 2–4 weeks before surgery.</div></div>
+              <div class="ep-step"><div class="ep-step-num">Step 3</div><div class="ep-step-title">Surgery day</div><div class="ep-step-desc">Outpatient. Home same day. General or spinal anesthesia. ~90 min OR time.</div></div>
+              <div class="ep-step"><div class="ep-step-num">Step 4</div><div class="ep-step-title">Recovery</div><div class="ep-step-desc">PT begins within days. 3 post-op visits over 90 days. Daily activity in 4–6 weeks.</div></div>
+            </div>
+          </div>
+          <div class="prep-block">
+            <div class="prep-lbl">Before you commit</div>
+            <ul><li>Bring recent knee X-rays (weight-bearing AP + lateral). DICOM or CD accepted.</li><li>If prior knee surgery: operative reports from previous procedure</li><li>Medication list, especially blood thinners</li><li>BMI above 40 may require optimization before surgery</li><li>Driver required on surgery day; help at home for 3–5 days</li></ul>
+          </div>
+          <div class="scope-trigger"><strong>Scope change trigger:</strong> If intraoperative findings require augments, bone grafting, or conversion to a constrained implant, the price may change. You will be notified before any change is authorized.</div>
+        </div>
+
+        <!-- TOTAL HIP REPLACEMENT -->
+        <div class="service-card" data-service="thr" onclick="selectService(this)">
+          <div class="service-card-top">
+            <div class="sc-header">
+              <div>
+                <div class="sc-name">Total Hip Replacement</div>
+                <span class="sc-type-tag procedure">Procedure</span>
+                <div class="sc-desc">Complete replacement of the hip joint via anterior or posterior approach. Outpatient ASC procedure. Includes surgeon, facility, anesthesia, implant, and 90-day post-operative follow-up.</div>
+              </div>
+              <div class="sc-price-block"><div class="sc-price">$15,800</div><div class="sc-price-label">Maximum responsibility</div></div>
+            </div>
+          </div>
+          <div class="sc-scope">
+            <div class="scope-col inc"><div class="scope-lbl">Included</div><ul><li>Surgeon fee (primary & assist)</li><li>ASC facility fee</li><li>Anesthesia</li><li>Hip implant system (stem, cup, head, liner)</li><li>Pre-operative imaging review</li><li>90-day post-operative visits (3 visits)</li><li>Physical therapy prescription</li></ul></div>
+            <div class="scope-col exc"><div class="scope-lbl">Not included</div><ul><li>Pre-operative medical clearance</li><li>Post-operative physical therapy sessions</li><li>Durable medical equipment</li><li>Prescription medications post-discharge</li><li>Revision surgery if required</li></ul></div>
+          </div>
+          <div class="episode-block">
+            <div class="ep-label">What to expect</div>
+            <div class="ep-steps">
+              <div class="ep-step"><div class="ep-step-num">Step 1</div><div class="ep-step-title">Surgical evaluation</div><div class="ep-step-desc">In-person. Review imaging, confirm diagnosis, discuss approach. ~45 min.</div></div>
+              <div class="ep-step"><div class="ep-step-num">Step 2</div><div class="ep-step-title">Pre-op clearance</div><div class="ep-step-desc">PCP clearance, labs, possible cardiac workup. 2–4 weeks before surgery.</div></div>
+              <div class="ep-step"><div class="ep-step-num">Step 3</div><div class="ep-step-title">Surgery day</div><div class="ep-step-desc">Outpatient. Home same day. General or spinal anesthesia. ~75–90 min OR time.</div></div>
+              <div class="ep-step"><div class="ep-step-num">Step 4</div><div class="ep-step-title">Recovery</div><div class="ep-step-desc">PT begins days after. 3 post-op visits over 90 days. Daily activities in 3–6 weeks.</div></div>
+            </div>
+          </div>
+          <div class="prep-block">
+            <div class="prep-lbl">Before you commit</div>
+            <ul><li>Bring recent hip X-rays (AP pelvis + lateral). DICOM or CD.</li><li>If prior hip surgery: operative reports and implant records</li><li>Medication list, especially anticoagulants</li><li>Driver required on surgery day; help at home for 3–5 days</li></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- TRUST & EVIDENCE -->
+      <div class="section">
+        <h2 class="section-header">Verified Record</h2>
+        <div class="section-sub">Transaction-verified signals only. No editorial content.</div>
+        <div class="trust-grid">
+          <div class="trust-card"><div class="trust-val">143</div><div class="trust-lbl">Completed transactions</div><div class="trust-n">n = 143</div></div>
+          <div class="trust-card"><div class="trust-val">98.6%</div><div class="trust-lbl">Completion rate</div><div class="trust-n">n = 143</div></div>
+          <div class="trust-card"><div class="trust-val">11d</div><div class="trust-lbl">Median time to service</div><div class="trust-n">n = 127</div></div>
+          <div class="trust-card"><div class="trust-val">97.2%</div><div class="trust-lbl">Scheduling reliability</div><div class="trust-n">n = 143</div></div>
+        </div>
+        <div style="margin-top: 14px;">
+          <div class="disclosure" onclick="this.classList.toggle('open')">
+            <div class="disc-header">Facility & affiliations <span class="disc-arrow">▾</span></div>
+            <div class="disc-body">
+              <strong>Primary facility:</strong> Advanced Center for Joint Replacement (Canton, GA) — Medicare-certified ASC, AAAHC accredited.<br><br>
+              <strong>Additional locations:</strong> Sandy Springs, GA · Cumming, GA · Buford, GA<br><br>
+              <strong>Fellowship:</strong> Adult Reconstruction, Emory University. Board certified ABOS. Georgia medical license active.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROUTING BLOCK -->
+      <div class="section">
+        <h2 class="section-header">If This Isn't the Right Fit</h2>
+        <div class="section-sub">OpenDoc routes to the right care — not just to a transaction.</div>
+        <div class="routing-card urgent">
+          <div class="routing-type">Seek urgent evaluation</div>
+          <div class="routing-text">Sudden joint swelling with fever, inability to bear weight after injury, or signs of infection around a prior surgical site — <strong>go to the nearest emergency department.</strong></div>
+        </div>
+        <div class="routing-card prereq">
+          <div class="routing-type">You may need this first</div>
+          <div class="routing-text">If you have not yet had <strong>weight-bearing X-rays</strong> of the affected joint, most evaluations will require them. Your PCP can order these, or use a direct imaging center.<br><br>If you have not tried <strong>at least 6 weeks of conservative treatment</strong> (PT, anti-inflammatory medication, activity modification), Dr. Torres may recommend starting there.</div>
+          <a href="#" class="routing-link">Find physical therapy near Canton, GA →</a>
+        </div>
+        <div class="routing-card alt">
+          <div class="routing-type">Better-matched providers nearby</div>
+          <div class="routing-text">
+            <strong>ACL, meniscus, or rotator cuff?</strong> Sports medicine — not joint replacement. <a href="#" class="routing-link">View sports medicine providers →</a><br><br>
+            <strong>Back or spine pain?</strong> Different specialty entirely. <a href="#" class="routing-link">View spine specialists →</a><br><br>
+            <strong>Second opinion on joint replacement?</strong> <a href="#" class="routing-link">View other joint replacement surgeons →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Transaction Panel -->
+    <div class="right-col">
+      <div class="tx-panel">
+        <div class="tx-price-section">
+          <div class="tx-price-label-top">The price for this service</div>
+          <div class="tx-price" id="txPrice">$275</div>
+          <div class="tx-price-sub">Your guaranteed maximum. Known before<br>care, final forever.</div>
+        </div>
+        <div class="tx-covers" onclick="this.classList.toggle('open')">
+          <div class="tx-covers-header">What this covers <span class="tx-covers-arrow">▾</span></div>
+          <div class="tx-covers-body" id="txCovers">Surgeon consultation (45–60 min), physical examination, imaging review, surgical candidacy assessment, and written summary of findings.</div>
+        </div>
+        <div class="tx-service-info">
+          <div class="tx-svc-name" id="txSvcName">Joint Replacement Evaluation</div>
+          <div class="tx-svc-meta" id="txSvcMeta">Duration: 45–60 min</div>
+        </div>
+        <div class="tx-dates">
+          <div class="tx-dates-label">Select appointment time</div>
+          <div class="tx-dates-sub">Select a date</div>
+          <div class="date-row">
+            <div class="date-arrow">‹</div>
+            <div class="date-slots">
+              <div class="date-slot selected"><div class="date-slot-day">Thu</div><div class="date-slot-num">20</div><div class="date-slot-mo">Mar</div></div>
+              <div class="date-slot disabled"><div class="date-slot-day">Fri</div><div class="date-slot-num">21</div><div class="date-slot-mo">Mar</div></div>
+              <div class="date-slot disabled"><div class="date-slot-day">Sat</div><div class="date-slot-num">22</div><div class="date-slot-mo">Mar</div></div>
+              <div class="date-slot"><div class="date-slot-day">Mon</div><div class="date-slot-num">24</div><div class="date-slot-mo">Mar</div></div>
+              <div class="date-slot"><div class="date-slot-day">Tue</div><div class="date-slot-num">25</div><div class="date-slot-mo">Mar</div></div>
+            </div>
+            <div class="date-arrow">›</div>
+          </div>
+        </div>
+        <div class="tx-guarantee">
+          <div class="tx-guarantee-icon">✓</div>
+          <div>This is the full price for the service you are booking. You will never be charged more for this service.</div>
+        </div>
+        <div class="tx-cta"><button class="btn-initiate" id="btnInitiate">Initiate Health Key</button></div>
+        <div class="tx-footer-links">
+          <span>✓</span> Guaranteed price · No surprise billing<br>
+          <a href="#">Refund & cancellation policy</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="page-footer">
+    <div class="footer-brand">OpenDoc</div>
+    All prices represent maximum patient responsibility, guaranteed before care begins.<br>
+    Prices are for cleared (non-insurance) transactions only. Verification sourced from ABMS and state licensing boards.<br>
+    Operational metrics are transaction-verified and suppressed below minimum sample thresholds.<br><br>
+    Last updated: March 20, 2026 · Provider ID: PRV-0847 · Page state: Fully activated
+  </footer>
+</div>
+
+<script>
+const serviceData = {
+  eval: { price: '$275', name: 'Joint Replacement Evaluation', meta: 'Duration: 45–60 min', covers: 'Surgeon consultation (45–60 min), physical examination, imaging review, surgical candidacy assessment, and written summary of findings.' },
+  tkr: { price: '$14,200', name: 'Total Knee Replacement', meta: 'Duration: ~90 min surgery · Outpatient', covers: 'Surgeon fee, ASC facility fee, anesthesia, primary implant, pre-operative labs & imaging review, 90-day post-operative visits (3 visits), and physical therapy prescription.' },
+  thr: { price: '$15,800', name: 'Total Hip Replacement', meta: 'Duration: ~90 min surgery · Outpatient', covers: 'Surgeon fee, ASC facility fee, anesthesia, hip implant system, pre-operative imaging review, 90-day post-operative visits (3 visits), and physical therapy prescription.' }
+};
+function selectService(card) {
+  document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  const d = serviceData[card.dataset.service];
+  if (!d) return;
+  document.getElementById('txPrice').textContent = d.price;
+  document.getElementById('txSvcName').textContent = d.name;
+  document.getElementById('txSvcMeta').textContent = d.meta;
+  document.getElementById('txCovers').textContent = d.covers;
+}
+document.querySelectorAll('.date-slot:not(.disabled)').forEach(s => {
+  s.addEventListener('click', function(e) {
+    e.stopPropagation();
+    document.querySelectorAll('.date-slot').forEach(x => x.classList.remove('selected'));
+    this.classList.add('selected');
+  });
+});
+</script>
+</body>
+</html>
