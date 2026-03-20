@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenDoc — How It Works</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
+  :root {
+    --green: #2D6A4F;
+    --green-deep: #1B4332;
+    --green-light: #D8F3DC;
+    --green-muted: #B7E4C7;
+    --cream: #F6F4F0;
+    --cream-dark: #EDE9E3;
+    --text: #1A1A1A;
+    --text2: #4A4A4A;
+    --text3: #7A7A7A;
+    --white: #FFFFFF;
+    --red: #C0392B;
+    --red-light: #FDEDEB;
+    --amber: #D4A017;
+    --amber-light: #FFF8E1;
+    --border: rgba(0,0,0,0.08);
+    --font-serif: 'Georgia', 'Times New Roman', serif;
+    --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --max-w: 1140px;
+    --section-pad: 120px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-sans); color: var(--text); background: var(--white); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+  /* ── NAV ── */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+  .nav-inner { max-width: var(--max-w); margin: 0 auto; padding: 0 32px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo svg { width: 28px; height: 28px; }
+  .nav-logo span { font-family: var(--font-sans); font-weight: 600; font-size: 18px; color: var(--text); letter-spacing: -0.3px; }
+  .nav-links { display: flex; align-items: center; gap: 32px; }
+  .nav-links a { font-size: 14px; font-weight: 500; color: var(--text2); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--green); }
+  .nav-links a.active { color: var(--green); font-weight: 600; }
+  .nav-cta { font-size: 14px; font-weight: 600; color: var(--white) !important; background: var(--green); padding: 8px 20px; border-radius: 8px; transition: opacity 0.2s; }
+  .nav-cta:hover { opacity: 0.9; color: var(--white) !important; }
+  .nav-search { display: flex; align-items: center; gap: 0; background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; padding: 0; overflow: hidden; }
+  .nav-search input { border: none; outline: none; font-size: 13px; padding: 8px 14px; width: 260px; background: transparent; color: var(--text); font-family: var(--font-sans); }
+  .nav-search input::placeholder { color: var(--text3); }
+  .nav-search button { border: none; background: var(--green); color: var(--white); font-size: 13px; font-weight: 600; padding: 8px 16px; cursor: pointer; font-family: var(--font-sans); }
+
+  /* ── HERO ── */
+  .hero { padding: 160px 32px 120px; background: linear-gradient(180deg, #EDF7F0 0%, var(--white) 100%); text-align: center; position: relative; }
+  .hero-inner { max-width: 740px; margin: 0 auto; }
+  .hero h1 { font-family: var(--font-serif); font-size: 54px; line-height: 1.15; font-weight: 700; color: var(--text); margin-bottom: 28px; letter-spacing: -1px; }
+  .hero-sub { font-size: 19px; line-height: 1.8; color: var(--text2); max-width: 560px; margin: 0 auto 40px; }
+  .hero-cta { display: inline-flex; align-items: center; gap: 10px; background: var(--green); color: var(--white); font-size: 17px; font-weight: 600; padding: 16px 36px; border-radius: 12px; text-decoration: none; transition: all 0.2s; border: none; cursor: pointer; }
+  .hero-cta:hover { background: var(--green-deep); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(45,106,79,0.3); }
+  .hero-cta svg { width: 18px; height: 18px; }
+  .hero-note { font-size: 13px; color: var(--text3); margin-top: 16px; }
+
+  /* ── ANIMATION ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-inner { animation: fadeUp 0.8s ease-out; }
+
+  /* ── THE OLD WAY / NEW WAY ── */
+  .compare { padding: var(--section-pad) 32px; background: var(--white); }
+  .compare-inner { max-width: var(--max-w); margin: 0 auto; }
+  .compare-header { text-align: center; max-width: 640px; margin: 0 auto 64px; }
+  .section-label { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green); margin-bottom: 16px; }
+  .compare-header h2 { font-family: var(--font-serif); font-size: 36px; line-height: 1.25; font-weight: 400; color: var(--text); margin-bottom: 16px; }
+  .compare-header p { font-size: 17px; line-height: 1.7; color: var(--text2); }
+  .compare-grid { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 0; align-items: stretch; }
+  .compare-col { padding: 40px 36px; border-radius: 20px; }
+  .compare-col.old { background: #FDF6F5; border: 1.5px solid #F0D0CC; }
+  .compare-col.new { background: #F2FAF5; border: 1.5px solid #B7E4C7; }
+  .compare-vs { display: flex; align-items: center; justify-content: center; }
+  .compare-vs span { width: 48px; height: 48px; border-radius: 50%; background: var(--cream); border: 1.5px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--text3); letter-spacing: 0.5px; }
+  .compare-col-label { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 20px; }
+  .compare-col.old .compare-col-label { color: var(--red); }
+  .compare-col.new .compare-col-label { color: var(--green); }
+  .compare-col h3 { font-family: var(--font-serif); font-size: 22px; font-weight: 400; margin-bottom: 24px; color: var(--text); line-height: 1.35; }
+  .compare-item { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 18px; }
+  .compare-item:last-child { margin-bottom: 0; }
+  .compare-icon { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 1px; }
+  .compare-col.old .compare-icon { background: #F0D0CC; color: var(--red); }
+  .compare-col.new .compare-icon { background: var(--green-light); color: var(--green); }
+  .compare-item p { font-size: 14px; line-height: 1.6; color: var(--text2); }
+  .compare-item p strong { color: var(--text); font-weight: 600; }
+
+  /* ── STEPS ── */
+  .steps { padding: var(--section-pad) 32px; background: var(--cream); }
+  .steps-inner { max-width: var(--max-w); margin: 0 auto; }
+  .steps-header { text-align: center; max-width: 640px; margin: 0 auto 80px; }
+  .steps-header h2 { font-family: var(--font-serif); font-size: 36px; line-height: 1.25; font-weight: 400; color: var(--text); margin-bottom: 16px; }
+  .steps-header p { font-size: 17px; line-height: 1.7; color: var(--text2); }
+
+  .step-row { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; margin-bottom: 100px; }
+  .step-row:last-child { margin-bottom: 0; }
+  .step-row.reverse { direction: rtl; }
+  .step-row.reverse > * { direction: ltr; }
+  .step-text { }
+  .step-num { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: var(--green); color: var(--white); font-family: var(--font-serif); font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+  .step-text h3 { font-family: var(--font-serif); font-size: 28px; font-weight: 400; color: var(--text); margin-bottom: 12px; line-height: 1.3; }
+  .step-text p { font-size: 16px; line-height: 1.75; color: var(--text2); }
+  .step-text .step-detail { margin-top: 16px; font-size: 14px; color: var(--text3); line-height: 1.7; padding-left: 16px; border-left: 2px solid var(--green-light); }
+
+  /* ── Step visuals (phone mockups) ── */
+  .step-visual { display: flex; justify-content: center; }
+  .phone-frame { width: 300px; background: var(--white); border: 2px solid var(--border); border-radius: 32px; padding: 16px 18px 24px; box-shadow: 0 16px 48px rgba(0,0,0,0.06), 0 2px 6px rgba(0,0,0,0.03); }
+  .phone-frame.active-border { border-color: var(--green); }
+  .phone-notch { width: 60px; height: 5px; background: var(--cream-dark); border-radius: 3px; margin: 0 auto 16px; }
+  .phone-label { font-size: 10px; font-weight: 700; color: var(--green); letter-spacing: 0.8px; text-transform: uppercase; text-align: center; margin-bottom: 14px; }
+
+  /* Search mockup */
+  .mock-search { border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 14px; font-size: 13px; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .mock-search .cursor { display: inline-block; width: 1px; height: 16px; background: var(--green); animation: blink 1s infinite; }
+  @keyframes blink { 0%,50% { opacity: 1; } 51%,100% { opacity: 0; } }
+  .mock-search-text { color: var(--text); }
+  .mock-result { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; }
+  .mock-result-name { font-family: var(--font-serif); font-size: 13px; font-weight: 600; color: var(--text); }
+  .mock-result-sub { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .mock-result-price { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
+  .mock-result-price .price { font-family: var(--font-serif); font-size: 16px; font-weight: 700; color: var(--green); }
+  .mock-result-price .tag { font-size: 10px; color: var(--text3); }
+
+  /* Provider detail mockup */
+  .mock-provider-top { text-align: center; margin-bottom: 14px; }
+  .mock-provider-top h4 { font-family: var(--font-serif); font-size: 15px; font-weight: 600; color: var(--text); }
+  .mock-provider-top p { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .mock-service-box { background: var(--cream); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+  .mock-service-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .mock-service-price { font-family: var(--font-serif); font-size: 22px; font-weight: 700; color: var(--green); }
+  .mock-service-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.3px; }
+  .mock-includes { font-size: 11px; color: var(--text2); line-height: 1.7; margin-bottom: 10px; }
+  .mock-includes strong { color: var(--text); font-weight: 600; display: block; margin-bottom: 2px; }
+  .mock-book-btn { display: block; width: 100%; padding: 11px; background: var(--green); color: var(--white); border-radius: 10px; font-size: 14px; font-weight: 600; text-align: center; border: none; }
+
+  /* Health Key mockup (reused from provider page) */
+  .hk-head { text-align: center; font-size: 10px; font-weight: 700; color: var(--green); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
+  .hk-name { text-align: center; font-family: var(--font-serif); font-size: 16px; font-weight: 600; letter-spacing: 1.5px; color: var(--text); }
+  .hk-dob { text-align: center; font-size: 11px; color: var(--text3); margin: 4px 0 12px; }
+  .hk-divider { height: 1px; background: var(--border); margin: 0 -18px; }
+  .hk-provider { text-align: center; font-size: 11px; color: var(--text2); margin-top: 12px; }
+  .hk-service { text-align: center; font-size: 12px; font-weight: 600; color: var(--text); margin: 3px 0 10px; }
+  .hk-price { text-align: center; font-family: var(--font-serif); font-size: 36px; font-weight: 700; color: var(--green); padding: 2px 0; }
+  .hk-price-label { text-align: center; font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+  .hk-state { text-align: center; margin: 6px 0; }
+  .hk-state span { display: inline-block; padding: 5px 22px; border-radius: 8px; font-weight: 700; font-size: 12px; background: var(--green-light); color: var(--green-deep); letter-spacing: 1px; }
+  .hk-qr { text-align: center; margin-top: 10px; }
+  .hk-qr-box { width: 56px; height: 56px; background: var(--cream); border: 1px solid var(--border); border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; }
+  .hk-qr-box svg { width: 36px; height: 36px; color: var(--text3); opacity: 0.4; }
+  .hk-qr-label { font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+
+  /* Show up mockup */
+  .mock-checkin { text-align: center; }
+  .mock-scan-ring { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--green); display: flex; align-items: center; justify-content: center; margin: 16px auto; position: relative; }
+  .mock-scan-ring::after { content: ''; position: absolute; inset: 6px; border-radius: 50%; border: 1.5px dashed var(--green-muted); animation: spin 8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .mock-scan-ring svg { width: 36px; height: 36px; color: var(--green); }
+  .mock-checkin h4 { font-family: var(--font-serif); font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .mock-checkin p { font-size: 12px; color: var(--text2); line-height: 1.6; margin-bottom: 14px; }
+  .mock-confirmed { background: var(--green-light); border-radius: 10px; padding: 14px 16px; text-align: left; }
+  .mock-confirmed-row { display: flex; justify-content: space-between; padding: 3px 0; font-size: 11px; color: var(--text); }
+  .mock-confirmed-row .check { color: var(--green); font-weight: 700; }
+  .mock-confirmed-row .lbl { color: var(--text2); }
+
+  /* ── WHAT YOU GET ── */
+  .promises { padding: var(--section-pad) 32px; background: var(--green-deep); color: var(--white); }
+  .promises-inner { max-width: var(--max-w); margin: 0 auto; }
+  .promises-header { text-align: center; max-width: 640px; margin: 0 auto 64px; }
+  .promises-header .section-label { color: var(--green-muted); }
+  .promises-header h2 { font-family: var(--font-serif); font-size: 36px; line-height: 1.25; font-weight: 400; color: var(--white); margin-bottom: 16px; }
+  .promises-header p { font-size: 17px; line-height: 1.7; color: rgba(255,255,255,0.65); }
+  .promises-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .promise-card { padding: 36px 28px; border-radius: 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); }
+  .promise-card h3 { font-size: 17px; font-weight: 600; color: var(--white); margin-bottom: 8px; }
+  .promise-card p { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.6); }
+  .promise-icon { font-size: 28px; margin-bottom: 16px; line-height: 1; }
+
+  /* ── FAQ ── */
+  .faq { padding: var(--section-pad) 32px; background: var(--white); }
+  .faq-inner { max-width: 720px; margin: 0 auto; }
+  .faq-header { text-align: center; margin-bottom: 56px; }
+  .faq-header h2 { font-family: var(--font-serif); font-size: 36px; font-weight: 400; color: var(--text); }
+  .faq-item { border-bottom: 1px solid var(--border); }
+  .faq-q { padding: 22px 0; font-size: 16px; font-weight: 600; color: var(--text); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+  .faq-q::after { content: '+'; font-size: 22px; font-weight: 300; color: var(--text3); transition: transform 0.2s; }
+  .faq-item.open .faq-q::after { content: '−'; }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; }
+  .faq-item.open .faq-a { max-height: 300px; padding-bottom: 22px; }
+  .faq-a p { font-size: 15px; line-height: 1.75; color: var(--text2); }
+
+  /* ── FINAL CTA ── */
+  .final-cta { padding: var(--section-pad) 32px; background: var(--cream); text-align: center; }
+  .final-cta-inner { max-width: 600px; margin: 0 auto; }
+  .final-cta h2 { font-family: var(--font-serif); font-size: 42px; font-weight: 400; color: var(--text); margin-bottom: 16px; line-height: 1.2; }
+  .final-cta p { font-size: 17px; line-height: 1.7; color: var(--text2); margin-bottom: 36px; }
+  .final-cta .hero-note { color: var(--text3); }
+
+  /* ── FOOTER ── */
+  .footer { padding: 48px 32px; background: var(--text); }
+  .footer-inner { max-width: var(--max-w); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+  .footer-left { font-size: 13px; color: rgba(255,255,255,0.4); }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; }
+  .footer-links a:hover { color: rgba(255,255,255,0.8); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    :root { --section-pad: 80px; }
+    .hero h1 { font-size: 38px; }
+    .compare-grid { grid-template-columns: 1fr; gap: 20px; }
+    .compare-vs { transform: rotate(90deg); }
+    .step-row, .step-row.reverse { grid-template-columns: 1fr; gap: 40px; direction: ltr; }
+    .step-visual { order: -1; }
+    .promises-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .hero { padding: 110px 20px 80px; }
+    .hero h1 { font-size: 32px; }
+    .nav-search { display: none; }
+    .nav-links a:not(.nav-cta) { display: none; }
+    .phone-frame { width: 260px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <svg viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" stroke="#2D6A4F" stroke-width="2" fill="none"/><circle cx="14" cy="14" r="5" fill="#2D6A4F"/></svg>
+      <span>opendoc</span>
+    </a>
+    <div class="nav-search">
+      <input type="text" placeholder="Search for a service, provider, diagnosis, or symptom" readonly>
+      <button>Search</button>
+    </div>
+    <div class="nav-links">
+      <a href="#" class="active">How It Works</a>
+      <a href="#">For Providers</a>
+      <a href="#">Sign in</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <h1>We should be able to purchase our healthcare like everything else.</h1>
+    <p class="hero-sub">You wouldn't buy a car without knowing the price.<br>You wouldn't shop online without a receipt.<br>So why does healthcare still work that way?</p>
+    <a href="#" class="hero-cta">
+      Get Your Health Key
+      <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h10M10 5l4 4-4 4"/></svg>
+    </a>
+    <div class="hero-note">Free. No insurance required. Takes 2 minutes.</div>
+  </div>
+</section>
+
+<!-- ── OLD WAY vs NEW WAY ── -->
+<section class="compare">
+  <div class="compare-inner">
+    <div class="compare-header">
+      <div class="section-label">The difference</div>
+      <h2>We all know the old way doesn't work</h2>
+      <p>Every other purchase in your life tells you the price before you pay. Healthcare is the only market where the bill is a surprise.</p>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-col old">
+        <div class="compare-col-label">Without OpenDoc</div>
+        <h3>Hope for the best, budget for the worst</h3>
+        <div class="compare-item">
+          <div class="compare-icon">✕</div>
+          <p><strong>"We'll bill your insurance."</strong> You leave with no idea what you owe. The bill arrives weeks later.</p>
+        </div>
+        <div class="compare-item">
+          <div class="compare-icon">✕</div>
+          <p><strong>"What's my co-pay?"</strong> Depends on your deductible, your plan, the provider's contract, the phase of the moon.</p>
+        </div>
+        <div class="compare-item">
+          <div class="compare-icon">✕</div>
+          <p><strong>"Can I get a price estimate?"</strong> Maybe. It won't be binding. The real number comes after.</p>
+        </div>
+        <div class="compare-item">
+          <div class="compare-icon">✕</div>
+          <p><strong>Surprise balance bill.</strong> Out-of-network anesthesiologist? Lab sent elsewhere? You're paying for it.</p>
+        </div>
+      </div>
+      <div class="compare-vs"><span>vs</span></div>
+      <div class="compare-col new">
+        <div class="compare-col-label">With OpenDoc</div>
+        <h3>Know the price. Pay the price. That's it.</h3>
+        <div class="compare-item">
+          <div class="compare-icon">✓</div>
+          <p><strong>You see the exact price before you book.</strong> Not an estimate. Not a range. The number you'll pay.</p>
+        </div>
+        <div class="compare-item">
+          <div class="compare-icon">✓</div>
+          <p><strong>You know what's included and excluded.</strong> Every service spells out exactly what you're getting — and what you're not.</p>
+        </div>
+        <div class="compare-item">
+          <div class="compare-icon">✓</div>
+          <p><strong>You pay once, upfront.</strong> No second bill. No balance bill. No collections letter. Your maximum is locked.</p>
+        </div>
+        <div class="compare-item">
+          <div class="compare-icon">✓</div>
+          <p><strong>Your Health Key proves it.</strong> One screen shows your provider, your service, your price, and your authorization. Scan it at check-in.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS (STEPS) ── -->
+<section class="steps">
+  <div class="steps-inner">
+    <div class="steps-header">
+      <div class="section-label">How it works</div>
+      <h2>Four steps. No surprises.</h2>
+      <p>From "I need care" to walking through the door — you know the price the entire time.</p>
+    </div>
+
+    <!-- STEP 1: SEARCH -->
+    <div class="step-row">
+      <div class="step-text">
+        <div class="step-num">1</div>
+        <h3>Search for what you need</h3>
+        <p>Type a symptom, a diagnosis, a service, or a particular provider. OpenDoc shows you providers near you with clear, guaranteed prices for every service they offer.</p>
+        <div class="step-detail">No account required to search. No insurance card needed. Just tell us what kind of care you're looking for.</div>
+      </div>
+      <div class="step-visual">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-label">OpenDoc</div>
+          <div class="mock-search">
+            <span class="mock-search-text">knee pain</span>
+            <span class="cursor"></span>
+          </div>
+          <div class="mock-result">
+            <div class="mock-result-name">Peachtree Orthopedics</div>
+            <div class="mock-result-sub">Dr. James Miller, MD · Canton, GA · 4.2 mi</div>
+            <div class="mock-result-price">
+              <span class="price">$150</span>
+              <span class="tag">Orthopedic consultation</span>
+            </div>
+          </div>
+          <div class="mock-result">
+            <div class="mock-result-name">North Georgia Sports Medicine</div>
+            <div class="mock-result-sub">Dr. Rachel Kim, DO · Cumming, GA · 11 mi</div>
+            <div class="mock-result-price">
+              <span class="price">$125</span>
+              <span class="tag">Orthopedic consultation</span>
+            </div>
+          </div>
+          <div class="mock-result" style="opacity: 0.5;">
+            <div class="mock-result-name">Mountain View Ortho</div>
+            <div class="mock-result-sub">Dr. Alex Park, MD · Jasper, GA · 18 mi</div>
+            <div class="mock-result-price">
+              <span class="price">$140</span>
+              <span class="tag">Orthopedic consultation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: SEE EVERYTHING -->
+    <div class="step-row reverse">
+      <div class="step-text">
+        <div class="step-num">2</div>
+        <h3>See the price. Know what's included and what's not.</h3>
+        <p>Every service lists exactly what you're paying for — and what's not covered. No vague descriptions. No fine print you discover later. The price is the price.</p>
+        <div class="step-detail">Inclusions and exclusions are spelled out before you book. If something isn't listed, it isn't part of the deal.</div>
+      </div>
+      <div class="step-visual">
+        <div class="phone-frame">
+          <div class="phone-notch"></div>
+          <div class="phone-label">Service details</div>
+          <div class="mock-provider-top">
+            <h4>Peachtree Orthopedics</h4>
+            <p>Dr. James Miller, MD · Canton, GA</p>
+          </div>
+          <div class="mock-service-box">
+            <div class="mock-service-name">Orthopedic Consultation</div>
+            <div class="mock-service-price">$150</div>
+            <div class="mock-service-label">Guaranteed price · No additional charges</div>
+          </div>
+          <div class="mock-includes">
+            <strong>What's included:</strong>
+            History & physical exam, diagnostic assessment, imaging review (if available), treatment plan, follow-up instructions
+          </div>
+          <div class="mock-includes">
+            <strong>What's not included:</strong>
+            X-rays, MRI, injections, physical therapy, surgical procedures (priced separately)
+          </div>
+          <div class="mock-book-btn">Book & Pay $150</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: GET YOUR HEALTH KEY -->
+    <div class="step-row">
+      <div class="step-text">
+        <div class="step-num">3</div>
+        <h3>Get your Health Key</h3>
+        <p>After you book and pay, you get a Health Key — a single screen that proves everything about your visit: who you are, what service is authorized, and what you've paid.</p>
+        <div class="step-detail">Think of it like a boarding pass. You wouldn't get on a plane without one. Your Health Key is your proof that everything is settled before care begins.</div>
+      </div>
+      <div class="step-visual">
+        <div class="phone-frame active-border">
+          <div class="phone-notch"></div>
+          <div class="hk-head">Health Key</div>
+          <div class="hk-name">EMILY R. DAVIS</div>
+          <div class="hk-dob">DOB: 1992-04-18</div>
+          <div class="hk-divider"></div>
+          <div class="hk-provider">Peachtree Orthopedics</div>
+          <div class="hk-service">Orthopedic Consultation</div>
+          <div class="hk-price">$150</div>
+          <div class="hk-price-label">Maximum Patient Responsibility</div>
+          <div class="hk-state"><span>ACTIVE</span></div>
+          <div class="hk-qr">
+            <div class="hk-qr-box">
+              <svg viewBox="0 0 36 36" fill="none"><rect x="4" y="4" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="6" y="6" width="6" height="6" rx="1" fill="currentColor"/><rect x="22" y="4" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="24" y="6" width="6" height="6" rx="1" fill="currentColor"/><rect x="4" y="22" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/><rect x="6" y="24" width="6" height="6" rx="1" fill="currentColor"/><rect x="22" y="22" width="4" height="4" rx="1" fill="currentColor"/><rect x="28" y="22" width="4" height="4" rx="1" fill="currentColor"/><rect x="22" y="28" width="4" height="4" rx="1" fill="currentColor"/><rect x="28" y="28" width="4" height="4" rx="1" fill="currentColor"/></svg>
+            </div>
+            <div class="hk-qr-label">Scan at check-in</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: SHOW UP -->
+    <div class="step-row reverse">
+      <div class="step-text">
+        <div class="step-num">4</div>
+        <h3>Show up. Show your Health Key. Get care.</h3>
+        <p>Walk in. The front desk scans your Health Key or glances at the screen. They know who you are, what you're here for, and that you've already paid. No paperwork. No "let me check your benefits." Just care.</p>
+        <div class="step-detail">If anything changes during your visit, your Health Key tells you. Nothing happens without your authorization.</div>
+      </div>
+      <div class="step-visual">
+        <div class="phone-frame active-border">
+          <div class="phone-notch"></div>
+          <div class="phone-label" style="color:var(--green)">Check-in verified</div>
+          <div class="mock-checkin">
+            <div class="mock-scan-ring">
+              <svg viewBox="0 0 36 36" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 8h-2a2 2 0 00-2 2v2M24 8h2a2 2 0 012 2v2M8 24v2a2 2 0 002 2h2M26 24v2a2 2 0 01-2 2h-2"/><rect x="14" y="14" width="8" height="8" rx="1.5"/></svg>
+            </div>
+            <h4>You're checked in</h4>
+            <p>Health Key verified. You're all set.</p>
+            <div class="mock-confirmed">
+              <div class="mock-confirmed-row"><span class="lbl">Identity</span><span class="check">✓ Confirmed</span></div>
+              <div class="mock-confirmed-row"><span class="lbl">Service</span><span class="check">✓ Orthopedic Consult</span></div>
+              <div class="mock-confirmed-row"><span class="lbl">Payment</span><span class="check">✓ $150 secured</span></div>
+              <div class="mock-confirmed-row"><span class="lbl">Authorization</span><span class="check">✓ Active</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHAT YOU GET ── -->
+<section class="promises">
+  <div class="promises-inner">
+    <div class="promises-header">
+      <div class="section-label">What you get</div>
+      <h2>No fine print. Just these.</h2>
+      <p>Every transaction on OpenDoc comes with these guarantees. Not policies. Not aspirations. Architectural guarantees built into how the system works.</p>
+    </div>
+    <div class="promises-grid">
+      <div class="promise-card">
+        <div class="promise-icon">💰</div>
+        <h3>The price you see is the price you pay</h3>
+        <p>Your maximum responsibility is locked before care begins. If the actual cost comes in lower, you pay less. Never more.</p>
+      </div>
+      <div class="promise-card">
+        <div class="promise-icon">📋</div>
+        <h3>You know what's included before you book</h3>
+        <p>Every service lists inclusions and exclusions. No vague categories. No hidden line items. If it's not listed, it's not in your price.</p>
+      </div>
+      <div class="promise-card">
+        <div class="promise-icon">🔒</div>
+        <h3>No surprise bills. Ever.</h3>
+        <p>You pay once, upfront. No balance bill. No collections letter. No "your insurance didn't cover this." The transaction is settled before care begins.</p>
+      </div>
+      <div class="promise-card">
+        <div class="promise-icon">🏥</div>
+        <h3>Every provider is verified</h3>
+        <p>NPI-verified. State-licensed. Credentials confirmed from the national registry. Not anonymous listings. Real providers, real accountability.</p>
+      </div>
+      <div class="promise-card">
+        <div class="promise-icon">📱</div>
+        <h3>Your Health Key works everywhere</h3>
+        <p>In-person or online. Show it, scan it, or present it digitally. Same screen, same truth, same authority — no matter how you access care.</p>
+      </div>
+      <div class="promise-card">
+        <div class="promise-icon">🚫</div>
+        <h3>No insurance required</h3>
+        <p>OpenDoc works on clear prices, not insurance contracts. You don't need a card, a plan, or a policy. Just you and the price you agreed to.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section class="faq">
+  <div class="faq-inner">
+    <div class="faq-header">
+      <h2>Common questions</h2>
+    </div>
+    <div class="faq-item open">
+      <div class="faq-q" onclick="toggleFaq(this)">What is a Health Key?</div>
+      <div class="faq-a"><p>A Health Key is a single screen that shows your identity, your provider, the service you've booked, and the maximum you'll pay. Think of it like a boarding pass for healthcare. You present it when you arrive, and both you and the provider know exactly what's authorized.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Do I need insurance to use OpenDoc?</div>
+      <div class="faq-a"><p>No. OpenDoc uses clear, upfront cash prices. There's no insurance card to present, no network to worry about, and no claim to file. You see the price, you pay the price.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Can I use my HSA or FSA?</div>
+      <div class="faq-a"><p>Yes. Healthcare services on OpenDoc are eligible expenses for HSA and FSA accounts. You pay with your HSA/FSA card just like any other medical payment.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">What if I need something that wasn't included?</div>
+      <div class="faq-a"><p>Every service on OpenDoc lists what's included and what's excluded before you book. If your provider recommends something outside the scope of your booking, your Health Key state changes to DECISION REQUIRED. Nothing additional happens without your explicit authorization and a clear price.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">How much does OpenDoc cost?</div>
+      <div class="faq-a"><p>Free to patients. You pay the price listed for the service you book — nothing on top. No subscription, no membership fee, no hidden platform charge.</p></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Are the prices usually cheaper than insurance?</div>
+      <div class="faq-a"><p>For many services — especially if you haven't met your deductible — the clear cash price on OpenDoc is lower than what you'd pay through insurance. You can always compare before you book.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FINAL CTA ── -->
+<section class="final-cta">
+  <div class="final-cta-inner">
+    <h2>Healthcare you can see before you buy.</h2>
+    <p>Search for a service. See the price. Book with confidence. Your Health Key handles the rest.</p>
+    <a href="#" class="hero-cta">
+      Get Your Health Key
+      <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h10M10 5l4 4-4 4"/></svg>
+    </a>
+    <div class="hero-note">Free. No insurance required. Takes 2 minutes.</div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-left">&copy; 2026 OpenDoc. Healthcare you can see before you buy.</div>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+</script>
+
+</body>
+</html>
