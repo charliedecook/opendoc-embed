@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenDoc — For Providers</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
+  :root {
+    --green: #2D6A4F;
+    --green-deep: #1B4332;
+    --green-light: #D8F3DC;
+    --green-muted: #B7E4C7;
+    --cream: #F6F4F0;
+    --cream-dark: #EDE9E3;
+    --text: #1A1A1A;
+    --text2: #4A4A4A;
+    --text3: #7A7A7A;
+    --white: #FFFFFF;
+    --border: rgba(0,0,0,0.08);
+    --font-serif: 'Georgia', 'Times New Roman', serif;
+    --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --max-w: 1140px;
+    --section-pad: 120px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-sans); color: var(--text); background: var(--white); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  img { max-width: 100%; display: block; }
+
+  /* ── NAV ── */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+  .nav-inner { max-width: var(--max-w); margin: 0 auto; padding: 0 32px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo svg { width: 28px; height: 28px; }
+  .nav-logo span { font-family: var(--font-sans); font-weight: 600; font-size: 18px; color: var(--text); letter-spacing: -0.3px; }
+  .nav-links { display: flex; align-items: center; gap: 32px; }
+  .nav-links a { font-size: 14px; font-weight: 500; color: var(--text2); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--green); }
+  .nav-links a.active { color: var(--green); font-weight: 600; }
+  .nav-cta { font-size: 14px; font-weight: 600; color: var(--white) !important; background: var(--green); padding: 8px 20px; border-radius: 8px; transition: opacity 0.2s; }
+  .nav-cta:hover { opacity: 0.9; color: var(--white) !important; }
+
+  /* ── HERO ── */
+  .hero { padding: 140px 32px 100px; background: var(--cream); position: relative; overflow: hidden; }
+  .hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: var(--border); }
+  .hero-inner { max-width: var(--max-w); margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  .hero-text { }
+  .hero-label { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green); margin-bottom: 20px; }
+  .hero h1 { font-family: var(--font-serif); font-size: 48px; line-height: 1.15; font-weight: 400; color: var(--text); margin-bottom: 24px; letter-spacing: -0.5px; }
+  .hero h1 em { font-style: italic; color: var(--green); }
+  .hero-sub { font-size: 18px; line-height: 1.7; color: var(--text2); max-width: 480px; margin-bottom: 36px; }
+  .hero-cta { display: inline-flex; align-items: center; gap: 10px; background: var(--green); color: var(--white); font-size: 16px; font-weight: 600; padding: 14px 32px; border-radius: 10px; text-decoration: none; transition: all 0.2s; border: none; cursor: pointer; }
+  .hero-cta:hover { background: var(--green-deep); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(45,106,79,0.3); }
+  .hero-cta svg { width: 18px; height: 18px; }
+  .hero-note { font-size: 13px; color: var(--text3); margin-top: 14px; }
+
+  /* ── Health Key mockup ── */
+  .hk-mockup { background: var(--white); border: 2px solid var(--green); border-radius: 28px; padding: 28px 24px 32px; max-width: 340px; margin-left: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04); position: relative; }
+  .hk-mockup::before { content: 'What walks through your door'; position: absolute; top: -32px; left: 0; font-size: 12px; font-weight: 600; color: var(--green); letter-spacing: 0.5px; text-transform: uppercase; }
+  .hk-notch { width: 60px; height: 5px; background: var(--cream-dark); border-radius: 3px; margin: 0 auto 20px; }
+  .hk-head { text-align: center; font-size: 10px; font-weight: 700; color: var(--green); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
+  .hk-name { text-align: center; font-family: var(--font-serif); font-size: 17px; font-weight: 600; letter-spacing: 1.5px; color: var(--text); }
+  .hk-dob { text-align: center; font-size: 11px; color: var(--text3); margin: 4px 0 14px; }
+  .hk-divider { height: 1px; background: var(--border); margin: 0 -24px; }
+  .hk-provider { text-align: center; font-size: 11px; color: var(--text2); margin-top: 14px; }
+  .hk-service { text-align: center; font-size: 13px; font-weight: 600; color: var(--text); margin: 4px 0 14px; }
+  .hk-price { text-align: center; font-family: var(--font-serif); font-size: 40px; font-weight: 700; color: var(--green); padding: 4px 0; }
+  .hk-price-label { text-align: center; font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px; }
+  .hk-state { text-align: center; margin: 8px 0; }
+  .hk-state span { display: inline-block; padding: 6px 28px; border-radius: 8px; font-weight: 700; font-size: 13px; background: var(--green-light); color: var(--green-deep); letter-spacing: 1px; }
+  .hk-qr { text-align: center; margin-top: 14px; }
+  .hk-qr-box { display: inline-flex; flex-direction: column; align-items: center; gap: 6px; }
+  .hk-qr-placeholder { width: 64px; height: 64px; background: var(--cream); border: 1px solid var(--border); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+  .hk-qr-placeholder svg { width: 40px; height: 40px; color: var(--text3); opacity: 0.4; }
+  .hk-qr-label { font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* ── PAIN SECTION ── */
+  .pain { padding: var(--section-pad) 32px; background: var(--white); }
+  .pain-inner { max-width: var(--max-w); margin: 0 auto; }
+  .pain-header { max-width: 640px; margin-bottom: 64px; }
+  .section-label { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--green); margin-bottom: 16px; }
+  .pain-header h2 { font-family: var(--font-serif); font-size: 36px; line-height: 1.25; font-weight: 400; color: var(--text); margin-bottom: 16px; }
+  .pain-header p { font-size: 17px; line-height: 1.7; color: var(--text2); }
+  .pain-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  .pain-card { padding: 36px 32px; border-radius: 16px; background: var(--cream); position: relative; }
+  .pain-stat { font-family: var(--font-serif); font-size: 52px; font-weight: 700; color: var(--green); line-height: 1; margin-bottom: 12px; }
+  .pain-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .pain-desc { font-size: 14px; line-height: 1.7; color: var(--text2); }
+
+  /* ── WHAT CHANGES ── */
+  .change { padding: var(--section-pad) 32px; background: var(--green-deep); color: var(--white); }
+  .change-inner { max-width: var(--max-w); margin: 0 auto; }
+  .change-header { max-width: 640px; margin-bottom: 64px; }
+  .change-header .section-label { color: var(--green-muted); }
+  .change-header h2 { font-family: var(--font-serif); font-size: 36px; line-height: 1.25; font-weight: 400; color: var(--white); margin-bottom: 16px; }
+  .change-header p { font-size: 17px; line-height: 1.7; color: rgba(255,255,255,0.7); }
+  .change-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  .change-card { padding: 32px; border-radius: 16px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); }
+  .change-card-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+  .change-card-icon svg { width: 20px; height: 20px; color: var(--green-muted); }
+  .change-card h3 { font-size: 17px; font-weight: 600; color: var(--white); margin-bottom: 8px; }
+  .change-card p { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,0.65); }
+
+  /* ── MONEY FLOW ── */
+  .flow { padding: var(--section-pad) 32px; background: var(--white); }
+  .flow-inner { max-width: var(--max-w); margin: 0 auto; }
+  .flow-header { text-align: center; max-width: 640px; margin: 0 auto 72px; }
+  .flow-header h2 { font-family: var(--font-serif); font-size: 36px; line-height: 1.25; font-weight: 400; color: var(--text); margin-bottom: 16px; }
+  .flow-header p { font-size: 17px; line-height: 1.7; color: var(--text2); }
+  .flow-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }
+  .flow-steps::before { content: ''; position: absolute; top: 32px; left: 10%; right: 10%; height: 2px; background: var(--green-light); z-index: 0; }
+  .flow-step { text-align: center; position: relative; z-index: 1; padding: 0 16px; }
+  .flow-num { width: 64px; height: 64px; border-radius: 50%; background: var(--green); color: var(--white); font-family: var(--font-serif); font-size: 24px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+  .flow-step h4 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .flow-step p { font-size: 13px; line-height: 1.6; color: var(--text2); }
+
+  /* ── ACTIVATION ── */
+  .activate { padding: var(--section-pad) 32px; background: var(--cream); }
+  .activate-inner { max-width: var(--max-w); margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+  .activate-text h2 { font-family: var(--font-serif); font-size: 36px; line-height: 1.25; font-weight: 400; color: var(--text); margin-bottom: 16px; }
+  .activate-text > p { font-size: 17px; line-height: 1.7; color: var(--text2); margin-bottom: 48px; }
+  .act-step { display: flex; gap: 20px; margin-bottom: 36px; }
+  .act-num { width: 36px; height: 36px; border-radius: 50%; background: var(--green); color: var(--white); font-family: var(--font-serif); font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .act-content h4 { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .act-content p { font-size: 14px; line-height: 1.65; color: var(--text2); }
+
+  /* activation right side — economics card */
+  .econ-card { background: var(--white); border-radius: 20px; padding: 40px 36px; box-shadow: 0 8px 40px rgba(0,0,0,0.06); border: 1px solid var(--border); position: sticky; top: 96px; }
+  .econ-card h3 { font-family: var(--font-serif); font-size: 20px; font-weight: 400; color: var(--text); margin-bottom: 28px; }
+  .econ-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--border); }
+  .econ-row:last-of-type { border-bottom: none; }
+  .econ-label { font-size: 14px; color: var(--text2); }
+  .econ-val { font-size: 14px; font-weight: 600; color: var(--text); }
+  .econ-val.green { color: var(--green); }
+  .econ-val.strike { text-decoration: line-through; color: var(--text3); font-weight: 400; }
+  .econ-note { font-size: 12px; color: var(--text3); margin-top: 20px; line-height: 1.6; padding-top: 20px; border-top: 1px solid var(--border); }
+
+  /* ── SCOPE ── */
+  .scope { padding: var(--section-pad) 32px; background: var(--white); }
+  .scope-inner { max-width: var(--max-w); margin: 0 auto; }
+  .scope-header { text-align: center; max-width: 640px; margin: 0 auto 56px; }
+  .scope-header h2 { font-family: var(--font-serif); font-size: 36px; font-weight: 400; color: var(--text); margin-bottom: 16px; }
+  .scope-header p { font-size: 17px; line-height: 1.7; color: var(--text2); }
+  .scope-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .scope-card { padding: 32px 28px; border: 1px solid var(--border); border-radius: 16px; transition: border-color 0.2s; }
+  .scope-card:hover { border-color: var(--green); }
+  .scope-card h4 { font-family: var(--font-serif); font-size: 28px; font-weight: 700; color: var(--green); margin-bottom: 4px; }
+  .scope-card h5 { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .scope-card p { font-size: 13px; line-height: 1.6; color: var(--text2); }
+
+  /* ── CTA FINAL ── */
+  .final-cta { padding: var(--section-pad) 32px; background: var(--green-deep); text-align: center; }
+  .final-cta-inner { max-width: 600px; margin: 0 auto; }
+  .final-cta h2 { font-family: var(--font-serif); font-size: 40px; font-weight: 400; color: var(--white); margin-bottom: 16px; }
+  .final-cta p { font-size: 17px; line-height: 1.7; color: rgba(255,255,255,0.7); margin-bottom: 36px; }
+  .final-cta .hero-cta { background: var(--white); color: var(--green-deep); }
+  .final-cta .hero-cta:hover { background: var(--cream); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+  .final-cta .hero-note { color: rgba(255,255,255,0.5); }
+
+  /* ── FOOTER ── */
+  .footer { padding: 48px 32px; background: var(--text); }
+  .footer-inner { max-width: var(--max-w); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+  .footer-left { font-size: 13px; color: rgba(255,255,255,0.4); }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; }
+  .footer-links a:hover { color: rgba(255,255,255,0.8); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-text { animation: fadeUp 0.8s ease-out; }
+  .hk-mockup { animation: fadeUp 0.8s ease-out 0.2s both; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    :root { --section-pad: 80px; }
+    .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+    .hero h1 { font-size: 36px; }
+    .hk-mockup { margin: 0 auto; }
+    .hk-mockup::before { display: none; }
+    .pain-grid { grid-template-columns: 1fr; }
+    .change-grid { grid-template-columns: 1fr; }
+    .flow-steps { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+    .flow-steps::before { display: none; }
+    .activate-inner { grid-template-columns: 1fr; gap: 48px; }
+    .econ-card { position: static; }
+    .scope-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .hero { padding: 100px 20px 64px; }
+    .hero h1 { font-size: 30px; }
+    .nav-links a:not(.nav-cta) { display: none; }
+    .flow-steps { grid-template-columns: 1fr; }
+    .pain-stat { font-size: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="14" cy="14" r="13" stroke="#2D6A4F" stroke-width="2" fill="none"/>
+        <circle cx="14" cy="14" r="5" fill="#2D6A4F"/>
+      </svg>
+      <span>opendoc</span>
+    </a>
+    <div class="nav-links">
+      <a href="#">How It Works</a>
+      <a href="#" class="active">For Providers</a>
+      <a href="#">Sign in</a>
+      <a href="#" class="nav-cta">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-label">For Providers</div>
+      <h1>Patients are tired of co-pays, deductibles, and <em>not knowing what care costs</em></h1>
+      <p class="hero-sub">Give them what they actually want: a clear price before they walk in the door. Patients pay upfront. Funds are held in escrow. You get paid when the service is complete. No billing. No collections. No surprises on either side.</p>
+      <a href="#" class="hero-cta">
+        Activate your practice
+        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h10M10 5l4 4-4 4"/></svg>
+      </a>
+      <div class="hero-note">Takes about 90 seconds. No contracts. No upfront cost.</div>
+    </div>
+
+    <div class="hk-mockup">
+      <div class="hk-notch"></div>
+      <div class="hk-head">Health Key</div>
+      <div class="hk-name">SARAH J. THOMPSON</div>
+      <div class="hk-dob">DOB: 1985-07-22</div>
+      <div class="hk-divider"></div>
+      <div class="hk-provider">Peachtree Direct Primary Care</div>
+      <div class="hk-service">Adult Sick Visit — Acute</div>
+      <div class="hk-price">$75</div>
+      <div class="hk-price-label">Maximum Patient Responsibility</div>
+      <div class="hk-state"><span>ACTIVE</span></div>
+      <div class="hk-qr">
+        <div class="hk-qr-box">
+          <div class="hk-qr-placeholder">
+            <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="4" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="7" y="7" width="6" height="6" rx="1" fill="currentColor"/>
+              <rect x="24" y="4" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="27" y="7" width="6" height="6" rx="1" fill="currentColor"/>
+              <rect x="4" y="24" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="7" y="27" width="6" height="6" rx="1" fill="currentColor"/>
+              <rect x="24" y="24" width="4" height="4" rx="1" fill="currentColor"/>
+              <rect x="32" y="24" width="4" height="4" rx="1" fill="currentColor"/>
+              <rect x="24" y="32" width="4" height="4" rx="1" fill="currentColor"/>
+              <rect x="32" y="32" width="4" height="4" rx="1" fill="currentColor"/>
+              <rect x="28" y="28" width="4" height="4" rx="1" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="hk-qr-label">Scan to verify</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PAIN ── -->
+<section class="pain">
+  <div class="pain-inner">
+    <div class="pain-header">
+      <div class="section-label">The problem you already know</div>
+      <h2>You went into healthcare to care for patients, not to fight insurance companies and chase collections</h2>
+      <p>The insurance-based payment model has turned every practice into an unpaid loan officer. These numbers are the cost of uncertainty in the transaction.</p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="pain-stat">~30%</div>
+        <div class="pain-title">Revenue lost to billing overhead</div>
+        <div class="pain-desc">Staff, software, clearinghouses, follow-ups, appeals. A third of what you earn goes to figuring out if you'll get paid.</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-stat">49 days</div>
+        <div class="pain-title">Average time to collect</div>
+        <div class="pain-desc">From service to payment. You've already paid your staff, your rent, your supplies. Insurance is still "processing."</div>
+      </div>
+      <div class="pain-card">
+        <div class="pain-stat">18%</div>
+        <div class="pain-title">Prior auth denial rate</div>
+        <div class="pain-desc">Nearly 1 in 5 pre-authorized services gets denied anyway. You did the work. The payer decided later it wasn't necessary.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHAT CHANGES ── -->
+<section class="change">
+  <div class="change-inner">
+    <div class="change-header">
+      <div class="section-label">What changes with OpenDoc</div>
+      <h2>Healthcare that works like every other market</h2>
+      <p>Patients pay for your service. They know the price before they book — just like every other transaction in their life. You set the price. They see it. The transaction executes. No middleman. No mystery.</p>
+    </div>
+    <div class="change-grid">
+      <div class="change-card">
+        <div class="change-card-icon">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 2v16M2 10h16"/></svg>
+        </div>
+        <h3>Payment guaranteed before care</h3>
+        <p>Patients pay when they book. Funds are held in escrow. When service is complete, you get paid. No invoices. No collections. No write-offs.</p>
+      </div>
+      <div class="change-card">
+        <div class="change-card-icon">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 10l2 2 4-4"/></svg>
+        </div>
+        <h3>Scope defined, not negotiated</h3>
+        <p>Every service is a Health Service Object — a pre-defined contract with inclusions, exclusions, and a locked price. Patients know what they're buying. You know what you're delivering.</p>
+      </div>
+      <div class="change-card">
+        <div class="change-card-icon">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M10 7v3l2 2"/></svg>
+        </div>
+        <h3>You set your cash prices</h3>
+        <p>No fee schedules. No insurance negotiations. No RVU games. You publish the price, patients see it, and the transaction executes at that price. Period.</p>
+      </div>
+      <div class="change-card">
+        <div class="change-card-icon">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 10a6 6 0 0112 0"/><circle cx="10" cy="10" r="2"/><path d="M10 12v4"/></svg>
+        </div>
+        <h3>Pre-qualified patients only</h3>
+        <p>Every patient who walks in holds a Health Key — identity verified, service selected, payment authorized. No surprise scope. No surprise bills. For either side.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MONEY FLOW ── -->
+<section class="flow">
+  <div class="flow-inner">
+    <div class="flow-header">
+      <div class="section-label">How money moves</div>
+      <h2>From booking to your account</h2>
+      <p>Every dollar is accounted for before the patient walks in. No ambiguity at any point in the transaction.</p>
+    </div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <h4>Patient books</h4>
+        <p>Patient selects your service, sees the guaranteed price, and pays. Funds leave their account immediately.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <h4>Escrow holds</h4>
+        <p>Payment is held in escrow. Not in your account, not refunded. Secured until service is complete.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <h4>Care delivered</h4>
+        <p>Patient presents Health Key. You scan or verify. Deliver the defined service. No scope questions.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">4</div>
+        <h4>Funds released</h4>
+        <p>Service confirmed complete. Funds are released to you. Settlement hits your bank account.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ACTIVATION ── -->
+<section class="activate">
+  <div class="activate-inner">
+    <div class="activate-text">
+      <div class="section-label">Get started</div>
+      <h2>90 seconds from your EMR to your first patient</h2>
+      <p>No sales call. No integration project. No contract negotiation. Log into your EMR or enter your NPI, confirm your services, and start receiving pre-paid patients.</p>
+
+      <div class="act-step">
+        <div class="act-num">1</div>
+        <div class="act-content">
+          <h4>Log into your EMR or enter your NPI</h4>
+          <p>We verify your identity, credentials, and specialty from the national registry. No manual data entry.</p>
+        </div>
+      </div>
+      <div class="act-step">
+        <div class="act-num">2</div>
+        <div class="act-content">
+          <h4>Review your services</h4>
+          <p>We pre-fill services from our catalog of 3,000+ Health Service Objects matched to your specialty. Confirm the ones you offer and set your cash prices.</p>
+        </div>
+      </div>
+      <div class="act-step">
+        <div class="act-num">3</div>
+        <div class="act-content">
+          <h4>Set your availability</h4>
+          <p>Connect your calendar or set hours manually. Patients only see real openings — no phantom availability.</p>
+        </div>
+      </div>
+      <div class="act-step">
+        <div class="act-num">4</div>
+        <div class="act-content">
+          <h4>Start receiving patients</h4>
+          <p>Every patient arrives with a Health Key: identity verified, service defined, payment guaranteed. You focus on care.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="econ-card">
+      <h3>Provider economics</h3>
+      <div class="econ-row">
+        <span class="econ-label">Setup fee</span>
+        <span class="econ-val strike">$500</span>
+        <span class="econ-val green">$0</span>
+      </div>
+      <div class="econ-row">
+        <span class="econ-label">Monthly subscription</span>
+        <span class="econ-val green">$0</span>
+      </div>
+      <div class="econ-row">
+        <span class="econ-label">Transaction fee</span>
+        <span class="econ-val">Per completed service</span>
+      </div>
+      <div class="econ-row">
+        <span class="econ-label">Billing overhead</span>
+        <span class="econ-val green">$0</span>
+      </div>
+      <div class="econ-row">
+        <span class="econ-label">Collections risk</span>
+        <span class="econ-val green">$0</span>
+      </div>
+      <div class="econ-row">
+        <span class="econ-label">Days to payment</span>
+        <span class="econ-val green">Same day</span>
+      </div>
+      <div class="econ-note">OpenDoc earns only when you do. No revenue until a patient completes a transaction through the platform.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SCOPE ── -->
+<section class="scope">
+  <div class="scope-inner">
+    <div class="scope-header">
+      <div class="section-label">Built for your specialty</div>
+      <h2>3,000+ services across 43 specialties</h2>
+      <p>Every service on the platform is a Health Service Object — a pre-defined contract with inclusions, exclusions, and price. We've already built the catalog. You just confirm and price.</p>
+    </div>
+    <div class="scope-grid">
+      <div class="scope-card">
+        <h4>430</h4>
+        <h5>Orthopedic surgery</h5>
+        <p>Joint replacements, arthroscopy, spine procedures, sports medicine. Full ASC and office-based catalog.</p>
+      </div>
+      <div class="scope-card">
+        <h4>320+</h4>
+        <h5>Primary care &amp; DPC</h5>
+        <p>Chronic disease management, acute care, procedures, diagnostics, immunizations, telehealth.</p>
+      </div>
+      <div class="scope-card">
+        <h4>280+</h4>
+        <h5>Ophthalmology &amp; refractive</h5>
+        <p>LASIK, PRK, cataract, glaucoma. 55% of refractive HSOs are statutorily excluded from Medicare — pure cash-pay surface.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FINAL CTA ── -->
+<section class="final-cta">
+  <div class="final-cta-inner">
+    <h2>OpenDoc. The way healthcare should be.</h2>
+    <p>Patients know the price. You deliver the care. Everyone gets paid. No middlemen. No mystery. No games.</p>
+    <a href="#" class="hero-cta">
+      Activate your practice
+      <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9h10M10 5l4 4-4 4"/></svg>
+    </a>
+    <div class="hero-note">90-second setup. No contracts. OpenDoc earns only when you do.</div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-left">&copy; 2026 OpenDoc. Transaction infrastructure for healthcare.</div>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
