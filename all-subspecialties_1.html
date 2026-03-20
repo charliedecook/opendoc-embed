@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenDoc — Browse by Subspecialty</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
+  :root {
+    --green: #2D6A4F;
+    --green-deep: #1B4332;
+    --green-light: #D8F3DC;
+    --green-muted: #B7E4C7;
+    --cream: #F6F4F0;
+    --cream-dark: #EDE9E3;
+    --text: #1A1A1A;
+    --text2: #4A4A4A;
+    --text3: #7A7A7A;
+    --white: #FFFFFF;
+    --border: rgba(0,0,0,0.08);
+    --font-serif: 'Georgia', 'Times New Roman', serif;
+    --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --max-w: 1140px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-sans); color: var(--text); background: var(--white); -webkit-font-smoothing: antialiased; }
+
+  /* ── NAV ── */
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+  .nav-inner { max-width: var(--max-w); margin: 0 auto; padding: 0 32px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-logo svg { width: 28px; height: 28px; }
+  .nav-logo span { font-family: var(--font-sans); font-weight: 600; font-size: 18px; color: var(--text); letter-spacing: -0.3px; }
+  .nav-links { display: flex; align-items: center; gap: 32px; }
+  .nav-links a { font-size: 14px; font-weight: 500; color: var(--text2); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--green); }
+  .nav-search { display: flex; align-items: center; background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .nav-search input { border: none; outline: none; font-size: 13px; padding: 8px 14px; width: 280px; background: transparent; color: var(--text); font-family: var(--font-sans); }
+  .nav-search input::placeholder { color: var(--text3); }
+  .nav-search button { border: none; background: var(--green); color: var(--white); font-size: 13px; font-weight: 600; padding: 8px 16px; cursor: pointer; font-family: var(--font-sans); }
+  .nav-signin { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; color: var(--text2); text-decoration: none; border: 1.5px solid var(--border); padding: 6px 16px; border-radius: 20px; transition: all 0.15s; }
+  .nav-signin:hover { border-color: var(--green); color: var(--green); }
+  .nav-signin svg { width: 18px; height: 18px; }
+
+  /* ── SPECIALTY SELECTOR BAR ── */
+  .spec-bar { position: fixed; top: 64px; left: 0; right: 0; z-index: 99; background: var(--cream); border-bottom: 1px solid var(--border); }
+  .spec-bar-inner { max-width: var(--max-w); margin: 0 auto; padding: 0 32px; display: flex; align-items: center; gap: 8px; height: 48px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .spec-bar-inner::-webkit-scrollbar { display: none; }
+  .spec-pill { white-space: nowrap; font-size: 13px; font-weight: 500; color: var(--text2); background: var(--white); border: 1px solid var(--border); padding: 6px 16px; border-radius: 20px; cursor: pointer; transition: all 0.15s; flex-shrink: 0; }
+  .spec-pill:hover { border-color: var(--green); color: var(--green); }
+  .spec-pill.active { background: var(--green); color: var(--white); border-color: var(--green); }
+
+  /* ── PAGE HEADER ── */
+  .page-header { padding: 148px 32px 48px; background: linear-gradient(180deg, #EDF7F0 0%, var(--white) 100%); }
+  .page-header-inner { max-width: var(--max-w); margin: 0 auto; }
+  .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text3); margin-bottom: 24px; }
+  .breadcrumb a { color: var(--green); text-decoration: none; font-weight: 500; cursor: pointer; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .breadcrumb svg { width: 14px; height: 14px; color: var(--text3); }
+  .page-header h1 { font-family: var(--font-serif); font-size: 40px; font-weight: 400; color: var(--text); margin-bottom: 12px; letter-spacing: -0.5px; }
+  .page-header p#spec-desc { font-size: 17px; line-height: 1.7; color: var(--text2); max-width: 600px; }
+
+  /* ── HELP BAR ── */
+  .help-bar { max-width: var(--max-w); margin: 0 auto; padding: 0 32px; }
+  .help-bar-inner { display: flex; align-items: center; gap: 16px; padding: 16px 24px; background: var(--cream); border-radius: 14px; margin-bottom: 40px; }
+  .help-bar-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--green-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .help-bar-icon svg { width: 20px; height: 20px; color: var(--green); }
+  .help-bar-text { font-size: 14px; color: var(--text2); line-height: 1.6; }
+  .help-bar-text strong { color: var(--text); }
+
+  /* ── SUBSPECIALTY GRID ── */
+  .subspecialties { max-width: var(--max-w); margin: 0 auto; padding: 0 32px 80px; }
+  .sub-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+  .sub-card { border: 1.5px solid var(--border); border-radius: 16px; padding: 28px 24px; cursor: pointer; transition: all 0.2s ease; position: relative; overflow: hidden; text-decoration: none; display: block; opacity: 0; animation: fadeUp 0.5s ease-out forwards; }
+  .sub-card:hover { border-color: var(--green); box-shadow: 0 4px 20px rgba(45,106,79,0.08); transform: translateY(-2px); }
+  .sub-card:hover .sub-arrow { opacity: 1; transform: translateX(0); }
+
+  .sub-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+  .sub-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--cream); display: flex; align-items: center; justify-content: center; font-size: 22px; line-height: 1; }
+  .sub-count { font-size: 11px; font-weight: 600; color: var(--green); background: var(--green-light); padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
+
+  .sub-card h3 { font-family: var(--font-serif); font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 6px; line-height: 1.3; }
+  .sub-card .sub-desc { font-size: 13px; line-height: 1.65; color: var(--text2); margin-bottom: 14px; }
+
+  .sub-conditions { display: flex; flex-wrap: wrap; gap: 6px; }
+  .sub-tag { font-size: 11px; color: var(--text3); background: var(--cream); padding: 3px 10px; border-radius: 6px; white-space: nowrap; }
+
+  .sub-arrow { position: absolute; bottom: 24px; right: 24px; opacity: 0; transform: translateX(-6px); transition: all 0.2s; }
+  .sub-arrow svg { width: 20px; height: 20px; color: var(--green); }
+
+  .sub-card.help-card { border-style: dashed; border-color: var(--green-muted); background: linear-gradient(135deg, rgba(216,243,220,0.2) 0%, rgba(255,255,255,0) 100%); }
+  .sub-card.help-card:hover { border-color: var(--green); border-style: solid; background: rgba(216,243,220,0.15); }
+
+  /* ── FOOTER ── */
+  .footer { padding: 48px 32px; background: var(--text); }
+  .footer-inner { max-width: var(--max-w); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+  .footer-left { font-size: 13px; color: rgba(255,255,255,0.4); }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; }
+  .footer-links a:hover { color: rgba(255,255,255,0.8); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  @media (max-width: 900px) {
+    .sub-grid { grid-template-columns: repeat(2, 1fr); }
+    .page-header h1 { font-size: 32px; }
+  }
+  @media (max-width: 600px) {
+    .sub-grid { grid-template-columns: 1fr; }
+    .nav-search { display: none; }
+    .page-header { padding: 138px 20px 36px; }
+    .subspecialties, .help-bar { padding-left: 20px; padding-right: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <svg viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="13" stroke="#2D6A4F" stroke-width="2" fill="none"/><circle cx="14" cy="14" r="5" fill="#2D6A4F"/></svg>
+      <span>opendoc</span>
+    </a>
+    <div class="nav-search">
+      <input type="text" placeholder="Search for a service, provider, diagnosis, or symptom" readonly>
+      <button>Search</button>
+    </div>
+    <div class="nav-links">
+      <a href="#">How It Works</a>
+      <a href="#">For Providers</a>
+      <a href="#" class="nav-signin">
+        <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="9" cy="7" r="3"/><path d="M3 16c0-3 2.7-5 6-5s6 2 6 5"/></svg>
+        Sign in
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div class="spec-bar">
+  <div class="spec-bar-inner" id="spec-bar"></div>
+</div>
+
+<section class="page-header">
+  <div class="page-header-inner">
+    <div class="breadcrumb">
+      <a onclick="showAllSpecialties()">All Specialties</a>
+      <svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M5 3l4 4-4 4"/></svg>
+      <span id="bc-name"></span>
+    </div>
+    <h1 id="spec-title"></h1>
+    <p id="spec-desc"></p>
+  </div>
+</section>
+
+<div class="help-bar">
+  <div class="help-bar-inner">
+    <div class="help-bar-icon">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="7"/><path d="M10 13v0M10 7a2 2 0 011.7 3c-.5.5-1.7 1-1.7 1.5"/></svg>
+    </div>
+    <div class="help-bar-text"><strong>Not sure which one?</strong> No problem — pick the "General Consultation" option at the bottom. Your provider will help you figure out the right next step, and you'll know the cost before anything happens.</div>
+  </div>
+</div>
+
+<div class="subspecialties">
+  <div class="sub-grid" id="sub-grid"></div>
+</div>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-left">&copy; 2026 OpenDoc. Healthcare you can see before you buy.</div>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const ARROW_SVG = '<div class="sub-arrow"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 10h10M11 6l4 4-4 4"/></svg></div>';
+
+const specialties = {
+  "Primary Care": {
+    desc: "Your first point of contact for healthcare. Select the type of primary care provider that matches your needs.",
+    subs: [
+      { icon:"🩺", name:"Family Medicine", count:62, desc:"Comprehensive care for all ages — children through seniors. Preventive care, chronic disease management, acute illness, and wellness.", tags:["Annual physical","Diabetes","Hypertension","Acute illness"] },
+      { icon:"🏥", name:"Internal Medicine", count:58, desc:"Adult-focused primary care with emphasis on complex medical conditions, diagnostic workups, and chronic disease coordination.", tags:["Complex conditions","Adult care","Diagnostics","Chronic disease"] },
+      { icon:"👶", name:"Pediatrics", count:42, desc:"Care for infants, children, and adolescents. Well-child visits, immunizations, developmental screening, and acute childhood illness.", tags:["Well-child","Immunizations","Development","Childhood illness"] },
+      { icon:"👵", name:"Geriatric Medicine", count:28, desc:"Fellowship-trained care for older adults. Cognitive assessment, fall prevention, polypharmacy review, and age-related disease management.", tags:["Cognitive screening","Fall risk","Medication review","Dementia"] },
+      { icon:"🧑‍🤝‍🧑", name:"Adolescent Medicine", count:18, desc:"Fellowship-trained care for teens and young adults. Puberty, mental health, reproductive health, and transition-age issues.", tags:["Adolescent health","Puberty","Teen mental health","Transition"] },
+      { icon:"🏃", name:"Sports Medicine (Primary Care)", count:24, desc:"Non-surgical sports medicine. Musculoskeletal evaluation, concussion management, exercise prescription, and injury prevention.", tags:["Sports injury","Concussion","Exercise Rx","MSK evaluation"] },
+      { icon:"🕊️", name:"Hospice & Palliative Medicine", count:14, desc:"Symptom management, goals-of-care conversations, pain control, and quality of life for serious illness.", tags:["Palliative care","Pain control","Serious illness","Goals of care"] },
+      { icon:"🩺", name:"General Primary Care Consultation", count:10, desc:"Not sure what type of primary care you need? Start here for a general evaluation with clear, upfront pricing.", tags:["New concern","Not sure","Symptom check","Health question"], help:true }
+    ]
+  },
+  "Orthopedics": {
+    desc: "Bones, joints, muscles, ligaments, and spine. Select the area of care that matches your concern — we'll show you providers and guaranteed prices.",
+    subs: [
+      { icon:"🏃", name:"Sports Medicine", count:38, desc:"Athletic injuries, ligament tears, overuse conditions, return-to-play evaluation and treatment.", tags:["ACL tear","Rotator cuff","Meniscus","Tendonitis"] },
+      { icon:"🦴", name:"Joint Replacement", count:45, desc:"Total and partial joint replacement for knees, hips, and shoulders. Pre-op evaluation through post-surgical rehab.", tags:["Total knee","Total hip","Partial knee","Revision"] },
+      { icon:"🔩", name:"Spine Surgery", count:52, desc:"Cervical, thoracic, and lumbar conditions. Decompression, fusion, disc replacement, and minimally invasive procedures.", tags:["Herniated disc","Spinal stenosis","Sciatica","Fusion"] },
+      { icon:"🤚", name:"Hand & Wrist", count:34, desc:"Fractures, nerve compression, tendon repair, joint reconstruction, and microsurgery of the hand and wrist.", tags:["Carpal tunnel","Trigger finger","Fracture","De Quervain's"] },
+      { icon:"🦶", name:"Foot & Ankle", count:36, desc:"Bunions, fractures, Achilles tendon, plantar fasciitis, ankle instability, and reconstructive surgery.", tags:["Bunion","Plantar fasciitis","Achilles","Ankle sprain"] },
+      { icon:"💪", name:"Shoulder & Elbow", count:32, desc:"Rotator cuff repair, labral tears, dislocations, frozen shoulder, tennis elbow, and joint replacement.", tags:["Rotator cuff","Frozen shoulder","Tennis elbow","Labral tear"] },
+      { icon:"🩹", name:"Trauma & Fracture Care", count:42, desc:"Acute fractures, dislocations, and musculoskeletal trauma. Surgical fixation, casting, and post-injury rehabilitation.", tags:["Broken bone","Dislocation","Stress fracture","Fixation"] },
+      { icon:"👶", name:"Pediatric Orthopedics", count:28, desc:"Growth plate injuries, scoliosis, clubfoot, limb deformities, and musculoskeletal conditions in children and adolescents.", tags:["Scoliosis","Clubfoot","Growth plate","Hip dysplasia"] },
+      { icon:"💉", name:"Orthopedic Pain Management", count:30, desc:"Joint injections, nerve blocks, epidurals, PRP therapy, and non-surgical pain treatment for musculoskeletal conditions.", tags:["Cortisone injection","PRP","Epidural","Nerve block"] },
+      { icon:"🏋️", name:"Physical Therapy & Rehab", count:24, desc:"Post-surgical rehabilitation, injury recovery, chronic pain management, and movement restoration programs.", tags:["Post-op rehab","Back pain","Knee rehab","Shoulder rehab"] },
+      { icon:"🔬", name:"Orthopedic Oncology", count:18, desc:"Bone tumors, soft tissue masses, biopsy, limb salvage surgery, and musculoskeletal cancer evaluation.", tags:["Bone tumor","Soft tissue mass","Biopsy","Limb salvage"] },
+      { icon:"🩺", name:"General Orthopedic Consultation", count:12, desc:"Not sure what you need? Start here. A general orthopedic evaluation to diagnose your condition and map out a treatment plan with clear pricing.", tags:["New pain","Second opinion","Diagnosis","Treatment plan"], help:true }
+    ]
+  },
+  "Dermatology": {
+    desc: "Skin, hair, and nail conditions. Select the subspecialty that matches your concern.",
+    subs: [
+      { icon:"🔬", name:"Micrographic Surgery & Dermatologic Oncology (Mohs)", count:28, desc:"Fellowship-trained Mohs surgeons for skin cancer excision, reconstruction, and complex dermatologic surgery.", tags:["Mohs surgery","Skin cancer","Excision","Reconstruction"] },
+      { icon:"🔍", name:"Dermatopathology", count:14, desc:"Microscopic diagnosis of skin diseases. Biopsy interpretation, tissue analysis, and diagnostic consultation.", tags:["Biopsy","Pathology","Diagnosis","Tissue analysis"] },
+      { icon:"👶", name:"Pediatric Dermatology", count:18, desc:"Fellowship-trained care for skin conditions in children. Birthmarks, childhood eczema, genetic skin disorders, and vascular malformations.", tags:["Eczema","Birthmark","Genetic skin","Vascular malformation"] },
+      { icon:"✨", name:"Cosmetic Dermatology", count:34, desc:"Botox, fillers, chemical peels, laser treatments, microneedling, and skin rejuvenation procedures.", tags:["Botox","Fillers","Laser","Chemical peel"] },
+      { icon:"🩺", name:"General Dermatology Consultation", count:48, desc:"Not sure what you need? Start with a general dermatology evaluation. Rashes, moles, acne, psoriasis, eczema, and all skin concerns.", tags:["Rash","Mole check","Acne","Psoriasis"], help:true }
+    ]
+  },
+  "OB/GYN": {
+    desc: "Women's reproductive health. Select the subspecialty that matches your concern.",
+    subs: [
+      { icon:"🤰", name:"Maternal-Fetal Medicine", count:32, desc:"Fellowship-trained high-risk pregnancy care. Advanced fetal monitoring, genetic counseling, and complex obstetric management.", tags:["High-risk pregnancy","Fetal monitoring","Genetic counseling","Complications"] },
+      { icon:"🔬", name:"Gynecologic Oncology", count:24, desc:"Fellowship-trained surgical and medical treatment of gynecologic cancers including ovarian, uterine, cervical, and vulvar.", tags:["Ovarian cancer","Uterine cancer","Cervical cancer","Vulvar cancer"] },
+      { icon:"🧬", name:"Reproductive Endocrinology & Infertility", count:22, desc:"Fellowship-trained fertility evaluation and treatment. IVF, IUI, ovulation induction, and hormonal disorders.", tags:["IVF","Infertility","Ovulation","Hormonal disorders"] },
+      { icon:"🩹", name:"Female Pelvic Medicine & Reconstructive Surgery", count:16, desc:"Fellowship-trained urogynecology. Pelvic organ prolapse, urinary incontinence, and pelvic floor reconstruction.", tags:["Prolapse","Incontinence","Pelvic floor","Urogynecology"] },
+      { icon:"🔧", name:"Minimally Invasive Gynecologic Surgery", count:20, desc:"Fellowship-trained laparoscopic and robotic gynecologic surgery. Hysterectomy, myomectomy, and endometriosis excision.", tags:["Laparoscopic","Robotic","Hysterectomy","Endometriosis"] },
+      { icon:"🩺", name:"General OB/GYN Consultation", count:38, desc:"Not sure what you need? Start with a general OB/GYN visit for prenatal care, well-woman exams, contraception, or any gynecologic concern.", tags:["Prenatal","Well-woman","Pelvic pain","Irregular periods"], help:true }
+    ]
+  },
+  "Cardiology": {
+    desc: "Heart and cardiovascular system. Select the subspecialty that matches your concern.",
+    subs: [
+      { icon:"🫀", name:"Interventional Cardiology", count:32, desc:"Fellowship-trained catheter-based procedures. Stents, angioplasty, structural heart repair, and cardiac catheterization.", tags:["Stent","Angioplasty","Catheterization","Valve repair"] },
+      { icon:"⚡", name:"Clinical Cardiac Electrophysiology", count:24, desc:"Fellowship-trained heart rhythm specialists. Atrial fibrillation, ablation, pacemaker and defibrillator management.", tags:["AFib","Ablation","Pacemaker","Arrhythmia"] },
+      { icon:"💔", name:"Advanced Heart Failure & Transplant", count:16, desc:"Fellowship-trained advanced heart failure management. Mechanical circulatory support, transplant evaluation, and device therapy.", tags:["Heart failure","LVAD","Transplant","Device therapy"] },
+      { icon:"🫁", name:"Adult Congenital Heart Disease", count:12, desc:"Fellowship-trained care for adults born with heart defects. Lifelong monitoring, interventions, and specialized imaging.", tags:["Congenital heart","ASD","VSD","Tetralogy of Fallot"] },
+      { icon:"🔬", name:"Cardiovascular Imaging", count:20, desc:"Advanced cardiac imaging subspecialists. CT calcium scoring, cardiac MRI, nuclear stress testing, and echocardiography.", tags:["Cardiac MRI","Calcium score","Nuclear stress","Echo"] },
+      { icon:"🩺", name:"General Cardiology Consultation", count:28, desc:"Not sure what you need? Start with a general cardiac evaluation for chest pain, shortness of breath, palpitations, or heart health screening.", tags:["Chest pain","Palpitations","Shortness of breath","Screening"], help:true }
+    ]
+  },
+  "Psychiatry": {
+    desc: "Mental health care. Select the subspecialty that matches your concern.",
+    subs: [
+      { icon:"👶", name:"Child & Adolescent Psychiatry", count:22, desc:"Fellowship-trained psychiatric care for children and teens. ADHD, anxiety, depression, behavioral disorders, and autism.", tags:["ADHD","Childhood anxiety","Teen depression","Behavioral"] },
+      { icon:"🍷", name:"Addiction Psychiatry", count:20, desc:"Fellowship-trained substance use and addiction treatment. Medication-assisted treatment, dual diagnosis, and recovery programs.", tags:["Substance use","MAT","Dual diagnosis","Recovery"] },
+      { icon:"⚖️", name:"Forensic Psychiatry", count:10, desc:"Fellowship-trained psychiatric evaluation for legal contexts. Competency evaluations, risk assessment, and expert testimony.", tags:["Competency eval","Risk assessment","Legal","Expert opinion"] },
+      { icon:"🏥", name:"Consultation-Liaison Psychiatry", count:14, desc:"Fellowship-trained psychiatric care for medically complex patients. Delirium, somatization, and psychiatric aspects of medical illness.", tags:["Delirium","Medical complexity","Somatization","Hospital psych"] },
+      { icon:"👵", name:"Geriatric Psychiatry", count:16, desc:"Fellowship-trained mental health care for older adults. Dementia-related behaviors, late-life depression, anxiety, and psychosis.", tags:["Dementia","Late-life depression","Agitation","Cognitive decline"] },
+      { icon:"🩺", name:"General Psychiatry Consultation", count:32, desc:"Not sure where to start? A general psychiatric evaluation for anxiety, depression, PTSD, medication management, or any mental health concern.", tags:["Anxiety","Depression","PTSD","Medication management"], help:true }
+    ]
+  },
+  "Ophthalmology": {
+    desc: "Eye care from routine exams to surgery. Select the subspecialty that matches your concern.",
+    subs: [
+      { icon:"👁️", name:"Cornea & External Disease", count:18, desc:"Fellowship-trained cornea specialists. Corneal transplant, keratoconus, dry eye, and corneal infections.", tags:["Corneal transplant","Keratoconus","Dry eye","Infection"] },
+      { icon:"🔴", name:"Vitreoretinal Surgery", count:24, desc:"Fellowship-trained retina specialists. Macular degeneration, diabetic retinopathy, retinal detachment, and intravitreal injections.", tags:["Macular degeneration","Diabetic eye","Retinal detachment","Injection"] },
+      { icon:"🟢", name:"Glaucoma", count:18, desc:"Fellowship-trained glaucoma specialists. Medical and surgical glaucoma management, laser treatment, and visual field monitoring.", tags:["Glaucoma","SLT laser","Visual field","Eye pressure"] },
+      { icon:"💉", name:"Oculoplastics & Orbital Surgery", count:16, desc:"Fellowship-trained eyelid and orbit specialists. Blepharoplasty, ptosis repair, tear duct surgery, and orbital tumors.", tags:["Blepharoplasty","Ptosis","Tear duct","Orbital"] },
+      { icon:"👶", name:"Pediatric Ophthalmology & Strabismus", count:16, desc:"Fellowship-trained children's eye specialists. Crossed eyes, amblyopia, childhood vision disorders, and eye muscle surgery.", tags:["Strabismus","Amblyopia","Pediatric","Eye muscle"] },
+      { icon:"🧠", name:"Neuro-Ophthalmology", count:12, desc:"Fellowship-trained specialists in visual disorders caused by the nervous system. Optic neuritis, papilledema, and cranial nerve palsies.", tags:["Optic neuritis","Papilledema","Double vision","Cranial nerve"] },
+      { icon:"✨", name:"Refractive Surgery", count:24, desc:"Vision correction procedures. LASIK, PRK, SMILE, ICL. 55% of refractive services are statutorily Medicare-excluded — pure cash-pay.", tags:["LASIK","PRK","SMILE","ICL"] },
+      { icon:"🔵", name:"Uveitis & Ocular Immunology", count:10, desc:"Fellowship-trained specialists in inflammatory eye disease. Uveitis, scleritis, and autoimmune-related eye conditions.", tags:["Uveitis","Scleritis","Autoimmune","Inflammation"] },
+      { icon:"🩺", name:"General Ophthalmology Consultation", count:24, desc:"Not sure what you need? Start with a comprehensive eye evaluation. Cataracts, vision changes, eye pain, or routine screening.", tags:["Cataracts","Vision change","Eye pain","Routine exam"], help:true }
+    ]
+  },
+  "ENT (Otolaryngology)": {
+    desc: "Ear, nose, throat, head, and neck. Select the subspecialty that matches your concern.",
+    subs: [
+      { icon:"👂", name:"Otology & Neurotology", count:22, desc:"Fellowship-trained ear and hearing specialists. Hearing loss, cochlear implants, cholesteatoma, and skull base surgery.", tags:["Hearing loss","Cochlear implant","Cholesteatoma","Skull base"] },
+      { icon:"👃", name:"Rhinology & Skull Base Surgery", count:24, desc:"Fellowship-trained sinus and nasal specialists. Chronic sinusitis, nasal polyps, CSF leaks, and endoscopic skull base procedures.", tags:["Sinusitis","Nasal polyps","CSF leak","Sinus surgery"] },
+      { icon:"🗣️", name:"Laryngology", count:16, desc:"Fellowship-trained voice and swallowing specialists. Vocal cord disorders, hoarseness, swallowing dysfunction, and airway management.", tags:["Hoarseness","Vocal cord","Swallowing","Airway"] },
+      { icon:"🦴", name:"Head & Neck Surgical Oncology", count:20, desc:"Fellowship-trained head and neck cancer surgeons. Thyroid cancer, oral cancer, throat cancer, and salivary gland tumors.", tags:["Thyroid cancer","Oral cancer","Throat cancer","Salivary gland"] },
+      { icon:"👶", name:"Pediatric Otolaryngology", count:18, desc:"Fellowship-trained children's ENT specialists. Ear tubes, tonsillectomy, adenoidectomy, and airway disorders in children.", tags:["Ear tubes","Tonsillectomy","Adenoids","Airway"] },
+      { icon:"🎨", name:"Facial Plastic & Reconstructive Surgery", count:22, desc:"Fellowship-trained facial surgery specialists. Rhinoplasty, facial reconstruction, Mohs reconstruction, and cosmetic facial procedures.", tags:["Rhinoplasty","Facial reconstruction","Facelift","Trauma repair"] },
+      { icon:"😴", name:"Sleep Medicine", count:14, desc:"Fellowship-trained sleep specialists. Sleep apnea evaluation, surgical and non-surgical treatment, and CPAP alternatives.", tags:["Sleep apnea","Snoring","CPAP","Surgery"] },
+      { icon:"🩺", name:"General ENT Consultation", count:20, desc:"Not sure what you need? Start with a general ENT evaluation for ear pain, sinus issues, sore throat, or hearing concerns.", tags:["Ear pain","Sinus","Sore throat","Hearing"], help:true }
+    ]
+  },
+  "Gastroenterology": {
+    desc: "Digestive system — esophagus, stomach, intestines, liver, and pancreas. Select the subspecialty that matches your concern.",
+    subs: [
+      { icon:"🫙", name:"Hepatology", count:20, desc:"Fellowship-trained liver specialists. Fatty liver disease, hepatitis, cirrhosis, and liver transplant evaluation.", tags:["Fatty liver","Hepatitis","Cirrhosis","Transplant eval"] },
+      { icon:"🔬", name:"Advanced & Interventional Endoscopy", count:18, desc:"Fellowship-trained complex endoscopic procedures. ERCP, EUS, advanced polypectomy, and endoscopic mucosal resection.", tags:["ERCP","EUS","Advanced polypectomy","EMR"] },
+      { icon:"🔥", name:"Inflammatory Bowel Disease", count:16, desc:"Fellowship-trained IBD specialists. Crohn's disease, ulcerative colitis, biologic therapy, and complex IBD management.", tags:["Crohn's","Ulcerative colitis","Biologics","Flare management"] },
+      { icon:"🫃", name:"Motility & Neurogastroenterology", count:14, desc:"Fellowship-trained functional GI specialists. Gastroparesis, esophageal dysmotility, IBS, and motility testing.", tags:["Gastroparesis","IBS","Dysmotility","Motility testing"] },
+      { icon:"🫘", name:"Pancreaticobiliary", count:12, desc:"Disorders of the pancreas and bile ducts. Pancreatitis, bile duct stones, pancreatic cysts, and biliary strictures.", tags:["Pancreatitis","Bile duct","Pancreatic cyst","Biliary"] },
+      { icon:"🩺", name:"General Gastroenterology Consultation", count:32, desc:"Not sure what you need? Start here for colonoscopy, reflux, stomach pain, or any digestive concern with clear, upfront pricing.", tags:["Colonoscopy","Reflux","Stomach pain","Digestive concern"], help:true }
+    ]
+  },
+  "Urology": {
+    desc: "Urinary tract and male reproductive health. Select the subspecialty that matches your concern.",
+    subs: [
+      { icon:"🔬", name:"Urologic Oncology", count:22, desc:"Fellowship-trained urologic cancer specialists. Prostate, bladder, kidney, and testicular cancer surgery and management.", tags:["Prostate cancer","Bladder cancer","Kidney cancer","Testicular cancer"] },
+      { icon:"🩹", name:"Female Pelvic Medicine & Reconstructive Surgery", count:14, desc:"Fellowship-trained specialists in female urologic conditions. Incontinence, pelvic organ prolapse, and reconstructive surgery.", tags:["Incontinence","Prolapse","Pelvic floor","Reconstruction"] },
+      { icon:"👶", name:"Pediatric Urology", count:14, desc:"Fellowship-trained children's urologic care. Undescended testes, hypospadias, vesicoureteral reflux, and congenital conditions.", tags:["Undescended testes","Hypospadias","Reflux","Congenital"] },
+      { icon:"🧬", name:"Male Infertility & Andrology", count:12, desc:"Fellowship-trained male reproductive specialists. Fertility evaluation, varicocele repair, vasectomy reversal, and hormonal management.", tags:["Male infertility","Varicocele","Vasectomy reversal","Testosterone"] },
+      { icon:"🪨", name:"Endourology & Stone Disease", count:18, desc:"Fellowship-trained kidney stone specialists. Lithotripsy, ureteroscopy, PCNL, and metabolic stone prevention.", tags:["Kidney stone","Lithotripsy","Ureteroscopy","PCNL"] },
+      { icon:"🧠", name:"Neurourology & Voiding Dysfunction", count:10, desc:"Specialists in neurogenic bladder, complex voiding dysfunction, and urodynamic evaluation.", tags:["Neurogenic bladder","Voiding dysfunction","Urodynamics","Spinal cord"] },
+      { icon:"🩺", name:"General Urology Consultation", count:24, desc:"Not sure what you need? Start here for prostate screening, urinary issues, kidney pain, or any urologic concern.", tags:["Prostate screening","Urinary issue","Kidney pain","Blood in urine"], help:true }
+    ]
+  },
+  "Radiology & Imaging": {
+    desc: "Diagnostic imaging and interventional procedures. Select the subspecialty that matches your imaging need.",
+    subs: [
+      { icon:"🧠", name:"Neuroradiology", count:22, desc:"Fellowship-trained brain and spine imaging specialists. Brain MRI, spine MRI, CT angiography, and neurologic imaging interpretation.", tags:["Brain MRI","Spine MRI","CT angio","Neurologic imaging"] },
+      { icon:"🦴", name:"Musculoskeletal Radiology", count:20, desc:"Fellowship-trained MSK imaging specialists. Joint MRI, sports injury imaging, arthrograms, and image-guided injections.", tags:["Knee MRI","Shoulder MRI","Arthrogram","Joint imaging"] },
+      { icon:"💉", name:"Interventional Radiology", count:26, desc:"Fellowship-trained image-guided procedures. Biopsies, embolization, port placement, drains, and minimally invasive treatments.", tags:["Biopsy","Embolization","Port placement","Drain"] },
+      { icon:"🩷", name:"Breast Imaging", count:14, desc:"Fellowship-trained breast imaging specialists. Mammography, breast MRI, ultrasound, and image-guided biopsies.", tags:["Mammogram","Breast MRI","Breast ultrasound","Biopsy"] },
+      { icon:"🫁", name:"Cardiothoracic Radiology", count:14, desc:"Fellowship-trained chest and heart imaging specialists. Chest CT, cardiac CT, CT pulmonary angiography, and lung screening.", tags:["Chest CT","Cardiac CT","Lung screening","CT angio"] },
+      { icon:"🫗", name:"Abdominal & Body Imaging", count:18, desc:"Fellowship-trained abdominal imaging specialists. Abdominal CT, MRI, ultrasound, and complex diagnostic interpretation.", tags:["Abdominal CT","Abdominal MRI","Ultrasound","Pelvic imaging"] },
+      { icon:"👶", name:"Pediatric Radiology", count:12, desc:"Fellowship-trained children's imaging specialists. Reduced-dose protocols, pediatric-specific imaging, and child-safe procedures.", tags:["Pediatric imaging","Low-dose CT","Ultrasound","Fetal MRI"] },
+      { icon:"☢️", name:"Nuclear Medicine", count:14, desc:"Fellowship-trained nuclear imaging specialists. PET/CT, bone scans, thyroid scans, and nuclear cardiac imaging.", tags:["PET/CT","Bone scan","Thyroid scan","Nuclear cardiac"] },
+      { icon:"🩺", name:"General Radiology Consultation", count:16, desc:"Not sure which imaging you need? Start here — a radiologist will recommend the right study with clear, upfront pricing.", tags:["Which scan","Not sure","Imaging needed","Referral"], help:true }
+    ]
+  },
+  "Physical Therapy": {
+    desc: "Movement, rehabilitation, and recovery. Select the board-certified specialty that matches your needs.",
+    subs: [
+      { icon:"🦴", name:"Orthopedic Physical Therapy", count:28, desc:"Board-certified orthopedic specialists. Post-surgical rehab, joint replacement recovery, fracture rehabilitation, and musculoskeletal conditions.", tags:["Post-op rehab","Joint replacement","Fracture","Musculoskeletal"] },
+      { icon:"🏃", name:"Sports Physical Therapy", count:22, desc:"Board-certified sports specialists. Return-to-sport programs, athletic injury rehab, performance optimization, and injury prevention.", tags:["Return to sport","ACL rehab","Athletic injury","Performance"] },
+      { icon:"🧠", name:"Neurologic Physical Therapy", count:16, desc:"Board-certified neurologic specialists. Stroke recovery, Parkinson's, multiple sclerosis, traumatic brain injury, and balance disorders.", tags:["Stroke rehab","Parkinson's","MS","Balance"] },
+      { icon:"👵", name:"Geriatric Physical Therapy", count:14, desc:"Board-certified geriatric specialists. Fall prevention, balance training, mobility restoration, and functional independence for older adults.", tags:["Fall prevention","Balance","Mobility","Independence"] },
+      { icon:"👶", name:"Pediatric Physical Therapy", count:14, desc:"Board-certified pediatric specialists. Developmental delays, torticollis, cerebral palsy, and childhood movement disorders.", tags:["Developmental delay","Torticollis","Cerebral palsy","Motor skills"] },
+      { icon:"🤰", name:"Women's Health / Pelvic Floor PT", count:14, desc:"Board-certified pelvic floor specialists. Incontinence, pelvic organ prolapse, postpartum recovery, and pelvic pain.", tags:["Pelvic floor","Incontinence","Postpartum","Pelvic pain"] },
+      { icon:"🫁", name:"Cardiovascular & Pulmonary PT", count:10, desc:"Board-certified cardiopulmonary specialists. Cardiac rehab, post-surgical heart recovery, COPD management, and pulmonary rehab.", tags:["Cardiac rehab","Post-cardiac surgery","COPD","Pulmonary rehab"] },
+      { icon:"🤚", name:"Hand Therapy (CHT)", count:12, desc:"Certified hand therapists. Post-surgical hand and wrist rehab, tendon repair recovery, nerve injury, and custom splinting.", tags:["Hand surgery rehab","Tendon repair","Nerve injury","Splinting"] },
+      { icon:"🩺", name:"General Physical Therapy Evaluation", count:18, desc:"Not sure what specialty you need? Start with a general PT evaluation to assess your movement concern and build a treatment plan.", tags:["New pain","Stiffness","Weakness","Not sure"], help:true }
+    ]
+  },
+  "Dental": {
+    desc: "Oral health care. Select the recognized dental specialty that matches your needs.",
+    subs: [
+      { icon:"🔧", name:"Endodontics", count:16, desc:"ADA-recognized root canal specialists. Root canal therapy, retreatment, apicoectomy, and dental trauma management.", tags:["Root canal","Retreatment","Apicoectomy","Dental trauma"] },
+      { icon:"🩹", name:"Oral & Maxillofacial Surgery", count:24, desc:"ADA-recognized oral surgeons. Wisdom teeth, dental implants, jaw surgery, facial trauma, and TMJ disorders.", tags:["Wisdom teeth","Implants","Jaw surgery","TMJ"] },
+      { icon:"📐", name:"Orthodontics & Dentofacial Orthopedics", count:18, desc:"ADA-recognized bite and alignment specialists. Braces, Invisalign, clear aligners, and jaw growth modification.", tags:["Braces","Invisalign","Clear aligners","Bite correction"] },
+      { icon:"👶", name:"Pediatric Dentistry", count:16, desc:"ADA-recognized children's dental specialists. Infant oral care, sealants, childhood cavities, and behavioral management.", tags:["Kids dental","Sealants","Cavities","First visit"] },
+      { icon:"🦠", name:"Periodontics", count:16, desc:"ADA-recognized gum and bone specialists. Gum disease treatment, dental implant placement, bone grafting, and gum surgery.", tags:["Gum disease","Implant placement","Bone graft","Gum surgery"] },
+      { icon:"🦷", name:"Prosthodontics", count:18, desc:"ADA-recognized tooth replacement specialists. Crowns, bridges, dentures, implant restorations, and full-mouth rehabilitation.", tags:["Crowns","Bridges","Dentures","Implant restoration"] },
+      { icon:"😣", name:"Orofacial Pain", count:8, desc:"ADA-recognized orofacial pain specialists. TMJ disorders, chronic facial pain, headache, and neuralgia.", tags:["TMJ","Facial pain","Headache","Neuralgia"] },
+      { icon:"🩺", name:"General Dentistry", count:32, desc:"Cleanings, fillings, exams, X-rays, whitening, and routine dental care. Start here if you're not sure what specialty you need.", tags:["Cleaning","Filling","Exam","Toothache"], help:true }
+    ]
+  },
+  "Pain Management": {
+    desc: "Chronic and acute pain treatment by fellowship-trained pain medicine specialists. Select your area of concern.",
+    subs: [
+      { icon:"🔩", name:"Interventional Spine", count:28, desc:"Epidural steroid injections, facet joint procedures, radiofrequency ablation, spinal cord stimulation, and minimally invasive spine procedures.", tags:["Epidural","Facet injection","RFA","Spinal cord stimulator"] },
+      { icon:"⚡", name:"Neuromodulation", count:14, desc:"Spinal cord stimulators, dorsal root ganglion stimulation, peripheral nerve stimulation, and intrathecal pump management.", tags:["Spinal cord stimulator","DRG","Peripheral nerve stim","Intrathecal pump"] },
+      { icon:"🫀", name:"Cancer Pain", count:10, desc:"Specialized pain management for oncology patients. Nerve blocks, intrathecal pumps, and palliative pain interventions.", tags:["Cancer pain","Nerve block","Palliative","Intrathecal"] },
+      { icon:"🧠", name:"Headache Medicine", count:12, desc:"Migraine treatment, Botox for chronic migraine, occipital nerve blocks, and complex headache management.", tags:["Migraine","Botox","Occipital block","Chronic headache"] },
+      { icon:"🩺", name:"General Pain Consultation", count:20, desc:"Not sure what you need? Start with a pain evaluation. Back pain, neck pain, joint pain, neuropathy — assessed with clear, upfront pricing.", tags:["Back pain","Neck pain","Joint pain","Neuropathy"], help:true }
+    ]
+  },
+  "Medical Aesthetics": {
+    desc: "Cosmetic and aesthetic procedures. Providers from dermatology, plastic surgery, and aesthetic medicine.",
+    subs: [
+      { icon:"💉", name:"Injectable & Neurotoxin Specialists", count:24, desc:"Botox, Dysport, dermal fillers, lip augmentation, and facial volumization by trained aesthetic providers.", tags:["Botox","Lip filler","Juvederm","Dysport"] },
+      { icon:"✨", name:"Laser & Energy-Based Treatments", count:20, desc:"Laser hair removal, skin resurfacing, IPL photofacial, radiofrequency skin tightening, and tattoo removal.", tags:["Laser hair removal","Resurfacing","IPL","RF tightening"] },
+      { icon:"🏋️", name:"Body Contouring", count:14, desc:"CoolSculpting, liposuction, non-surgical fat reduction, skin tightening, and body sculpting procedures.", tags:["CoolSculpting","Liposuction","Skin tightening","Fat reduction"] },
+      { icon:"💇", name:"Hair Restoration", count:12, desc:"FUE and FUT hair transplant, PRP for hair loss, scalp micropigmentation, and medical hair loss treatment.", tags:["Hair transplant","FUE","PRP","Scalp micropigmentation"] },
+      { icon:"🧴", name:"Regenerative Aesthetics", count:10, desc:"PRP facials, microneedling, exosome therapy, and stem cell-based aesthetic treatments.", tags:["PRP facial","Microneedling","Exosome","Regenerative"] },
+      { icon:"🩺", name:"Aesthetic Consultation", count:8, desc:"Not sure what you want? Start with a consultation to discuss your goals and see pricing for recommended treatments.", tags:["Anti-aging","Goals","New to aesthetics","Not sure"], help:true }
+    ]
+  }
+};
+
+// Render specialty bar
+function renderSpecBar() {
+  const bar = document.getElementById('spec-bar');
+  bar.innerHTML = '';
+  Object.keys(specialties).forEach((name, i) => {
+    const pill = document.createElement('div');
+    pill.className = 'spec-pill' + (i === 0 ? ' active' : '');
+    pill.textContent = name;
+    pill.onclick = () => loadSpecialty(name);
+    bar.appendChild(pill);
+  });
+}
+
+// Load a specialty
+function loadSpecialty(name) {
+  const spec = specialties[name];
+  if (!spec) return;
+
+  // Update pills
+  document.querySelectorAll('.spec-pill').forEach(p => {
+    p.classList.toggle('active', p.textContent === name);
+  });
+
+  // Scroll pill into view
+  const activePill = document.querySelector('.spec-pill.active');
+  if (activePill) activePill.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
+
+  // Header
+  document.getElementById('bc-name').textContent = name;
+  document.getElementById('spec-title').textContent = name;
+  document.getElementById('spec-desc').textContent = spec.desc;
+  document.title = 'OpenDoc — ' + name + ' Subspecialties';
+
+  // Grid
+  const grid = document.getElementById('sub-grid');
+  grid.innerHTML = '';
+  spec.subs.forEach((s, i) => {
+    const card = document.createElement('a');
+    card.href = '#';
+    card.className = 'sub-card' + (s.help ? ' help-card' : '');
+    card.style.animationDelay = (i * 0.04) + 's';
+
+    card.innerHTML =
+      '<div class="sub-card-top">' +
+        '<div class="sub-icon"' + (s.help ? ' style="background:var(--green-light)"' : '') + '>' + s.icon + '</div>' +
+        '<div class="sub-count">' + s.count + ' services</div>' +
+      '</div>' +
+      '<h3>' + s.name + '</h3>' +
+      '<div class="sub-desc">' + s.desc + '</div>' +
+      '<div class="sub-conditions">' +
+        s.tags.map(t => '<span class="sub-tag">' + t + '</span>').join('') +
+      '</div>' +
+      ARROW_SVG;
+
+    grid.appendChild(card);
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Init
+renderSpecBar();
+loadSpecialty(Object.keys(specialties)[0]);
+</script>
+
+</body>
+</html>
