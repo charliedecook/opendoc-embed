@@ -1,0 +1,2976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenDoc - Healthcare Simplified</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --od-navy: #0C2340;
+            --od-white: #FFFFFF;
+            --od-offwhite: #FBF9F6;
+            --od-gold: #D4AF37;
+            --od-gold-hover: #B8962F;
+            --od-radius-card: 13px;
+            --od-font-primary: 'Plus Jakarta Sans', sans-serif;
+            --od-font-display: 'DM Serif Display', serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--od-font-primary);
+            color: var(--od-navy);
+            background-color: var(--od-white);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            gap: 2rem;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .nav-logo svg {
+            height: 40px;
+            width: auto;
+        }
+
+        /* When search is stuck, nav goes transparent so search bar shows through */
+        nav.search-stuck {
+            background: transparent;
+            backdrop-filter: none;
+            border-bottom: none;
+            box-shadow: none;
+        }
+
+        /* Sticky search bar — sits behind nav, visible because nav is transparent */
+        .hero-search-container.stuck {
+            position: fixed !important;
+            top: 0;
+            left: 0 !important;
+            right: 0;
+            z-index: 999;
+            max-width: 100%;
+            width: 100%;
+            height: 80px;
+            margin: 0 !important;
+            padding: 0 240px 0 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(12, 35, 64, 0.08);
+            box-shadow: 0 2px 20px rgba(12, 35, 64, 0.08);
+            animation: none !important;
+            opacity: 1 !important;
+            transform: none !important;
+        }
+
+        .hero-search-container.stuck .hero-search-input {
+            max-width: 780px;
+            box-shadow: 0 4px 24px rgba(12, 35, 64, 0.1);
+        }
+
+        /* Placeholder spacer to prevent layout jump */
+        .search-spacer {
+            display: none;
+        }
+
+        .search-spacer.active {
+            display: block;
+        }
+
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-left: auto;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--od-navy);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            opacity: 0.7;
+        }
+
+        .nav-signin {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 50px;
+            color: var(--od-white);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            background: var(--od-navy);
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-signin:hover {
+            opacity: 0.85;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: linear-gradient(180deg, var(--od-offwhite) 0%, var(--od-white) 100%);
+        }
+
+        .hero h1 {
+            font-family: var(--od-font-display);
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            color: var(--od-navy);
+        }
+
+        .hero-search-container {
+            max-width: 780px;
+            margin: 2.5rem auto;
+            position: relative;
+        }
+
+        .hero-search-input {
+            width: 100%;
+            padding: 1.5rem 6rem 1.5rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.15rem;
+            font-family: var(--od-font-primary);
+            background: var(--od-white);
+            box-shadow: 0 4px 20px rgba(12, 35, 64, 0.08);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .hero-search-input:focus {
+            outline: none;
+            box-shadow: 0 4px 24px rgba(12, 35, 64, 0.15);
+        }
+
+        .hero-search-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--od-gold);
+            color: var(--od-white);
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.05rem;
+            font-family: var(--od-font-primary);
+            transition: background 0.3s ease;
+        }
+
+        .hero-search-btn:hover {
+            background: var(--od-gold-hover);
+        }
+
+        .hero-cta {
+            margin-top: 2rem;
+        }
+
+        .hero-cta a {
+            color: var(--od-navy);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .hero-cta a:hover {
+            text-decoration: underline;
+        }
+
+        /* Specialty Cards Section */
+        .specialty-section {
+            padding: 4rem 2rem;
+            background: var(--od-white);
+        }
+
+        .section-title {
+            font-family: var(--od-font-display);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--od-navy);
+        }
+
+        .section-subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .specialty-scroll-wrapper {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .specialty-scroll-container {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding: 2rem 0;
+            scroll-behavior: smooth;
+            cursor: grab;
+            scrollbar-width: none;
+        }
+
+        .specialty-scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .specialty-scroll-container:active {
+            cursor: grabbing;
+        }
+
+        .specialty-card {
+            flex: 0 0 280px;
+            background: var(--od-offwhite);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+            position: relative;
+        }
+
+        .specialty-card-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: filter 0.3s ease;
+        }
+
+        .specialty-card:hover .specialty-card-img {
+            filter: grayscale(0%);
+        }
+
+        .specialty-card:hover {
+            transform: scale(1.15);
+            z-index: 10;
+            box-shadow: 0 20px 40px rgba(12, 35, 64, 0.15);
+        }
+
+        .specialty-card-content {
+            padding: 1.5rem;
+        }
+
+        .specialty-card-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--od-navy);
+        }
+
+        .specialty-card-desc {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* Popular Providers Section */
+        .providers-section {
+            padding: 4rem 2rem;
+            background: var(--od-offwhite);
+        }
+
+        .providers-scroll-wrapper {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .providers-scroll-container {
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            padding: 2rem 0;
+            scroll-behavior: smooth;
+            cursor: grab;
+            scrollbar-width: none;
+        }
+
+        .providers-scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .provider-card {
+            flex: 0 0 220px;
+            background: var(--od-white);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .provider-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 24px rgba(12, 35, 64, 0.12);
+        }
+
+        .provider-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: filter 0.3s ease;
+        }
+
+        .provider-card:hover .provider-avatar {
+            filter: grayscale(0%);
+        }
+
+        .provider-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--od-navy);
+            margin-bottom: 0.25rem;
+        }
+
+        .provider-specialty {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .provider-location {
+            font-size: 0.85rem;
+            color: #999;
+            margin-bottom: 0.75rem;
+        }
+
+        .provider-rating {
+            font-weight: 600;
+            color: var(--od-navy);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .provider-cta {
+            color: var(--od-navy);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .provider-cta:hover {
+            text-decoration: underline;
+        }
+
+        /* How It Works - Scrollytelling Section */
+        .hiw-section {
+            background: var(--od-navy);
+            color: var(--od-white);
+        }
+
+        .hiw-header {
+            text-align: center;
+            padding: 5rem 2rem 3rem;
+        }
+
+        .hiw-header h2 {
+            font-family: var(--od-font-display);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hiw-header p {
+            font-size: 1.1rem;
+            opacity: 0.7;
+        }
+
+        .hiw-layout {
+            display: flex;
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hiw-steps {
+            flex: 1;
+            padding: 0 2rem 4rem;
+        }
+
+        .hiw-phone-col {
+            flex: 0 0 380px;
+            position: relative;
+        }
+
+        .hiw-phone-sticky {
+            position: sticky;
+            top: 120px;
+            display: flex;
+            justify-content: center;
+            padding-bottom: 4rem;
+        }
+
+        .hiw-step {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem 0;
+            opacity: 0.25;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .hiw-step.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hiw-step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--od-gold);
+            color: var(--od-white);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+        }
+
+        .hiw-step h3 {
+            font-family: var(--od-font-display);
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
+        }
+
+        .hiw-step p {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            opacity: 0.8;
+            max-width: 380px;
+        }
+
+        .phone-frame {
+            position: relative;
+            width: 280px;
+            height: 560px;
+            background: #2c2c2c;
+            border-radius: 40px;
+            padding: 10px;
+            box-shadow:
+                0 0 0 2px #444,
+                0 0 0 4px #555,
+                0 30px 80px rgba(0, 0, 0, 0.5),
+                inset 0 0 6px rgba(255, 255, 255, 0.05);
+        }
+
+        .phone-frame::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 20%;
+            right: 20%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            border-radius: 0 0 4px 4px;
+            z-index: 11;
+        }
+
+        .phone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 28px;
+            background: #2c2c2c;
+            border-radius: 0 0 18px 18px;
+            z-index: 10;
+        }
+
+        .phone-notch::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            border: 1px solid #444;
+        }
+
+        .phone-screen {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            background: var(--od-offwhite);
+            border-radius: 34px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 2.5rem 1.25rem 1.5rem;
+            font-size: 0.8rem;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.5s ease-out;
+            font-family: var(--od-font-primary);
+            color: var(--od-navy);
+            z-index: 1;
+        }
+
+        .phone-screen.active {
+            opacity: 1;
+            transform: scale(1);
+            z-index: 2;
+        }
+
+        .phone-screen h3 {
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .phone-search-bar {
+            background: var(--od-white);
+            border: 1px solid rgba(12, 35, 64, 0.08);
+            padding: 0.6rem 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.75rem;
+            color: #999;
+        }
+
+        .phone-result-item {
+            background: var(--od-white);
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(12, 35, 64, 0.05);
+        }
+
+        .phone-result-name {
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-bottom: 0.15rem;
+        }
+
+        .phone-result-spec {
+            font-size: 0.65rem;
+            color: #999;
+            margin-bottom: 0.15rem;
+        }
+
+        .phone-result-price {
+            font-weight: 700;
+            color: var(--od-navy);
+            font-size: 0.75rem;
+        }
+
+        .phone-price-card {
+            background: var(--od-white);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(12, 35, 64, 0.1);
+            margin-bottom: 0.75rem;
+        }
+
+        .phone-price-amount {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--od-navy);
+            margin-bottom: 0.35rem;
+        }
+
+        .phone-price-label {
+            font-size: 0.65rem;
+            color: #999;
+            margin-bottom: 0.5rem;
+        }
+
+        .phone-checklist {
+            font-size: 0.7rem;
+            color: #666;
+        }
+
+        .phone-checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .phone-checklist-check {
+            color: var(--od-gold);
+            font-weight: 700;
+        }
+
+        .phone-button {
+            background: var(--od-gold);
+            color: var(--od-white);
+            border: none;
+            padding: 0.6rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 0.75rem;
+            font-size: 0.75rem;
+            text-align: center;
+        }
+
+        .phone-confirmation {
+            text-align: center;
+            padding: 0.5rem;
+        }
+
+        .phone-keyhole-mark {
+            margin-bottom: 0.5rem;
+        }
+
+        .phone-confirmation-text {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 0.75rem;
+            color: var(--od-navy);
+        }
+
+        /* Guide Section */
+        .guide-section {
+            padding: 4rem 2rem;
+            background: var(--od-offwhite);
+        }
+
+        .guide-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-box {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--od-navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .trust-badges {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: var(--od-white);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .badge-icon {
+            font-size: 1.5rem;
+        }
+
+        .badge-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Testimonials */
+        .testimonials-section {
+            padding: 4rem 2rem;
+            background: var(--od-white);
+        }
+
+        .testimonials-grid {
+            max-width: 1200px;
+            margin: 3rem auto 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: var(--od-offwhite);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .testimonial-stars {
+            color: #FFB700;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .testimonial-text {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            font-weight: 700;
+            color: var(--od-navy);
+            font-size: 0.95rem;
+        }
+
+        .testimonial-title {
+            color: #999;
+            font-size: 0.85rem;
+        }
+
+        /* Provider CTA Section */
+        .provider-cta-section {
+            padding: 4rem 2rem;
+            background: var(--od-navy);
+            color: var(--od-white);
+            text-align: center;
+        }
+
+        .provider-cta-section h2 {
+            font-family: var(--od-font-display);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .provider-cta-section p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .provider-cta-button {
+            background: var(--od-gold);
+            color: var(--od-white);
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .provider-cta-button:hover {
+            background: var(--od-gold-hover);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--od-navy);
+            color: var(--od-white);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        footer a {
+            color: var(--od-white);
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            margin-bottom: 2rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Page Visibility */
+        #home-page {
+            display: none;
+        }
+
+        #home-page.active {
+            display: block;
+        }
+
+        .detail-page {
+            display: none;
+        }
+
+        .detail-page.active {
+            display: block;
+        }
+
+        .detail-header {
+            padding: 4rem 2rem;
+            background: linear-gradient(180deg, var(--od-offwhite) 0%, var(--od-white) 100%);
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        .detail-header h1 {
+            font-family: var(--od-font-display);
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--od-navy);
+        }
+
+        .detail-header p {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .detail-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .back-link {
+            color: var(--od-navy);
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .subspecialties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .subspecialty-card {
+            background: var(--od-offwhite);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .subspecialty-card:hover {
+            box-shadow: 0 10px 24px rgba(12, 35, 64, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .subspecialty-card h3 {
+            color: var(--od-navy);
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .subspecialty-card p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .no-subspecialties {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #999;
+        }
+
+        /* Provider List Cards (for specialties without subspecialties) */
+        .provider-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .provider-list-card {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--od-white);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .provider-list-card:hover {
+            box-shadow: 0 8px 24px rgba(12, 35, 64, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .plc-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--od-navy);
+            color: var(--od-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .plc-info {
+            flex: 1;
+        }
+
+        .plc-name {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--od-navy);
+            margin-bottom: 0.2rem;
+        }
+
+        .plc-spec {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .plc-location {
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 0.15rem;
+        }
+
+        .plc-rating {
+            font-size: 0.85rem;
+            color: var(--od-navy);
+            font-weight: 600;
+            margin-top: 0.3rem;
+        }
+
+        .plc-right {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .plc-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--od-navy);
+        }
+
+        .plc-avail {
+            font-size: 0.8rem;
+            color: var(--od-gold);
+            font-weight: 600;
+            margin: 0.25rem 0 0.75rem;
+        }
+
+        .plc-book-btn {
+            display: inline-block;
+            padding: 0.5rem 1.25rem;
+            background: var(--od-navy);
+            color: var(--od-white);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Provider Profile Page */
+        .profile-page {
+            display: none;
+        }
+
+        .profile-page.active {
+            display: block;
+        }
+
+        .profile-header {
+            padding: 3rem 2rem;
+            background: linear-gradient(180deg, var(--od-offwhite) 0%, var(--od-white) 100%);
+            margin-top: 80px;
+        }
+
+        .profile-header-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+        }
+
+        .profile-avatar-lg {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--od-navy);
+            color: var(--od-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .profile-header-info h1 {
+            font-family: var(--od-font-display);
+            font-size: 2rem;
+            color: var(--od-navy);
+            margin-bottom: 0.25rem;
+        }
+
+        .profile-header-info .profile-title {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-header-info .profile-rating-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .profile-rating-bar .stars {
+            color: #FFB700;
+        }
+
+        .profile-body {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 2.5rem;
+        }
+
+        .profile-main h2 {
+            font-family: var(--od-font-display);
+            font-size: 1.5rem;
+            color: var(--od-navy);
+            margin-bottom: 1rem;
+            margin-top: 2rem;
+        }
+
+        .profile-main h2:first-child {
+            margin-top: 0;
+        }
+
+        .profile-about {
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .profile-fit-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-top: 1rem;
+        }
+
+        .fit-card {
+            padding: 1.25rem;
+            border-radius: 10px;
+            border: 1px solid;
+        }
+
+        .fit-card.good {
+            background: #f8f6f0;
+            border-color: #e8dfc0;
+        }
+
+        .fit-card.not {
+            background: #fafafa;
+            border-color: #e5e5e5;
+        }
+
+        .fit-card-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        .fit-card.good .fit-card-label {
+            color: var(--od-navy);
+        }
+
+        .fit-card.not .fit-card-label {
+            color: #999;
+        }
+
+        .fit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: #444;
+        }
+
+        .fit-item .icon {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .fit-card.good .icon { color: var(--od-gold); }
+        .fit-card.not .icon { color: #ccc; }
+
+        .service-row {
+            padding: 1.25rem;
+            border: 1.5px solid rgba(12, 35, 64, 0.1);
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .service-row-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--od-navy);
+            margin-bottom: 0.25rem;
+        }
+
+        .service-row-tag {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            background: #e0f2fe;
+            color: #0369a1;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-row-desc {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-row-meta {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .alert-card {
+            padding: 1.25rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .alert-card.urgent {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-card.info {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+        }
+
+        .alert-card-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .alert-card.urgent .alert-card-label { color: #dc2626; }
+        .alert-card.info .alert-card-label { color: #d97706; }
+
+        .alert-card p {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .profile-sidebar {
+            position: sticky;
+            top: 100px;
+            align-self: start;
+        }
+
+        .sidebar-card {
+            background: var(--od-white);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .sidebar-pricing-header {
+            text-align: center;
+            padding: 1.25rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .sidebar-pricing-header h3 {
+            font-size: 1rem;
+            color: var(--od-navy);
+            margin-bottom: 0.25rem;
+        }
+
+        .sidebar-pricing-header p {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .sidebar-body {
+            padding: 1.5rem;
+        }
+
+        .sidebar-body h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--od-navy);
+            margin-bottom: 0.35rem;
+        }
+
+        .sidebar-body p {
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-guarantee {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: #f8f6f0;
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+        }
+
+        .sidebar-guarantee .icon { color: var(--od-gold); font-size: 1.25rem; flex-shrink: 0; }
+
+        .sidebar-guarantee p {
+            font-size: 0.85rem;
+            color: #444;
+            margin: 0;
+        }
+
+        .sidebar-cta {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: var(--od-navy);
+            color: var(--od-white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            font-family: var(--od-font-primary);
+            transition: opacity 0.3s;
+        }
+
+        .sidebar-cta:hover {
+            opacity: 0.85;
+        }
+
+        .sidebar-footer {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .sidebar-footer p {
+            font-size: 0.8rem;
+            color: #999;
+            margin: 0;
+        }
+
+        .sidebar-footer a {
+            color: #0369a1;
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+
+        .profile-contact {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .profile-contact span {
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        /* Why OpenDoc - Redesigned */
+        .why-section {
+            background: linear-gradient(135deg, #f0fdf9 0%, #ecfdf5 30%, #f0f9ff 70%, #eff6ff 100%);
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        .why-quote {
+            font-family: var(--od-font-display);
+            font-size: 1.8rem;
+            color: var(--od-navy);
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.4;
+            font-style: italic;
+        }
+
+        .why-subtext {
+            font-size: 1.05rem;
+            color: #666;
+            margin-bottom: 3.5rem;
+        }
+
+        .why-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            max-width: 900px;
+            margin: 0 auto 3rem;
+        }
+
+        .why-stat-num {
+            font-family: var(--od-font-display);
+            font-size: 2.5rem;
+            color: var(--od-navy);
+            line-height: 1;
+            margin-bottom: 0.4rem;
+        }
+
+        .why-stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .why-badges {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .why-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--od-navy);
+        }
+
+        .why-badge-icon {
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .hiw-layout {
+                flex-direction: column;
+            }
+
+            .hiw-phone-col {
+                flex: none;
+                order: -1;
+            }
+
+            .hiw-phone-sticky {
+                position: relative;
+                top: 0;
+                padding: 2rem 0;
+            }
+
+            .phone-frame {
+                width: 220px;
+                height: 440px;
+                margin: 0 auto;
+            }
+
+            .hiw-step {
+                min-height: 50vh;
+            }
+
+            .nav-right {
+                gap: 1rem;
+            }
+
+            .detail-header h1 {
+                font-size: 2rem;
+            }
+
+            .specialty-card {
+                flex: 0 0 200px;
+            }
+
+            .provider-card {
+                flex: 0 0 180px;
+            }
+
+            .why-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .why-quote {
+                font-size: 1.3rem;
+            }
+
+            .profile-body {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-fit-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-header-inner {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .plc-right {
+                display: none;
+            }
+        }
+
+        /* Specialty card drag scroll */
+        .specialty-scroll-container.dragging {
+            scroll-behavior: auto;
+        }
+
+        .section-header-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header-row .section-title {
+            margin-bottom: 0;
+        }
+
+        .browse-all-link {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--od-gold);
+            text-decoration: none;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .browse-all-link:hover {
+            color: var(--od-gold-hover);
+            text-decoration: underline;
+        }
+
+        /* ===== Scroll-triggered animations ===== */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-reveal-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+
+        .scroll-reveal-left.revealed {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .scroll-reveal-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+
+        .scroll-reveal-right.revealed {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .scroll-reveal-scale {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .scroll-reveal-scale.revealed {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Hero entrance animation */
+        .hero h1 {
+            animation: heroFadeUp 0.8s ease-out forwards;
+        }
+
+        .hero p {
+            animation: heroFadeUp 0.8s ease-out 0.15s forwards;
+            opacity: 0;
+        }
+
+        .hero-search-container {
+            animation: heroFadeUp 0.8s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        .hero-cta {
+            animation: heroFadeUp 0.8s ease-out 0.45s forwards;
+            opacity: 0;
+        }
+
+        @keyframes heroFadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Staggered children animation */
+        .stagger-children .scroll-child {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .stagger-children.revealed .scroll-child {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stagger-children.revealed .scroll-child:nth-child(1) { transition-delay: 0s; }
+        .stagger-children.revealed .scroll-child:nth-child(2) { transition-delay: 0.1s; }
+        .stagger-children.revealed .scroll-child:nth-child(3) { transition-delay: 0.2s; }
+        .stagger-children.revealed .scroll-child:nth-child(4) { transition-delay: 0.3s; }
+        .stagger-children.revealed .scroll-child:nth-child(5) { transition-delay: 0.4s; }
+        .stagger-children.revealed .scroll-child:nth-child(6) { transition-delay: 0.5s; }
+
+        /* Stat counter animation */
+        .why-stat-num {
+            transition: opacity 0.5s ease-out;
+        }
+
+        /* Parallax subtle float */
+        .parallax-float {
+            transition: transform 0.1s linear;
+        }
+
+        /* Nav background on scroll */
+        nav {
+            transition: box-shadow 0.3s ease;
+        }
+        nav.scrolled {
+            box-shadow: 0 2px 20px rgba(12, 35, 64, 0.08);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a class="nav-logo" href="#" onclick="window.location.hash = ''; return false;">
+            <svg viewBox="0 0 410 80" height="40" aria-label="OpenDoc">
+                <rect width="72" height="80" rx="13" fill="#0C2340"/>
+                <circle cx="23" cy="28" r="8" fill="#D4AF37"/>
+                <rect x="19.5" y="34.5" width="7" height="22" rx="2" fill="#D4AF37"/>
+                <circle cx="49" cy="28" r="8" fill="#fff"/>
+                <rect x="45.5" y="34.5" width="7" height="22" rx="2" fill="#fff"/>
+                <text x="90" y="58" font-family="'DM Serif Display',serif" font-size="48" letter-spacing="-0.5" fill="#0C2340">OpenDoc</text>
+            </svg>
+        </a>
+        <div style="flex: 1;"></div>
+        <div class="nav-right">
+            <a class="nav-link" href="#" onclick="showProviderSignup(); return false;">For Providers</a>
+            <a class="nav-signin" href="#" onclick="showSignin(); return false;">
+                <svg viewBox="0 0 72 80" width="14" height="16" style="margin-right:4px;">
+                    <rect width="72" height="80" rx="13" fill="rgba(255,255,255,0.25)"/>
+                    <circle cx="23" cy="28" r="8" fill="#fff"/>
+                    <rect x="19.5" y="34.5" width="7" height="22" rx="2" fill="#fff"/>
+                    <circle cx="49" cy="28" r="8" fill="#fff"/>
+                    <rect x="45.5" y="34.5" width="7" height="22" rx="2" fill="#fff"/>
+                </svg>
+                HealthKey
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Page -->
+        <div id="home-page" class="active">
+            <!-- Hero Section -->
+            <section class="hero">
+                <h1>Find. Price. Book.</h1>
+                <p style="font-size: 1.2rem; color: #666; margin-bottom: 0.5rem;">Healthcare Simplified</p>
+                <div class="hero-search-container" id="heroSearchContainer">
+                    <input type="text" class="hero-search-input" id="heroSearch" placeholder="Symptom? Diagnosis? Provider Name? Specialty? MRI?" value="">
+                    <button class="hero-search-btn" onclick="performSearch()">Search</button>
+                </div>
+                <div class="search-spacer" id="searchSpacer"></div>
+                <div class="hero-cta">
+                    <a href="#" onclick="document.querySelector('.hiw-section').scrollIntoView({ behavior: 'smooth' }); return false;">See how it works ↓</a>
+                </div>
+            </section>
+
+            <!-- Specialty Cards Section -->
+            <section class="specialty-section scroll-reveal">
+                <div class="section-header-row">
+                    <h2 class="section-title">Browse Specialties</h2>
+                    <a class="browse-all-link" href="#">Browse all →</a>
+                </div>
+                <p class="section-subtitle">Find healthcare providers by specialty</p>
+                <div class="specialty-scroll-wrapper">
+                    <div class="specialty-scroll-container" id="specialtyContainer">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Most-Booked Services Section -->
+            <section class="services-section scroll-reveal" style="padding: 4rem 2rem; background: var(--od-offwhite);">
+                <div class="section-header-row">
+                    <h2 class="section-title">Most-Booked Services</h2>
+                    <a class="browse-all-link" href="#">Browse all →</a>
+                </div>
+                <p class="section-subtitle">Popular healthcare services with transparent pricing</p>
+                <div class="specialty-scroll-wrapper">
+                    <div class="specialty-scroll-container" id="servicesContainer" style="padding: 2rem 0;">
+                        <div class="specialty-card" style="flex: 0 0 280px;">
+                            <img src="https://images.unsplash.com/photo-1579154204601-01d982e944d0?w=400&h=200&fit=crop" alt="Annual Physical" class="specialty-card-img">
+                            <div class="specialty-card-content">
+                                <div class="specialty-card-title">Annual Physical Exam</div>
+                                <div class="specialty-card-desc">Comprehensive health assessment</div>
+                                <div style="font-weight: 700; color: var(--od-navy); margin-top: 0.5rem;">$150–$300</div>
+                            </div>
+                        </div>
+                        <div class="specialty-card" style="flex: 0 0 280px;">
+                            <img src="https://images.unsplash.com/photo-1576091160550-112173f0f767?w=400&h=200&fit=crop" alt="Dental Cleaning" class="specialty-card-img">
+                            <div class="specialty-card-content">
+                                <div class="specialty-card-title">Dental Cleaning</div>
+                                <div class="specialty-card-desc">Professional cleaning & oral health check</div>
+                                <div style="font-weight: 700; color: var(--od-navy); margin-top: 0.5rem;">$100–$200</div>
+                            </div>
+                        </div>
+                        <div class="specialty-card" style="flex: 0 0 280px;">
+                            <img src="https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?w=400&h=200&fit=crop" alt="Therapy Session" class="specialty-card-img">
+                            <div class="specialty-card-content">
+                                <div class="specialty-card-title">Therapy Session</div>
+                                <div class="specialty-card-desc">Licensed therapist consultation</div>
+                                <div style="font-weight: 700; color: var(--od-navy); margin-top: 0.5rem;">$100–$250</div>
+                            </div>
+                        </div>
+                        <div class="specialty-card" style="flex: 0 0 280px;">
+                            <img src="https://images.unsplash.com/photo-1576091160569-112a11180e90?w=400&h=200&fit=crop" alt="Physical Therapy" class="specialty-card-img">
+                            <div class="specialty-card-content">
+                                <div class="specialty-card-title">Physical Therapy</div>
+                                <div class="specialty-card-desc">Rehabilitation & injury recovery</div>
+                                <div style="font-weight: 700; color: var(--od-navy); margin-top: 0.5rem;">$75–$200</div>
+                            </div>
+                        </div>
+                        <div class="specialty-card" style="flex: 0 0 280px;">
+                            <img src="https://images.unsplash.com/photo-1576091160579-112173f0f767?w=400&h=200&fit=crop" alt="Dermatology" class="specialty-card-img">
+                            <div class="specialty-card-content">
+                                <div class="specialty-card-title">Dermatology Visit</div>
+                                <div class="specialty-card-desc">Skin screening & consultation</div>
+                                <div style="font-weight: 700; color: var(--od-navy); margin-top: 0.5rem;">$150–$350</div>
+                            </div>
+                        </div>
+                        <div class="specialty-card" style="flex: 0 0 280px;">
+                            <img src="https://images.unsplash.com/photo-1631217314830-4e9eef194036?w=400&h=200&fit=crop" alt="Eye Exam" class="specialty-card-img">
+                            <div class="specialty-card-content">
+                                <div class="specialty-card-title">Eye Exam</div>
+                                <div class="specialty-card-desc">Comprehensive vision assessment</div>
+                                <div style="font-weight: 700; color: var(--od-navy); margin-top: 0.5rem;">$75–$200</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Popular Providers Section -->
+            <section class="providers-section scroll-reveal">
+                <div class="section-header-row">
+                    <h2 class="section-title">Popular Providers</h2>
+                    <a class="browse-all-link" href="#">Browse all →</a>
+                </div>
+                <p class="section-subtitle">Highly-rated healthcare professionals near you</p>
+                <div class="providers-scroll-wrapper">
+                    <div class="providers-scroll-container" id="providersContainer">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works - Scrollytelling Section -->
+            <section class="hiw-section">
+                <div class="hiw-header scroll-reveal">
+                    <h2>How It Works</h2>
+                    <p>Three simple steps to better healthcare</p>
+                </div>
+                <div class="hiw-layout">
+                    <div class="hiw-steps">
+                        <div class="hiw-step active" data-step="1">
+                            <div class="hiw-step-num">1</div>
+                            <h3>Search Your Care</h3>
+                            <p>Enter your symptoms, procedure, or condition to discover available providers with transparent pricing. No referrals needed.</p>
+                        </div>
+                        <div class="hiw-step" data-step="2">
+                            <div class="hiw-step-num">2</div>
+                            <h3>Compare Real Prices</h3>
+                            <p>Browse guaranteed all-in prices with full transparency. No hidden fees, no surprises. Know exactly what you'll pay before you book.</p>
+                        </div>
+                        <div class="hiw-step" data-step="3">
+                            <div class="hiw-step-num">3</div>
+                            <h3>Book with Confidence</h3>
+                            <p>Secure checkout with identity verification through HealthKey. Get instant confirmation and peace of mind knowing everything is handled.</p>
+                        </div>
+                    </div>
+                    <div class="hiw-phone-col">
+                        <div class="hiw-phone-sticky">
+                            <div class="phone-frame">
+                                <div class="phone-notch"></div>
+                                <div class="phone-screen active" id="phoneScreen1">
+                                    <h3>Search</h3>
+                                    <div class="phone-search-bar">knee pain</div>
+                                    <div class="phone-result-item">
+                                        <div class="phone-result-name">Dr. James Miller</div>
+                                        <div class="phone-result-spec">Orthopedic Surgery</div>
+                                        <div class="phone-result-price">$150 · 3 mi</div>
+                                    </div>
+                                    <div class="phone-result-item">
+                                        <div class="phone-result-name">Dr. Sarah Chen</div>
+                                        <div class="phone-result-spec">Sports Medicine</div>
+                                        <div class="phone-result-price">$120 · 5 mi</div>
+                                    </div>
+                                    <div class="phone-result-item">
+                                        <div class="phone-result-name">Dr. Marcus Webb</div>
+                                        <div class="phone-result-spec">Physical Medicine</div>
+                                        <div class="phone-result-price">$100 · 8 mi</div>
+                                    </div>
+                                </div>
+                                <div class="phone-screen" id="phoneScreen2">
+                                    <h3>Price Details</h3>
+                                    <div class="phone-price-card">
+                                        <div class="phone-price-amount">$150</div>
+                                        <div class="phone-price-label">Guaranteed all-in price</div>
+                                        <div class="phone-button">Book & Pay $150</div>
+                                    </div>
+                                    <div style="font-size: 0.7rem; font-weight: 600; margin: 0.75rem 0 0.5rem; color: #999;">What's included:</div>
+                                    <div class="phone-checklist">
+                                        <div class="phone-checklist-item"><span class="phone-checklist-check">✓</span><span>30 min visit</span></div>
+                                        <div class="phone-checklist-item"><span class="phone-checklist-check">✓</span><span>Exam & assessment</span></div>
+                                        <div class="phone-checklist-item"><span class="phone-checklist-check">✓</span><span>Same-day booking</span></div>
+                                    </div>
+                                </div>
+                                <div class="phone-screen" id="phoneScreen3">
+                                    <div style="text-align:center; padding-top: 0.5rem;">
+                                        <div style="font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#16a34a; margin-bottom:0.75rem;">Check-in Verified</div>
+                                        <div style="width:56px; height:56px; border-radius:50%; border:2px solid #16a34a; margin:0 auto 0.75rem; display:flex; align-items:center; justify-content:center;">
+                                            <svg viewBox="0 0 72 80" width="28" height="32"><rect width="72" height="80" rx="13" fill="none" stroke="#16a34a" stroke-width="4"/><circle cx="23" cy="28" r="6" fill="none" stroke="#16a34a" stroke-width="3"/><rect x="20" y="35" width="6" height="18" rx="2" fill="none" stroke="#16a34a" stroke-width="3"/><circle cx="49" cy="28" r="6" fill="none" stroke="#16a34a" stroke-width="3"/><rect x="46" y="35" width="6" height="18" rx="2" fill="none" stroke="#16a34a" stroke-width="3"/></svg>
+                                        </div>
+                                        <div style="font-weight:700; font-size:0.95rem; color:var(--od-navy); margin-bottom:0.25rem;">You're checked in</div>
+                                        <div style="font-size:0.7rem; color:#999; margin-bottom:1rem;">HealthKey verified. You're all set.</div>
+                                    </div>
+                                    <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:8px; padding:0.75rem; font-size:0.7rem;">
+                                        <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;"><span style="color:#666;">Identity</span><span style="color:#16a34a; font-weight:600;">✓ Confirmed</span></div>
+                                        <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;"><span style="color:#666;">Service</span><span style="color:#16a34a; font-weight:600;">✓ Orthopedic Consult</span></div>
+                                        <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;"><span style="color:#666;">Payment</span><span style="color:#16a34a; font-weight:600;">✓ $150 secured</span></div>
+                                        <div style="display:flex; justify-content:space-between;"><span style="color:#666;">Authorization</span><span style="color:#16a34a; font-weight:600;">✓ Active</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Why OpenDoc Section -->
+            <section class="why-section">
+                <div class="why-quote scroll-reveal">"We built OpenDoc because we were tired of the same thing you are — not knowing who to see, what it would cost, or when we could get in."</div>
+                <div class="why-subtext scroll-reveal">We believe booking healthcare should be as simple as booking a flight.</div>
+                <div class="why-stats stagger-children scroll-reveal">
+                    <div class="scroll-child">
+                        <div class="why-stat-num" data-target="2400" data-suffix="+">0</div>
+                        <div class="why-stat-label">Verified Providers</div>
+                    </div>
+                    <div class="scroll-child">
+                        <div class="why-stat-num" data-target="340" data-prefix="$">0</div>
+                        <div class="why-stat-label">Avg Savings</div>
+                    </div>
+                    <div class="scroll-child">
+                        <div class="why-stat-num" data-target="98" data-suffix="%">0</div>
+                        <div class="why-stat-label">Price Accuracy</div>
+                    </div>
+                    <div class="scroll-child">
+                        <div class="why-stat-num" data-target="50" data-suffix="K+">0</div>
+                        <div class="why-stat-label">Appointments Booked</div>
+                    </div>
+                </div>
+                <div class="why-badges scroll-reveal stagger-children">
+                    <div class="why-badge scroll-child"><span class="why-badge-icon" style="color: #16a34a;">&#x1f512;</span> HIPAA Compliant</div>
+                    <div class="why-badge scroll-child"><span class="why-badge-icon" style="color: #16a34a;">&#x1f512;</span> SSL Secure</div>
+                    <div class="why-badge scroll-child"><span class="why-badge-icon" style="color: #FFB700;">&#x2605;</span> Verified Providers</div>
+                    <div class="why-badge scroll-child"><span class="why-badge-icon" style="color: #0369a1;">&#x2194;</span> Price Guaranteed</div>
+                </div>
+            </section>
+
+            <!-- Testimonials Section -->
+            <section class="testimonials-section">
+                <h2 class="section-title scroll-reveal" style="text-align: center;">What Patients Say</h2>
+                <div class="testimonials-grid stagger-children scroll-reveal">
+                    <div class="testimonial-card scroll-child">
+                        <div class="testimonial-stars">★★★★★</div>
+                        <div class="testimonial-text">"I found a orthopedic specialist in 5 minutes and knew the exact cost upfront. No surprise bills!"</div>
+                        <div class="testimonial-author">Jessica Martinez</div>
+                        <div class="testimonial-title">Atlanta, GA</div>
+                    </div>
+                    <div class="testimonial-card scroll-child">
+                        <div class="testimonial-stars">★★★★★</div>
+                        <div class="testimonial-text">"Finally, a way to compare healthcare providers just like I shop for everything else. Transparent and simple."</div>
+                        <div class="testimonial-author">David Thompson</div>
+                        <div class="testimonial-title">Marietta, GA</div>
+                    </div>
+                    <div class="testimonial-card scroll-child">
+                        <div class="testimonial-stars">★★★★★</div>
+                        <div class="testimonial-text">"The pricing guarantee gives me peace of mind. I actually understand what I'm paying for now."</div>
+                        <div class="testimonial-author">Rachel Kim</div>
+                        <div class="testimonial-title">Alpharetta, GA</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Provider CTA Section -->
+            <section class="provider-cta-section scroll-reveal-scale">
+                <h2>Become a Provider</h2>
+                <p>Join thousands of healthcare professionals on OpenDoc</p>
+                <button class="provider-cta-button" onclick="showProviderSignup()">Get Started</button>
+            </section>
+        </div>
+
+        <!-- Specialty Detail Pages (populated by JavaScript) -->
+        <div id="specialty-detail-placeholder"></div>
+
+        <!-- Provider Profile Page (populated by JavaScript) -->
+        <div id="provider-profile-page" class="profile-page"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div style="margin-bottom: 2rem;">
+                <svg viewBox="0 0 410 80" height="36" aria-label="OpenDoc">
+                    <rect width="72" height="80" rx="13" fill="#fff"/>
+                    <circle cx="23" cy="28" r="8" fill="#D4AF37"/>
+                    <rect x="19.5" y="34.5" width="7" height="22" rx="2" fill="#D4AF37"/>
+                    <circle cx="49" cy="28" r="8" fill="#0C2340"/>
+                    <rect x="45.5" y="34.5" width="7" height="22" rx="2" fill="#0C2340"/>
+                    <text x="90" y="58" font-family="'DM Serif Display',serif" font-size="48" letter-spacing="-0.5" fill="#fff">OpenDoc</text>
+                </svg>
+                <p style="margin-top: 0.75rem; font-size: 0.9rem; color: rgba(255,255,255,0.6);">Transparent, affordable healthcare at your fingertips.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#" onclick="window.location.hash = ''; return false;">Home</a>
+                <a href="#">All Specialties</a>
+                <a href="#">For Providers</a>
+                <a href="#">About</a>
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 OpenDoc. Committed to transparent, accessible healthcare for everyone.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Specialty and Provider Data
+        const specialtiesData = {
+            ADDICTION_MEDICINE: {
+                key: 'ADDICTION_MEDICINE',
+                displayName: 'Addiction Medicine',
+                description: 'Specialized treatment for substance use disorders and behavioral addictions with comprehensive, evidence-based care.',
+                image: 'https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Substance use treatment'
+            },
+            ALLERGY_IMMUNOLOGY: {
+                key: 'ALLERGY_IMMUNOLOGY',
+                displayName: 'Allergy & Immunology',
+                description: 'Diagnosis and management of allergic reactions, asthma, and immune system disorders.',
+                image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Allergy & immune care'
+            },
+            AUDIOLOGY: {
+                key: 'AUDIOLOGY',
+                displayName: 'Audiology',
+                description: 'Hearing assessment, testing, and management of hearing disorders and balance conditions.',
+                image: 'https://images.unsplash.com/photo-1590650153855-d9e808231d41?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Hearing & balance care'
+            },
+            BARIATRIC_SURGERY: {
+                key: 'BARIATRIC_SURGERY',
+                displayName: 'Bariatric Surgery',
+                description: 'Surgical weight loss procedures and metabolic surgery for weight management.',
+                image: 'https://images.unsplash.com/photo-1551076805-e1869033e561?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Weight loss surgery'
+            },
+            CARDIOLOGY: {
+                key: 'CARDIOLOGY',
+                displayName: 'Cardiology',
+                description: 'Comprehensive cardiac care including diagnosis, treatment, and management of heart and vascular diseases.',
+                image: 'https://images.unsplash.com/photo-1628348068343-eb9c7bd51d6c?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Advanced Heart Failure & Transplant', description: 'Specialized management of severe heart failure and cardiac transplantation evaluation and care.' },
+                    { name: 'Electrophysiology', description: 'Diagnosis and treatment of heart rhythm disorders using advanced monitoring and ablation techniques.' },
+                    { name: 'Interventional Cardiology', description: 'Catheter-based procedures for coronary artery disease including angioplasty and stent placement.' }
+                ],
+                shortDesc: 'Heart & vascular care'
+            },
+            CLINICAL_PSYCHOLOGY: {
+                key: 'CLINICAL_PSYCHOLOGY',
+                displayName: 'Clinical Psychology',
+                description: 'Mental health assessment, psychotherapy, and psychological treatment for various mental health conditions.',
+                image: 'https://images.unsplash.com/photo-1573497620053-ea5300f94f21?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Neuropsychology', description: 'Assessment and treatment of cognitive and behavioral changes related to brain function and neurological conditions.' }
+                ],
+                shortDesc: 'Mental health support'
+            },
+            DERMATOLOGY: {
+                key: 'DERMATOLOGY',
+                displayName: 'Dermatology',
+                description: 'Medical and surgical treatment of skin, hair, and nail conditions.',
+                image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Mohs / Dermatologic Surgery', description: 'Specialized surgical technique for skin cancer removal with precise histological control and tissue preservation.' },
+                    { name: 'Pediatric Dermatology', description: 'Diagnosis and treatment of skin conditions specific to infants, children, and adolescents.' }
+                ],
+                shortDesc: 'Skin health care'
+            },
+            ENDOCRINOLOGY: {
+                key: 'ENDOCRINOLOGY',
+                displayName: 'Endocrinology',
+                description: 'Management of hormonal and metabolic disorders including diabetes, thyroid disease, and hormonal imbalances.',
+                image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Hormone & metabolism care'
+            },
+            ENT: {
+                key: 'ENT',
+                displayName: 'ENT (Otolaryngology)',
+                description: 'Medical and surgical care of disorders affecting the ear, nose, throat, and head & neck region.',
+                image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Head & Neck Surgical Oncology', description: 'Surgical treatment of cancers affecting the head, neck, and related structures.' },
+                    { name: 'Otology / Neurotology', description: 'Specialized treatment of ear diseases, hearing loss, balance disorders, and skull base pathology.' },
+                    { name: 'Pediatric Otolaryngology', description: 'Medical and surgical care of ear, nose, and throat conditions in children.' }
+                ],
+                shortDesc: 'Ear, nose, throat care'
+            },
+            FAMILY_MEDICINE: {
+                key: 'FAMILY_MEDICINE',
+                displayName: 'Family Medicine',
+                description: 'Comprehensive primary care for patients of all ages from birth through adulthood.',
+                image: 'https://images.unsplash.com/photo-1666214280557-091e5804c8e3?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Geriatric Medicine', description: 'Specialized care focused on the unique health needs and challenges of elderly patients.' },
+                    { name: 'Sports Medicine', description: 'Medical care and injury prevention for active individuals and athletes.' }
+                ],
+                shortDesc: 'Primary care'
+            },
+            FUNCTIONAL_MEDICINE: {
+                key: 'FUNCTIONAL_MEDICINE',
+                displayName: 'Functional Medicine',
+                description: 'Systems-based approach to identify and address root causes of disease and optimize wellness.',
+                image: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Wellness optimization'
+            },
+            GENERAL_SURGERY: {
+                key: 'GENERAL_SURGERY',
+                displayName: 'General Surgery',
+                description: 'Surgical care for acute illnesses, injuries, and chronic diseases affecting multiple organ systems.',
+                image: 'https://images.unsplash.com/photo-1551190822-a9ce113d0d15?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Acute Care / Trauma', description: 'Emergency surgical management of acute injuries and critical illnesses requiring immediate intervention.' },
+                    { name: 'Bariatric Surgery', description: 'Surgical procedures for weight loss and metabolic management in obese patients.' },
+                    { name: 'Breast Surgery', description: 'Surgical diagnosis and treatment of benign and malignant breast conditions.' },
+                    { name: 'Colorectal Surgery', description: 'Surgical treatment of conditions affecting the colon, rectum, and anus.' },
+                    { name: 'Surgical Oncology', description: 'Surgical removal and management of cancerous tumors and related complications.' }
+                ],
+                shortDesc: 'General surgical care'
+            },
+            GENETIC_COUNSELING: {
+                key: 'GENETIC_COUNSELING',
+                displayName: 'Genetic Counseling',
+                description: 'Assessment and counseling for inherited genetic conditions and hereditary disease risks.',
+                image: 'https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Cancer Genetics', description: 'Evaluation of hereditary cancer syndromes and personalized cancer risk management strategies.' },
+                    { name: 'Cardiovascular Genetics', description: 'Assessment and management of inherited heart and vascular disease predispositions.' },
+                    { name: 'Prenatal Genetics', description: 'Genetic counseling and screening for pregnant individuals to assess fetal health risks.' }
+                ],
+                shortDesc: 'Genetic health assessment'
+            },
+            HEMATOLOGY: {
+                key: 'HEMATOLOGY',
+                displayName: 'Hematology',
+                description: 'Medical care of blood disorders including anemia, clotting disorders, and hematologic malignancies.',
+                image: 'https://images.unsplash.com/photo-1615631648086-325025c9e51e?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Blood disorder care'
+            },
+            INFECTIOUS_DISEASE: {
+                key: 'INFECTIOUS_DISEASE',
+                displayName: 'Infectious Disease',
+                description: 'Diagnosis, treatment, and prevention of bacterial, viral, fungal, and parasitic infections.',
+                image: 'https://images.unsplash.com/photo-1583912086296-be5b665036d3?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Infection treatment'
+            },
+            IV_THERAPY: {
+                key: 'IV_THERAPY',
+                displayName: 'IV Therapy',
+                description: 'Intravenous administration of medications, nutrients, and therapeutic agents.',
+                image: 'https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'IV treatments'
+            },
+            KETAMINE_THERAPY: {
+                key: 'KETAMINE_THERAPY',
+                displayName: 'Ketamine Therapy',
+                description: 'Specialized treatment using ketamine for treatment-resistant depression and chronic pain.',
+                image: 'https://images.unsplash.com/photo-1576671081837-49000212a370?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Ketamine-assisted care'
+            },
+            LABORATORY: {
+                key: 'LABORATORY',
+                displayName: 'Laboratory Services',
+                description: 'Clinical laboratory testing for diagnosis, monitoring, and health screening.',
+                image: 'https://images.unsplash.com/photo-1582719471384-894fbb16564e?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Lab testing'
+            },
+            MEDICAL_AESTHETICS: {
+                key: 'MEDICAL_AESTHETICS',
+                displayName: 'Medical Aesthetics',
+                description: 'Non-surgical cosmetic procedures and treatments for facial and body aesthetics.',
+                image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Cosmetic procedures'
+            },
+            MEDICAL_ONCOLOGY: {
+                key: 'MEDICAL_ONCOLOGY',
+                displayName: 'Medical Oncology',
+                description: 'Chemotherapy, immunotherapy, and medical management of cancer.',
+                image: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Cancer treatment'
+            },
+            NEPHROLOGY: {
+                key: 'NEPHROLOGY',
+                displayName: 'Nephrology',
+                description: 'Medical care of kidney diseases, hypertension, and renal failure.',
+                image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Transplant Nephrology', description: 'Specialized care for kidney transplant evaluation, management, and long-term follow-up.' }
+                ],
+                shortDesc: 'Kidney health care'
+            },
+            NEUROLOGY: {
+                key: 'NEUROLOGY',
+                displayName: 'Neurology',
+                description: 'Medical diagnosis and treatment of nervous system disorders including neurological diseases.',
+                image: 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Behavioral Neurology & Cognitive Disorders', description: 'Evaluation and treatment of memory loss, dementia, and behavioral changes from neurological causes.' },
+                    { name: 'Epilepsy', description: 'Specialized diagnosis, treatment, and management of seizure disorders.' },
+                    { name: 'Movement Disorders', description: 'Treatment of conditions like Parkinson\'s disease, tremor, and other movement abnormalities.' },
+                    { name: 'Neuro-Ophthalmology', description: 'Evaluation of vision problems related to neurological diseases and eye movement disorders.' },
+                    { name: 'Neuromuscular Medicine', description: 'Diagnosis and treatment of diseases affecting muscles and neuromuscular junction.' },
+                    { name: 'Vascular Neurology', description: 'Specialized care for stroke, cerebrovascular disease, and related neurological emergencies.' }
+                ],
+                shortDesc: 'Nervous system care'
+            },
+            NEUROSURGERY: {
+                key: 'NEUROSURGERY',
+                displayName: 'Neurosurgery',
+                description: 'Surgical treatment of brain, spinal cord, and nervous system disorders.',
+                image: 'https://images.unsplash.com/photo-1581595220892-b0739db3ba8c?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Cerebrovascular / Endovascular', description: 'Surgical and endovascular treatment of stroke, aneurysms, and vascular malformations.' },
+                    { name: 'Functional Neurosurgery', description: 'Surgical procedures for movement disorders, pain, and neuropsychiatric conditions.' },
+                    { name: 'Pediatric Neurosurgery', description: 'Surgical treatment of brain and spinal cord disorders in infants and children.' },
+                    { name: 'Peripheral Nerve', description: 'Surgical repair and management of peripheral nerve injuries and disorders.' },
+                    { name: 'Skull Base / Brain Tumor', description: 'Advanced surgical removal of brain tumors and complex skull base lesions.' },
+                    { name: 'Spine Surgery', description: 'Surgical treatment of spinal cord compression, deformity, and instability.' }
+                ],
+                shortDesc: 'Brain & spine surgery'
+            },
+            NUTRITION: {
+                key: 'NUTRITION',
+                displayName: 'Nutrition',
+                description: 'Nutritional assessment and counseling for disease prevention and management.',
+                image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Nutrition counseling'
+            },
+            OBGYN: {
+                key: 'OBGYN',
+                displayName: 'OB/GYN',
+                description: 'Comprehensive reproductive and women\'s health care including obstetrics and gynecology.',
+                image: 'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Gynecologic Oncology', description: 'Surgical and medical treatment of cancers affecting the reproductive organs.' },
+                    { name: 'Reproductive Endocrinology & Infertility', description: 'Specialized care for infertility evaluation and fertility treatment including IVF and assisted reproduction.' },
+                    { name: 'Urogynecology', description: 'Surgical and non-surgical management of pelvic floor disorders and incontinence.' }
+                ],
+                shortDesc: 'Women\'s health care'
+            },
+            OPHTHALMOLOGY: {
+                key: 'OPHTHALMOLOGY',
+                displayName: 'Ophthalmology',
+                description: 'Medical and surgical care of eye diseases and vision disorders.',
+                image: 'https://images.unsplash.com/photo-1606567595334-d39972c85dbe?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Cornea & External Disease', description: 'Treatment of corneal diseases, dry eye, and infections affecting the eye surface.' },
+                    { name: 'Glaucoma', description: 'Specialized diagnosis and treatment of glaucoma to prevent vision loss.' },
+                    { name: 'Neuro-Ophthalmology', description: 'Evaluation of vision problems related to neurological diseases.' },
+                    { name: 'Oculoplastics', description: 'Surgical procedures for eyelid, lacrimal system, and orbital conditions.' },
+                    { name: 'Pediatric Ophthalmology', description: 'Eye care and treatment of vision problems in infants and children.' },
+                    { name: 'Retina & Vitreous', description: 'Treatment of retinal diseases including macular degeneration and diabetic retinopathy.' }
+                ],
+                shortDesc: 'Eye care'
+            },
+            OPTOMETRY: {
+                key: 'OPTOMETRY',
+                displayName: 'Optometry',
+                description: 'Vision assessment, eye examinations, and prescription of corrective lenses.',
+                image: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Vision care & glasses'
+            },
+            ORTHOPEDIC_SURGERY: {
+                key: 'ORTHOPEDIC_SURGERY',
+                displayName: 'Orthopedic Surgery',
+                description: 'Surgical and non-surgical treatment of musculoskeletal disorders and injuries.',
+                image: 'https://images.unsplash.com/photo-1530497610245-94d3c16cda28?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Adult Reconstruction', description: 'Joint replacement and reconstruction surgery for hip, knee, and shoulder arthritis.' },
+                    { name: 'Foot & Ankle', description: 'Surgical and non-surgical treatment of foot and ankle disorders and injuries.' },
+                    { name: 'Hand & Upper Extremity', description: 'Specialized surgical care for hand, wrist, elbow, and shoulder conditions.' },
+                    { name: 'Musculoskeletal Oncology', description: 'Surgical treatment of bone and soft tissue tumors with limb-salvaging techniques.' },
+                    { name: 'Pediatric Orthopedics', description: 'Treatment of bone and joint disorders specific to growing children.' },
+                    { name: 'Spine Surgery', description: 'Surgical treatment of spine disorders including degeneration, deformity, and instability.' },
+                    { name: 'Sports Medicine', description: 'Treatment of sports injuries and return-to-play evaluation for athletes.' },
+                    { name: 'Trauma', description: 'Emergency surgical management of fractures and multi-system musculoskeletal injuries.' }
+                ],
+                shortDesc: 'Bone & joint care'
+            },
+            PAIN_MANAGEMENT: {
+                key: 'PAIN_MANAGEMENT',
+                displayName: 'Pain Management',
+                description: 'Comprehensive approach to chronic pain diagnosis and treatment.',
+                image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Chronic pain care'
+            },
+            PALLIATIVE_CARE: {
+                key: 'PALLIATIVE_CARE',
+                displayName: 'Palliative Care',
+                description: 'Compassionate care focused on symptom management and quality of life for serious illnesses.',
+                image: 'https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Comfort-focused care'
+            },
+            PEDIATRICS: {
+                key: 'PEDIATRICS',
+                displayName: 'Pediatrics',
+                description: 'Comprehensive health care for infants, children, and adolescents.',
+                image: 'https://images.unsplash.com/photo-1631815589968-fdb09a223b1e?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Adolescent Medicine', description: 'Medical care addressing the unique health needs of teenagers and young adults.' },
+                    { name: 'Developmental-Behavioral Pediatrics', description: 'Evaluation and management of developmental delays, behavioral issues, and learning disorders in children.' },
+                    { name: 'Neonatal-Perinatal Medicine', description: 'Intensive care and specialized management of premature and critically ill newborns.' },
+                    { name: 'Pediatric Cardiology', description: 'Diagnosis and treatment of congenital and acquired heart diseases in children.' },
+                    { name: 'Pediatric Endocrinology', description: 'Management of hormonal and metabolic disorders in children including diabetes.' },
+                    { name: 'Pediatric Gastroenterology', description: 'Treatment of digestive system disorders and nutritional issues in children.' },
+                    { name: 'Pediatric Hematology-Oncology', description: 'Treatment of blood disorders and cancers in children.' },
+                    { name: 'Pediatric Nephrology', description: 'Care of kidney diseases and urological disorders in children.' },
+                    { name: 'Pediatric Pulmonology', description: 'Treatment of lung and respiratory disorders in children.' }
+                ],
+                shortDesc: 'Child health care'
+            },
+            PHYSICAL_THERAPY: {
+                key: 'PHYSICAL_THERAPY',
+                displayName: 'Physical Therapy',
+                description: 'Rehabilitation and therapeutic exercise for movement disorders and injury recovery.',
+                image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Cardiovascular & Pulmonary', description: 'Rehabilitation for heart disease, stroke, and lung conditions.' },
+                    { name: 'Geriatrics', description: 'Physical therapy for mobility, fall prevention, and functional independence in elderly patients.' },
+                    { name: 'Neurology', description: 'Therapy for neurological conditions including stroke, Parkinson\'s, and brain injury.' },
+                    { name: 'Oncology', description: 'Rehabilitation addressing functional impairments from cancer treatment.' },
+                    { name: 'Orthopaedics', description: 'Physical therapy for joint and bone injuries and post-surgical rehabilitation.' },
+                    { name: 'Pediatrics', description: 'Therapy for developmental delays and movement disorders in children.' },
+                    { name: 'Sports', description: 'Injury prevention and rehabilitation for athletes and active individuals.' },
+                    { name: 'Women\'s Health', description: 'Therapy for pelvic floor disorders and women-specific musculoskeletal issues.' },
+                    { name: 'Wound Management', description: 'Therapy and wound care for non-healing wounds and tissue damage.' }
+                ],
+                shortDesc: 'Rehabilitation therapy'
+            },
+            PLASTIC_SURGERY: {
+                key: 'PLASTIC_SURGERY',
+                displayName: 'Plastic Surgery',
+                description: 'Surgical reconstruction and cosmetic enhancement of body structures.',
+                image: 'https://images.unsplash.com/photo-1579684453423-f84349ef60b0?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Craniofacial Surgery', description: 'Surgical repair and reconstruction of facial and skull deformities.' },
+                    { name: 'Hand Surgery', description: 'Surgical treatment and reconstruction of hand and upper extremity structures.' }
+                ],
+                shortDesc: 'Reconstructive surgery'
+            },
+            PM_R: {
+                key: 'PM_R',
+                displayName: 'PM&R (Physical Medicine & Rehabilitation)',
+                description: 'Medical rehabilitation and functional restoration for patients with disabilities.',
+                image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Brain Injury Medicine', description: 'Rehabilitation and management of cognitive and physical impairments from traumatic brain injury.' },
+                    { name: 'Neuromuscular Medicine', description: 'Treatment of disorders affecting muscles and peripheral nerves.' },
+                    { name: 'Spinal Cord Injury Medicine', description: 'Comprehensive rehabilitation and long-term management of spinal cord injuries.' }
+                ],
+                shortDesc: 'Physical rehabilitation'
+            },
+            PSYCHIATRY: {
+                key: 'PSYCHIATRY',
+                displayName: 'Psychiatry',
+                description: 'Medical diagnosis and treatment of mental health and behavioral disorders.',
+                image: 'https://images.unsplash.com/photo-1527689368864-3a821dbccc34?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Addiction Psychiatry', description: 'Specialized treatment of substance use disorders and behavioral addictions.' },
+                    { name: 'Child & Adolescent Psychiatry', description: 'Mental health care for emotional and behavioral disorders in children and teenagers.' },
+                    { name: 'Geriatric Psychiatry', description: 'Treatment of mental health conditions specific to elderly patients.' }
+                ],
+                shortDesc: 'Mental health care'
+            },
+            PULMONOLOGY: {
+                key: 'PULMONOLOGY',
+                displayName: 'Pulmonology',
+                description: 'Medical care of lung and respiratory system disorders.',
+                image: 'https://images.unsplash.com/photo-1530026405186-ed1f139313f8?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Interventional Pulmonology', description: 'Minimally invasive procedures for lung diseases including biopsy and airway management.' },
+                    { name: 'Pulmonary & Critical Care', description: 'Intensive care management of acute respiratory failure and critical illness.' }
+                ],
+                shortDesc: 'Lung health care'
+            },
+            RADIATION_ONCOLOGY: {
+                key: 'RADIATION_ONCOLOGY',
+                displayName: 'Radiation Oncology',
+                description: 'Treatment of cancer using targeted radiation therapy.',
+                image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Radiation therapy'
+            },
+            RADIOLOGY: {
+                key: 'RADIOLOGY',
+                displayName: 'Radiology',
+                description: 'Diagnostic imaging and imaging-guided interventions for disease diagnosis and treatment.',
+                image: 'https://images.unsplash.com/photo-1516069677018-378515003435?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Breast Imaging', description: 'Specialized imaging for breast cancer screening, diagnosis, and biopsy.' },
+                    { name: 'Interventional Radiology', description: 'Minimally invasive procedures guided by imaging for diagnosis and treatment.' },
+                    { name: 'Nuclear Medicine', description: 'Imaging and therapy using radioactive tracers and isotopes.' }
+                ],
+                shortDesc: 'Medical imaging'
+            },
+            RHEUMATOLOGY: {
+                key: 'RHEUMATOLOGY',
+                displayName: 'Rheumatology',
+                description: 'Diagnosis and treatment of rheumatic diseases and autoimmune disorders.',
+                image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1e?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Autoimmune disease care'
+            },
+            THORACIC_SURGERY: {
+                key: 'THORACIC_SURGERY',
+                displayName: 'Thoracic Surgery',
+                description: 'Surgical treatment of diseases affecting the chest, lungs, and esophagus.',
+                image: 'https://images.unsplash.com/photo-1530497610245-94d3c16cda29?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Chest surgery'
+            },
+            URGENT_CARE: {
+                key: 'URGENT_CARE',
+                displayName: 'Urgent Care',
+                description: 'Walk-in medical care for acute illnesses and minor injuries outside of emergency settings.',
+                image: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Quick medical care'
+            },
+            UROLOGY: {
+                key: 'UROLOGY',
+                displayName: 'Urology',
+                description: 'Medical and surgical treatment of urinary tract and male reproductive system disorders.',
+                image: 'https://images.unsplash.com/photo-1576091160579-112173f0f767?w=400&h=200&fit=crop',
+                subspecialties: [
+                    { name: 'Endourology & Stone Disease', description: 'Minimally invasive treatment of kidney stones and urinary obstruction.' },
+                    { name: 'Female Pelvic Medicine', description: 'Surgical and non-surgical treatment of urinary incontinence and pelvic disorders in women.' },
+                    { name: 'Pediatric Urology', description: 'Treatment of urological conditions and birth defects in children.' },
+                    { name: 'Reconstructive Urology', description: 'Surgical reconstruction of urethral injuries and strictures.' },
+                    { name: 'Urologic Oncology', description: 'Surgical and medical treatment of cancers of the bladder, prostate, and kidneys.' }
+                ],
+                shortDesc: 'Urinary health care'
+            },
+            VASCULAR_SURGERY: {
+                key: 'VASCULAR_SURGERY',
+                displayName: 'Vascular Surgery',
+                description: 'Surgical treatment of blood vessel diseases and vascular conditions.',
+                image: 'https://images.unsplash.com/photo-1559757148-5c350d0d3c57?w=400&h=200&fit=crop',
+                subspecialties: [],
+                shortDesc: 'Vascular care'
+            }
+        };
+
+        // Show ALL specialties on home page
+        const featuredSpecialties = Object.keys(specialtiesData);
+
+        const homeSpecialties = featuredSpecialties;
+
+        // Provider data
+        const providersData = [
+            {
+                name: 'Dr. James Miller',
+                title: 'MD',
+                specialty: 'Orthopedic Surgery',
+                location: 'Canton, GA',
+                rating: 4.9,
+                image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop'
+            },
+            {
+                name: 'Dr. Rachel Kim',
+                title: 'DO',
+                specialty: 'Sports Medicine',
+                location: 'Cumming, GA',
+                rating: 4.8,
+                image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop'
+            },
+            {
+                name: 'Dr. Sarah Chen',
+                title: 'MD',
+                specialty: 'Cardiology',
+                location: 'Atlanta, GA',
+                rating: 4.9,
+                image: 'https://images.unsplash.com/photo-1517841905240-74f88d959cff?w=200&h=200&fit=crop'
+            },
+            {
+                name: 'Dr. Marcus Webb',
+                title: 'MD',
+                specialty: 'Dermatology',
+                location: 'Marietta, GA',
+                rating: 4.7,
+                image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop'
+            },
+            {
+                name: 'Dr. Elena Rodriguez',
+                title: 'MD',
+                specialty: 'OB/GYN',
+                location: 'Roswell, GA',
+                rating: 4.9,
+                image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop'
+            },
+            {
+                name: 'Dr. David Park',
+                title: 'MD',
+                specialty: 'Neurology',
+                location: 'Alpharetta, GA',
+                rating: 4.8,
+                image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop'
+            },
+            {
+                name: 'Dr. Lisa Thompson',
+                title: 'DO',
+                specialty: 'Family Medicine',
+                location: 'Johns Creek, GA',
+                rating: 4.9,
+                image: 'https://images.unsplash.com/photo-1517841905240-74f88d959cff?w=200&h=200&fit=crop'
+            },
+            {
+                name: 'Dr. Robert Chen',
+                title: 'MD',
+                specialty: 'Gastroenterology',
+                location: 'Duluth, GA',
+                rating: 4.7,
+                image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop'
+            }
+        ];
+
+        // Initialize specialty cards
+        function initializeSpecialties() {
+            const container = document.getElementById('specialtyContainer');
+
+            featuredSpecialties.forEach(key => {
+                const specialty = specialtiesData[key];
+                const card = document.createElement('div');
+                card.className = 'specialty-card';
+                card.onclick = () => showSpecialtyDetail(key);
+                card.innerHTML = `
+                    <img src="${specialty.image}" alt="${specialty.displayName}" class="specialty-card-img" onerror="this.src='https://via.placeholder.com/400x300?text=${encodeURIComponent(specialty.displayName)}'">
+                    <div class="specialty-card-content">
+                        <div class="specialty-card-title">${specialty.displayName}</div>
+                        <div class="specialty-card-desc">${specialty.shortDesc}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Initialize provider cards
+        function initializeProviders() {
+            const container = document.getElementById('providersContainer');
+
+            providersData.forEach(provider => {
+                const reviews = Math.floor(40 + Math.random() * 160);
+                const card = document.createElement('div');
+                card.className = 'provider-card';
+                card.style.cursor = 'pointer';
+                card.onclick = () => showProviderProfile(provider.name, provider.title, provider.specialty, provider.location, provider.rating, reviews);
+                card.innerHTML = `
+                    <img src="${provider.image}" alt="${provider.name}" class="provider-avatar" onerror="this.style.display='none'">
+                    <div class="provider-name">${provider.name}, ${provider.title}</div>
+                    <div class="provider-specialty">${provider.specialty}</div>
+                    <div class="provider-location">${provider.location}</div>
+                    <div class="provider-rating">${provider.rating} ★ · ${reviews} reviews</div>
+                    <span class="provider-cta">View profile →</span>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Setup scroll animations for How It Works
+        function setupScrollytelling() {
+            const steps = document.querySelectorAll('.hiw-step');
+            const screens = document.querySelectorAll('.phone-screen');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const stepNum = entry.target.getAttribute('data-step');
+
+                        // Activate the current step text
+                        steps.forEach(s => s.classList.remove('active'));
+                        entry.target.classList.add('active');
+
+                        // Switch the phone screen
+                        screens.forEach(s => s.classList.remove('active'));
+                        const screen = document.getElementById('phoneScreen' + stepNum);
+                        if (screen) screen.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.5, rootMargin: '-10% 0px -30% 0px' });
+
+            steps.forEach(step => observer.observe(step));
+        }
+
+        // Generate mock providers for a specialty
+        function getMockProviders(specialtyName) {
+            const firstNames = ['James','Sarah','Marcus','Elena','David','Lisa','Robert','Maria','Andrew','Catherine'];
+            const lastNames = ['Miller','Chen','Webb','Rodriguez','Park','Thompson','Patel','Kim','Brooks','Nguyen'];
+            const titles = ['MD','DO','MD, FACS','MD, PhD','DO, MS'];
+            const cities = ['Atlanta, GA','Marietta, GA','Roswell, GA','Alpharetta, GA','Canton, GA','Cumming, GA','Johns Creek, GA','Duluth, GA'];
+            const providers = [];
+            const count = 4 + Math.floor(Math.random() * 4);
+            for (let i = 0; i < count; i++) {
+                providers.push({
+                    name: 'Dr. ' + firstNames[i % firstNames.length] + ' ' + lastNames[(i + 3) % lastNames.length],
+                    title: titles[i % titles.length],
+                    specialty: specialtyName,
+                    location: cities[i % cities.length],
+                    rating: (4.5 + Math.random() * 0.5).toFixed(1),
+                    reviews: Math.floor(40 + Math.random() * 160),
+                    nextAvail: i < 3 ? 'Tomorrow' : 'This week',
+                    price: '$' + (80 + Math.floor(Math.random() * 200))
+                });
+            }
+            return providers;
+        }
+
+        // Create specialty detail page
+        function createSpecialtyDetailPage(key) {
+            const specialty = specialtiesData[key];
+            const pageId = `detail-${key}`;
+
+            const page = document.createElement('div');
+            page.id = pageId;
+            page.className = 'detail-page';
+
+            const hasSubspecialties = specialty.subspecialties && specialty.subspecialties.length > 0;
+
+            let mainContent = '';
+
+            if (hasSubspecialties) {
+                // Show subspecialty cards
+                mainContent = '<h2 class="section-title" style="margin-top: 2rem;">Subspecialties</h2>';
+                mainContent += '<div class="subspecialties-grid">';
+                specialty.subspecialties.forEach(sub => {
+                    const subName = typeof sub === 'string' ? sub : sub.name;
+                    const subDesc = typeof sub === 'string' ? `Specialized ${sub.toLowerCase()} services within ${specialty.displayName}.` : sub.description;
+                    mainContent += `
+                        <div class="subspecialty-card">
+                            <h3>${subName}</h3>
+                            <p>${subDesc}</p>
+                            <a href="#" class="subspecialty-link" onclick="return false;">Find providers →</a>
+                        </div>
+                    `;
+                });
+                mainContent += '</div>';
+            } else {
+                // Show provider list directly
+                const providers = getMockProviders(specialty.displayName);
+                mainContent = '<h2 class="section-title" style="margin-top: 2rem;">Providers</h2>';
+                mainContent += '<div class="provider-list">';
+                providers.forEach(p => {
+                    const initials = p.name.replace('Dr. ','').split(' ').map(w => w[0]).join('');
+                    mainContent += `
+                        <div class="provider-list-card" onclick="showProviderProfile('${p.name}', '${p.title}', '${p.specialty}', '${p.location}', ${p.rating}, ${p.reviews})">
+                            <div class="plc-avatar">${initials}</div>
+                            <div class="plc-info">
+                                <div class="plc-name">${p.name}, ${p.title}</div>
+                                <div class="plc-spec">${p.specialty}</div>
+                                <div class="plc-location">${p.location}</div>
+                                <div class="plc-rating">${p.rating} ★ · ${p.reviews} reviews</div>
+                            </div>
+                            <div class="plc-right">
+                                <div class="plc-price">${p.price}</div>
+                                <div class="plc-avail">${p.nextAvail}</div>
+                                <div class="plc-book-btn">View Profile</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                mainContent += '</div>';
+            }
+
+            page.innerHTML = `
+                <div class="detail-header">
+                    <h1>${specialty.displayName}</h1>
+                    <p>${specialty.description}</p>
+                </div>
+                <div class="detail-content">
+                    <a class="back-link" href="#" onclick="window.location.hash = ''; return false;">← Back to Specialties</a>
+                    ${mainContent}
+                </div>
+            `;
+
+            return page;
+        }
+
+        // Show specialty detail
+        function showSpecialtyDetail(key) {
+            const pageId = `detail-${key}`;
+            let page = document.getElementById(pageId);
+
+            if (!page) {
+                page = createSpecialtyDetailPage(key);
+                document.getElementById('specialty-detail-placeholder').appendChild(page);
+            }
+
+            document.getElementById('home-page').classList.remove('active');
+            document.getElementById('provider-profile-page').classList.remove('active');
+            document.querySelectorAll('.detail-page').forEach(p => p.classList.remove('active'));
+            page.classList.add('active');
+            window.location.hash = `#${key}`;
+            window.scrollTo(0, 0);
+        }
+
+        // Show provider profile page
+        function showProviderProfile(name, title, specialty, location, rating, reviews) {
+            const profilePage = document.getElementById('provider-profile-page');
+            const initials = name.replace('Dr. ','').split(' ').map(w => w[0]).join('');
+            const starsHtml = '★'.repeat(Math.floor(rating)) + (rating % 1 >= 0.5 ? '½' : '');
+
+            profilePage.innerHTML = `
+                <div class="profile-header">
+                    <div class="profile-header-inner">
+                        <div class="profile-avatar-lg">${initials}</div>
+                        <div class="profile-header-info">
+                            <h1>${name}</h1>
+                            <div class="profile-title">${title} · ${specialty}</div>
+                            <div class="profile-rating-bar">
+                                <span class="stars">${starsHtml}</span>
+                                <span>${rating} · ${reviews} reviews</span>
+                                <span style="color: #999;">· ${location}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-body">
+                    <div class="profile-main">
+                        <a class="back-link" href="#" onclick="history.back(); return false;">← Back</a>
+
+                        <h2>About</h2>
+                        <p class="profile-about">${name.replace('Dr. ','')} is a ${location}-based specialist in ${specialty.toLowerCase()} with a strong focus on providing top-notch care. With extensive experience in the field, they combine evidence-based treatment with compassionate patient care to achieve optimal outcomes.</p>
+
+                        <h2>Best Fit For</h2>
+                        <div class="profile-fit-grid">
+                            <div class="fit-card good">
+                                <div class="fit-card-label">Best Fit For</div>
+                                <div class="fit-item"><span class="icon">✓</span> General evaluation</div>
+                                <div class="fit-item"><span class="icon">✓</span> Failed conservative treatment (PT, injections, NSAIDs)</div>
+                                <div class="fit-item"><span class="icon">✓</span> Second opinion consultation</div>
+                                <div class="fit-item"><span class="icon">✓</span> New or worsening symptoms</div>
+                            </div>
+                            <div class="fit-card not">
+                                <div class="fit-card-label">Not the Right Fit For</div>
+                                <div class="fit-item"><span class="icon">—</span> Emergency or urgent conditions</div>
+                                <div class="fit-item"><span class="icon">—</span> Primary care / general wellness</div>
+                                <div class="fit-item"><span class="icon">—</span> Unrelated specialty concerns</div>
+                                <div class="fit-item"><span class="icon">—</span> Conditions outside this specialty</div>
+                            </div>
+                        </div>
+
+                        <h2>Services & Prices</h2>
+                        <p style="color: #666; font-size: 0.9rem;">Each service is a binding contract. The price shown is your guaranteed maximum.</p>
+                        <div class="service-row">
+                            <div class="service-row-name">New Patient Evaluation</div>
+                            <div class="service-row-tag">Evaluation</div>
+                            <div class="service-row-desc">Comprehensive evaluation with ${name.replace('Dr. ','')}. History, physical exam, assessment, and treatment plan.</div>
+                            <div class="service-row-meta">Duration: 30–45 min · In-Person</div>
+                        </div>
+
+                        <h2>If This Isn't the Right Fit</h2>
+                        <p style="color: #666; font-size: 0.9rem;">OpenDoc routes to the right care — not just to a transaction.</p>
+                        <div class="alert-card urgent">
+                            <div class="alert-card-label">Seek Urgent Evaluation</div>
+                            <p>If you are experiencing a medical emergency — difficulty breathing, chest pain, uncontrolled bleeding, or loss of consciousness — <strong>call 911 or go to the nearest emergency department.</strong></p>
+                        </div>
+                        <div class="alert-card info">
+                            <div class="alert-card-label">You May Need This First</div>
+                            <p>Bring relevant medical records, imaging, and a list of current medications to your appointment for the most productive visit.</p>
+                        </div>
+
+                        <div class="profile-contact">
+                            <span>&#x1f4cd; ${location} · In-person · Telehealth evaluation</span>
+                        </div>
+                    </div>
+                    <div class="profile-sidebar">
+                        <div class="sidebar-card">
+                            <div class="sidebar-pricing-header">
+                                <h3>Pricing</h3>
+                                <p>See provider for pricing</p>
+                            </div>
+                            <div class="sidebar-body">
+                                <h4>What this covers</h4>
+                                <p>History, physical examination, assessment, and treatment plan</p>
+                                <h4>New Patient Evaluation</h4>
+                                <p style="margin-bottom: 0.5rem;">Duration: 30–45 min</p>
+                                <div class="sidebar-guarantee">
+                                    <span class="icon">✓</span>
+                                    <p>When this provider activates on OpenDoc, prices will be guaranteed and binding before care begins.</p>
+                                </div>
+                            </div>
+                            <button class="sidebar-cta" onclick="alert('Call to inquire — coming soon!')">Call to Inquire</button>
+                            <div class="sidebar-footer">
+                                <p>Guaranteed price · No surprise billing</p>
+                                <a href="#">Refund & cancellation policy</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Hide everything else, show profile
+            document.getElementById('home-page').classList.remove('active');
+            document.querySelectorAll('.detail-page').forEach(p => p.classList.remove('active'));
+            profilePage.classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // Router
+        function handleRouting() {
+            const hash = window.location.hash.slice(1);
+
+            // Hide profile page on route change
+            document.getElementById('provider-profile-page').classList.remove('active');
+
+            if (hash && specialtiesData[hash]) {
+                showSpecialtyDetail(hash);
+            } else {
+                document.getElementById('home-page').classList.add('active');
+                document.querySelectorAll('.detail-page').forEach(p => p.classList.remove('active'));
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // Drag scroll functionality for specialty cards
+        function enableDragScroll(container) {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            container.addEventListener('mousedown', (e) => {
+                isDown = true;
+                container.classList.add('dragging');
+                startX = e.pageX - container.offsetLeft;
+                scrollLeft = container.scrollLeft;
+            });
+
+            container.addEventListener('mouseleave', () => {
+                isDown = false;
+                container.classList.remove('dragging');
+            });
+
+            container.addEventListener('mouseup', () => {
+                isDown = false;
+                container.classList.remove('dragging');
+            });
+
+            container.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - container.offsetLeft;
+                const walk = (x - startX) * 1.5;
+                container.scrollLeft = scrollLeft - walk;
+            });
+        }
+
+        // Search functionality
+        function performSearch() {
+            const searchTerm = document.getElementById('heroSearch').value.trim();
+            if (searchTerm) {
+                alert(`Searching for: ${searchTerm}\n\nIn a real app, this would show filtered results.`);
+            }
+        }
+
+        // Placeholder functions
+        function showProviderSignup() {
+            alert('Provider signup coming soon!');
+        }
+
+        function showSignin() {
+            alert('Sign in coming soon!');
+        }
+
+        // Scroll-reveal IntersectionObserver
+        function setupScrollReveal() {
+            const revealElements = document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale');
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                        // Trigger stat counter if this is the stats section
+                        if (entry.target.classList.contains('why-stats')) {
+                            animateCounters(entry.target);
+                        }
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+            revealElements.forEach(el => revealObserver.observe(el));
+        }
+
+        // Stat counter animation
+        function animateCounters(container) {
+            const statNums = container.querySelectorAll('.why-stat-num[data-target]');
+            statNums.forEach(el => {
+                const target = parseInt(el.dataset.target);
+                const prefix = el.dataset.prefix || '';
+                const suffix = el.dataset.suffix || '';
+                const duration = 1800;
+                const startTime = performance.now();
+                function tick(now) {
+                    const elapsed = now - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    // Ease-out cubic
+                    const eased = 1 - Math.pow(1 - progress, 3);
+                    const current = Math.round(eased * target);
+                    el.textContent = prefix + current.toLocaleString() + suffix;
+                    if (progress < 1) requestAnimationFrame(tick);
+                }
+                requestAnimationFrame(tick);
+            });
+        }
+
+        // Nav shadow on scroll + sticky search bar
+        function setupNavScroll() {
+            const navEl = document.querySelector('nav');
+            const heroSearchContainer = document.getElementById('heroSearchContainer');
+            const searchSpacer = document.getElementById('searchSpacer');
+            let isStuck = false;
+            let originalOffsetTop = null;
+            let ticking = false;
+
+            // Capture original position after page loads and animations finish
+            setTimeout(() => {
+                if (heroSearchContainer) {
+                    originalOffsetTop = heroSearchContainer.getBoundingClientRect().top + window.scrollY;
+                }
+            }, 1000);
+
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        const scrollY = window.scrollY;
+
+                        // Nav shadow
+                        if (scrollY > 20) {
+                            navEl.classList.add('scrolled');
+                        } else {
+                            navEl.classList.remove('scrolled');
+                        }
+
+                        // Sticky search bar
+                        if (heroSearchContainer && originalOffsetTop !== null) {
+                            const triggerPoint = originalOffsetTop - 80; // 80 = nav height
+
+                            if (scrollY >= triggerPoint && !isStuck) {
+                                const h = heroSearchContainer.offsetHeight + 20; // include margins
+                                searchSpacer.style.height = h + 'px';
+                                searchSpacer.classList.add('active');
+                                heroSearchContainer.classList.add('stuck');
+                                navEl.classList.add('search-stuck');
+                                isStuck = true;
+                            } else if (scrollY < triggerPoint && isStuck) {
+                                heroSearchContainer.classList.remove('stuck');
+                                navEl.classList.remove('search-stuck');
+                                searchSpacer.classList.remove('active');
+                                isStuck = false;
+                            }
+                        }
+
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeSpecialties();
+            initializeProviders();
+            setupScrollytelling();
+            setupScrollReveal();
+            setupNavScroll();
+            enableDragScroll(document.getElementById('specialtyContainer'));
+            enableDragScroll(document.getElementById('servicesContainer'));
+            enableDragScroll(document.getElementById('providersContainer'));
+            handleRouting();
+        });
+
+        // Handle hash changes
+        window.addEventListener('hashchange', handleRouting);
+
+        // Enter key on search
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('heroSearch');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        performSearch();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
